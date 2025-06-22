@@ -125,6 +125,36 @@ export default function QuizPage() {
 
   // 問題数選択時の処理
   const handleQuestionCountSelect = (count: number) => {
+    // 学習履歴がある場合は確認
+    const savedHistory = localStorage.getItem('quizHistory');
+    if (savedHistory) {
+      try {
+        const history: QuizHistory = JSON.parse(savedHistory);
+        const isRecent = Date.now() - history.timestamp < 24 * 60 * 60 * 1000;
+        
+        if (isRecent && !history.completed) {
+          const choice = window.confirm(
+            `前回の学習履歴があります。\n\n` +
+            `前回: ${history.answers ? Object.keys(history.answers).length : 0}問回答済み\n` +
+            `正解: ${history.correctAnswers || 0}問\n\n` +
+            `「OK」を押すと前回の続きから再開します。\n` +
+            `「キャンセル」を押すと新しい演習を開始します。\n\n` +
+            `前回の続きから再開しますか？`
+          );
+          
+          if (choice) {
+            // 前回の続きから再開
+            fetchQuestions(history.selectedQuestionCount || count, history);
+            return;
+          } else {
+            // 新しい演習を開始（履歴は削除しない）
+          }
+        }
+      } catch (error) {
+        console.error('学習履歴の読み込みに失敗しました:', error);
+      }
+    }
+    
     setSelectedQuestionCount(count);
     setShowQuestionCountSelector(false);
     setSessionStartTime(Date.now());
@@ -292,7 +322,15 @@ export default function QuizPage() {
     if (hasProgress) {
       // 進捗がある場合は確認ダイアログを表示
       const confirmed = window.confirm(
-        `現在${Object.keys(answers).length}問回答済みです。\n問題数を${newCount}問に変更すると、現在の進捗はリセットされます。\n\n続行しますか？`
+        `⚠️ 問題数を変更すると、現在の学習履歴が削除されます！\n\n` +
+        `現在の状況:\n` +
+        `• ${Object.keys(answers).length}問回答済み\n` +
+        `• 正解: ${correctAnswers}問\n` +
+        `• 現在の問題: ${currentQuestionIndex + 1}問目\n\n` +
+        `問題数を${newCount}問に変更すると、\n` +
+        `現在の進捗は全てリセットされ、\n` +
+        `続きから再開することはできません。\n\n` +
+        `本当に問題数を変更しますか？`
       );
       
       if (!confirmed) {
@@ -312,19 +350,22 @@ export default function QuizPage() {
       if (newCount > actualAvailableQuestions) {
         alert(`利用可能な問題数（${actualAvailableQuestions}問）を超えています。全${actualAvailableQuestions}問で演習を開始します。`);
         newCount = actualAvailableQuestions;
-        setSelectedQuestionCount(newCount);
       }
 
-      // 新しい問題数を取得
+      // 学習履歴を削除
+      clearHistory();
+      
+      // 新しい問題セットを取得
       const newResponse = await fetch(`/api/quiz-questions?count=${newCount}`);
       if (!newResponse.ok) {
-        throw new Error('問題の取得に失敗しました');
+        throw new Error('新しい問題の取得に失敗しました');
       }
       const newData = await newResponse.json();
+      
+      // 状態をリセットして新しい問題セットを設定
       setAllQuestions(newData.questions);
       setAvailableQuestions(newData.totalQuestions);
-      
-      // 初期状態をリセット
+      setSelectedQuestionCount(newCount);
       setCurrentQuestionIndex(0);
       setSelectedAnswer(null);
       setShowResult(false);
@@ -332,25 +373,44 @@ export default function QuizPage() {
       setCorrectAnswers(0);
       setQuizCompleted(false);
       setIsReviewMode(false);
-      
-      // セッション開始時間を更新
       setSessionStartTime(Date.now());
-      
-      // モーダルを閉じる
       setShowQuestionCountModal(false);
       
-      // 学習履歴をクリア
-      localStorage.removeItem('quizHistory');
+      // 成功メッセージを表示
+      alert(`問題数を${newCount}問に変更しました。\n新しい演習を開始します。`);
       
     } catch (err) {
-      alert('問題数の変更に失敗しました。');
-      console.error('問題数変更エラー:', err);
+      alert('問題数の変更に失敗しました: ' + (err instanceof Error ? err.message : '不明なエラー'));
     }
   };
 
   // 問題数変更モーダルを開く
   const openQuestionCountModal = () => {
     setShowQuestionCountModal(true);
+  };
+
+  // TOPに戻る際の確認処理
+  const handleGoHome = () => {
+    const hasProgress = Object.keys(answers).length > 0;
+    
+    if (hasProgress) {
+      const choice = window.confirm(
+        `現在${Object.keys(answers).length}問回答済みです。\n\n` +
+        `「OK」を押すと学習履歴を保持してホームに戻ります。\n` +
+        `次回問題演習にアクセスした際に、続きから再開できます。\n\n` +
+        `「キャンセル」を押すとそのまま演習を続けます。\n\n` +
+        `学習履歴を保持してホームに戻りますか？`
+      );
+      
+      if (choice) {
+        // 履歴を保持してホームに戻る
+        window.location.href = '/';
+      }
+      // キャンセルの場合は何もしない（そのまま演習を続ける）
+    } else {
+      // 進捗がない場合は直接ホームに戻る
+      window.location.href = '/';
+    }
   };
 
   // 問題数選択画面
@@ -373,10 +433,13 @@ export default function QuizPage() {
               <Brain className="w-12 h-12 mx-auto text-blue-500 mb-4" />
               <h1 className="text-3xl font-bold text-gray-800">問題演習</h1>
               <p className="text-gray-500 mt-2">問題数を選択して、実力を試しましょう</p>
-              <Link href="/" className="inline-flex items-center mt-6 text-gray-600 hover:text-blue-500 transition-colors">
+              <button 
+                onClick={handleGoHome}
+                className="inline-flex items-center mt-6 text-gray-600 hover:text-blue-500 transition-colors"
+              >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 ホームに戻る
-              </Link>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -500,13 +563,13 @@ export default function QuizPage() {
                   間違えた問題を復習する
                 </button>
               )}
-              <Link
-                href="/"
+              <button
+                onClick={handleGoHome}
                 className="w-full px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 ホームに戻る
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -535,13 +598,6 @@ export default function QuizPage() {
                 <span className="text-sm text-blue-600 font-medium">
                   {selectedQuestionCount}問演習
                 </span>
-                <button
-                  onClick={openQuestionCountModal}
-                  className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs hover:bg-blue-200 transition-colors"
-                >
-                  <Target className="w-3 h-3 mr-1" />
-                  変更
-                </button>
               </div>
               {answeredQuestions > 0 && (
                 <p className="text-sm text-green-600 mt-1">
@@ -562,6 +618,22 @@ export default function QuizPage() {
               <div className="text-sm text-gray-500">
                 正解: {correctAnswers} / {answeredQuestions}問
               </div>
+              <div className="flex gap-2 mt-3">
+                <button
+                  onClick={openQuestionCountModal}
+                  className="inline-flex items-center px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm"
+                >
+                  <Target className="w-4 h-4 mr-1" />
+                  問題数変更
+                </button>
+                <button
+                  onClick={handleGoHome}
+                  className="inline-flex items-center px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-1" />
+                  TOPに戻る
+                </button>
+              </div>
               {wrongAnswersCount > 0 && !isReviewMode && (
                 <button
                   onClick={reviewWrongAnswers}
@@ -571,13 +643,6 @@ export default function QuizPage() {
                   間違えた問題を復習
                 </button>
               )}
-              <button
-                onClick={resetQuiz}
-                className="inline-flex items-center mt-3 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
-              >
-                <ArrowLeft className="w-4 h-4 mr-1" />
-                TOPに戻る
-              </button>
             </div>
           </div>
         </div>
@@ -673,13 +738,6 @@ export default function QuizPage() {
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 前の問題
-              </button>
-              <button
-                onClick={resetQuiz}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                TOPに戻る
               </button>
             </div>
 
