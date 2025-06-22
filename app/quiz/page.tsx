@@ -7,6 +7,16 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { LearningHistoryManager } from '@/app/utils/learningHistory';
 
+// Fisher-Yates shuffle algorithm
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 // 学習履歴の型定義
 interface QuizHistory {
   answers: { [key: string]: string }; // 問題IDをキーとして使用
@@ -34,6 +44,7 @@ export default function QuizPage() {
   const [selectedQuestionCount, setSelectedQuestionCount] = useState<number | null>(null); // 選択された問題数
   const [sessionStartTime, setSessionStartTime] = useState<number>(0); // セッション開始時間
   const [showQuestionCountModal, setShowQuestionCountModal] = useState(false); // 問題数変更モーダルの表示状態
+  const [availableQuestions, setAvailableQuestions] = useState(0); // 利用可能な問題数
 
   // 問題数オプション
   const questionCountOptions = [
@@ -75,8 +86,9 @@ export default function QuizPage() {
       if (!response.ok) {
         throw new Error('問題の取得に失敗しました');
       }
-      const data: Question[] = await response.json();
-      setAllQuestions(data);
+      const data = await response.json();
+      setAllQuestions(data.questions); // data.questionsから配列を取得
+      setAvailableQuestions(data.totalQuestions); // 利用可能な問題数を設定
       
       if (history) {
         // 履歴から状態を復元
@@ -273,7 +285,7 @@ export default function QuizPage() {
   };
 
   // 問題数変更の処理
-  const handleQuestionCountChange = (newCount: number) => {
+  const handleQuestionCountChange = async (newCount: number) => {
     // 現在の進捗を確認
     const hasProgress = Object.keys(answers).length > 0;
     
@@ -288,45 +300,52 @@ export default function QuizPage() {
       }
     }
 
-    // 問題数を変更
-    setSelectedQuestionCount(newCount);
-    
-    // 選択された問題数分の問題を取得
-    const questions: Question[] = [];
-    allQuestions.forEach((question: Question) => {
-      questions.push(question);
-    });
-    
-    // 利用可能な問題数を確認
-    const availableQuestions = questions.length;
-    
-    if (newCount > availableQuestions) {
-      alert(`利用可能な問題数（${availableQuestions}問）を超えています。全${availableQuestions}問で演習を開始します。`);
-      newCount = availableQuestions;
-      setSelectedQuestionCount(newCount);
+    try {
+      // 実際の利用可能な問題数を取得
+      const response = await fetch(`/api/quiz-questions?count=1`);
+      if (!response.ok) {
+        throw new Error('問題数の取得に失敗しました');
+      }
+      const data = await response.json();
+      const actualAvailableQuestions = data.totalQuestions;
+      
+      if (newCount > actualAvailableQuestions) {
+        alert(`利用可能な問題数（${actualAvailableQuestions}問）を超えています。全${actualAvailableQuestions}問で演習を開始します。`);
+        newCount = actualAvailableQuestions;
+        setSelectedQuestionCount(newCount);
+      }
+
+      // 新しい問題数を取得
+      const newResponse = await fetch(`/api/quiz-questions?count=${newCount}`);
+      if (!newResponse.ok) {
+        throw new Error('問題の取得に失敗しました');
+      }
+      const newData = await newResponse.json();
+      setAllQuestions(newData.questions);
+      setAvailableQuestions(newData.totalQuestions);
+      
+      // 初期状態をリセット
+      setCurrentQuestionIndex(0);
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setAnswers({});
+      setCorrectAnswers(0);
+      setQuizCompleted(false);
+      setIsReviewMode(false);
+      
+      // セッション開始時間を更新
+      setSessionStartTime(Date.now());
+      
+      // モーダルを閉じる
+      setShowQuestionCountModal(false);
+      
+      // 学習履歴をクリア
+      localStorage.removeItem('quizHistory');
+      
+    } catch (err) {
+      alert('問題数の変更に失敗しました。');
+      console.error('問題数変更エラー:', err);
     }
-    
-    // Fisher-Yatesシャッフルアルゴリズムで重複のないランダム選択
-    const shuffledQuestions = shuffleArray([...questions]).slice(0, newCount);
-    setAllQuestions(shuffledQuestions);
-    
-    // 初期状態をリセット
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setAnswers({});
-    setCorrectAnswers(0);
-    setQuizCompleted(false);
-    setIsReviewMode(false);
-    
-    // セッション開始時間を更新
-    setSessionStartTime(Date.now());
-    
-    // モーダルを閉じる
-    setShowQuestionCountModal(false);
-    
-    // 学習履歴をクリア
-    localStorage.removeItem('quizHistory');
   };
 
   // 問題数変更モーダルを開く
@@ -354,6 +373,10 @@ export default function QuizPage() {
               <Brain className="w-12 h-12 mx-auto text-blue-500 mb-4" />
               <h1 className="text-3xl font-bold text-gray-800">問題演習</h1>
               <p className="text-gray-500 mt-2">問題数を選択して、実力を試しましょう</p>
+              <Link href="/" className="inline-flex items-center mt-6 text-gray-600 hover:text-blue-500 transition-colors">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                ホームに戻る
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -548,13 +571,13 @@ export default function QuizPage() {
                   間違えた問題を復習
                 </button>
               )}
-              <Link
-                href="/"
+              <button
+                onClick={resetQuiz}
                 className="inline-flex items-center mt-3 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
               >
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 TOPに戻る
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -651,13 +674,13 @@ export default function QuizPage() {
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 前の問題
               </button>
-              <Link
-                href="/"
+              <button
+                onClick={resetQuiz}
                 className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 TOPに戻る
-              </Link>
+              </button>
             </div>
 
             {!showResult ? (

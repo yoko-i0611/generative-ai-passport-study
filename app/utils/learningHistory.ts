@@ -166,7 +166,10 @@ export class LearningHistoryManager {
   }
 
   // 正解判定（改善版）
-  private static isAnswerCorrect(questionText: string, userAnswer: string): boolean {
+  private static isAnswerCorrect(questionText: string, userAnswer: string | null): boolean {
+    if (userAnswer === null) {
+      return false;
+    }
     // 問題データベースから正解を検索
     for (const course of courses) {
       for (const quiz of course.quiz) {

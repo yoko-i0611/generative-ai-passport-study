@@ -25,8 +25,10 @@ export type Question = {
   options: string[];
   correctAnswer: string;
   explanation: string;
-  chapter?: string; // 章の情報を追加
-  difficulty?: 'easy' | 'medium' | 'hard'; // 難易度を追加
+  course?: string;
+  chapter?: string;
+  section?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
 };
 
 // 学習履歴の拡張型定義
@@ -56,7 +58,7 @@ export type LearningHistory = {
 export type QuizSession = {
   id: string;
   timestamp: number;
-  answers: { [key: string]: string };
+  answers: { [key: string]: string | null };
   correctAnswers: number;
   totalQuestions: number;
   accuracy: number;

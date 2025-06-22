@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { courses } from '../../data/courses';
+import { courses } from '../../../data/courses';
 import { Question } from '@/types';
 
 // Fisher-Yates shuffle algorithm
@@ -16,35 +16,32 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const countParam = searchParams.get('count');
   
-  // デフォルト値を10に設定
-  let count = 10;
-  if (countParam) {
-    const parsedCount = parseInt(countParam, 10);
-    if (!isNaN(parsedCount)) {
-      count = parsedCount;
-    }
-  }
+  const count = countParam ? parseInt(countParam, 10) : 10;
 
   if (count <= 0) {
-    return NextResponse.json({ error: 'Invalid question count' }, { status: 400 });
+    return NextResponse.json({ error: 'Count must be a positive integer' }, { status: 400 });
   }
 
   try {
-    // Add courseId and chapterTitle to each question for context
-    const questionsWithContext = courses.flatMap(course => 
-      course.quiz.flatMap(q => 
-        q.questions.map(question => ({
+    const allQuestions = courses.flatMap(course =>
+      (course.quiz || []).flatMap(q =>
+        (q.questions || []).map(question => ({
           ...question,
-          courseId: course.id,
-          chapterTitle: course.title,
+          course: course.title,
+          chapter: course.title,
+          section: q.title,
         }))
       )
     );
 
-    const shuffledQuestions = shuffleArray(questionsWithContext);
+    const totalQuestions = allQuestions.length;
+    const shuffledQuestions = shuffleArray(allQuestions);
     const selectedQuestions = shuffledQuestions.slice(0, count);
 
-    return NextResponse.json(selectedQuestions);
+    return NextResponse.json({
+      questions: selectedQuestions,
+      totalQuestions: totalQuestions,
+    });
   } catch (error) {
     console.error('Error fetching quiz questions:', error);
     return NextResponse.json({ error: 'Failed to fetch quiz questions' }, { status: 500 });
