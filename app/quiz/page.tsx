@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { courses } from '../../data/courses';
+import { useState, useEffect, useMemo } from 'react';
 import { Question, Course, Quiz } from '@/types';
-import { Brain, CheckCircle, XCircle, ArrowLeft, ArrowRight, RotateCcw, Clock, Target } from 'lucide-react';
+import { Brain, CheckCircle, XCircle, ArrowLeft, ArrowRight, RotateCcw, Clock, Target, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { LearningHistoryManager } from '@/app/utils/learningHistory';
@@ -22,6 +21,8 @@ interface QuizHistory {
 
 export default function QuizPage() {
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -42,29 +43,6 @@ export default function QuizPage() {
     { count: 50, label: '50問', time: '約25分', description: '全問題に挑戦' },
   ];
 
-  // 利用可能な問題数を計算
-  const getAvailableQuestionCount = (): number => {
-    let totalQuestions = 0;
-    courses.forEach((course: Course) => {
-      course.quiz.forEach((quiz: Quiz) => {
-        totalQuestions += quiz.questions.length;
-      });
-    });
-    return totalQuestions;
-  };
-
-  const availableQuestions = getAvailableQuestionCount();
-
-  // Fisher-Yatesシャッフルアルゴリズム
-  const shuffleArray = <T,>(array: T[]): T[] => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
-
   // ローカルストレージから学習履歴を読み込み
   useEffect(() => {
     const savedHistory = localStorage.getItem('quizHistory');
@@ -74,34 +52,49 @@ export default function QuizPage() {
         // 24時間以内の履歴のみ有効とする
         const isRecent = Date.now() - history.timestamp < 24 * 60 * 60 * 1000;
         
-        if (isRecent && !history.completed) {
-          setAnswers(history.answers);
-          setCorrectAnswers(history.correctAnswers);
-          setCurrentQuestionIndex(history.currentQuestionIndex);
-          setQuizCompleted(false);
-          setIsReviewMode(history.isReviewMode || false);
-          setSelectedQuestionCount(history.selectedQuestionCount || null);
-          setShowQuestionCountSelector(false); // 既存のクイズがある場合は選択画面をスキップ
-          
-          // 履歴から問題を復元
-          if (history.selectedQuestionCount) {
-            const questions: Question[] = [];
-            courses.forEach((course: Course) => {
-              course.quiz.forEach((quiz: Quiz) => {
-                questions.push(...quiz.questions);
-              });
-            });
-            
-            // 選択された問題数分の問題を取得
-            const shuffledQuestions = shuffleArray([...questions]).slice(0, history.selectedQuestionCount);
-            setAllQuestions(shuffledQuestions);
-          }
+        if (isRecent && !history.completed && history.selectedQuestionCount) {
+          // 履歴がある場合は、APIから問題を取得
+          fetchQuestions(history.selectedQuestionCount, history);
+        } else {
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('学習履歴の読み込みに失敗しました:', error);
+        setIsLoading(false);
       }
+    } else {
+      setIsLoading(false);
     }
   }, []);
+
+  const fetchQuestions = async (count: number, history?: QuizHistory) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/quiz-questions?count=${count}`);
+      if (!response.ok) {
+        throw new Error('問題の取得に失敗しました');
+      }
+      const data: Question[] = await response.json();
+      setAllQuestions(data);
+      
+      if (history) {
+        // 履歴から状態を復元
+        setAnswers(history.answers);
+        setCorrectAnswers(history.correctAnswers);
+        setCurrentQuestionIndex(history.currentQuestionIndex);
+        setQuizCompleted(false);
+        setIsReviewMode(history.isReviewMode || false);
+        setSelectedQuestionCount(history.selectedQuestionCount || null);
+        setShowQuestionCountSelector(false);
+      }
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '不明なエラーが発生しました');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // 学習履歴をローカルストレージに保存
   const saveHistory = (newAnswers: { [key: string]: string }, newCorrectAnswers: number, newCurrentIndex: number, completed: boolean) => {
@@ -122,31 +115,8 @@ export default function QuizPage() {
   const handleQuestionCountSelect = (count: number) => {
     setSelectedQuestionCount(count);
     setShowQuestionCountSelector(false);
-    
-    // セッション開始時間を記録
     setSessionStartTime(Date.now());
-    
-    // 選択された問題数分の問題を取得
-    const questions: Question[] = [];
-    courses.forEach((course: Course) => {
-      course.quiz.forEach((quiz: Quiz) => {
-        questions.push(...quiz.questions);
-      });
-    });
-    
-    // 利用可能な問題数を確認
-    const availableQuestions = questions.length;
-    
-    if (count > availableQuestions) {
-      // 選択した問題数が利用可能な問題数を超える場合
-      alert(`利用可能な問題数（${availableQuestions}問）を超えています。全${availableQuestions}問で演習を開始します。`);
-      count = availableQuestions;
-      setSelectedQuestionCount(count);
-    }
-    
-    // Fisher-Yatesシャッフルアルゴリズムで重複のないランダム選択
-    const shuffledQuestions = shuffleArray([...questions]).slice(0, count);
-    setAllQuestions(shuffledQuestions);
+    fetchQuestions(count);
     
     // 初期状態をリセット
     setCurrentQuestionIndex(0);
@@ -158,7 +128,7 @@ export default function QuizPage() {
     setIsReviewMode(false);
   };
 
-  const currentQuestion = allQuestions[currentQuestionIndex];
+  const currentQuestion = useMemo(() => allQuestions[currentQuestionIndex], [allQuestions, currentQuestionIndex]);
   const answeredQuestions = Object.keys(answers).length;
   const currentAccuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
 
@@ -323,10 +293,8 @@ export default function QuizPage() {
     
     // 選択された問題数分の問題を取得
     const questions: Question[] = [];
-    courses.forEach((course: Course) => {
-      course.quiz.forEach((quiz: Quiz) => {
-        questions.push(...quiz.questions);
-      });
+    allQuestions.forEach((question: Question) => {
+      questions.push(question);
     });
     
     // 利用可能な問題数を確認
@@ -369,138 +337,73 @@ export default function QuizPage() {
   // 問題数選択画面
   if (showQuestionCountSelector) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* ヘッダー */}
-          <div className="text-center mb-12">
-            <Link href="/" className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              ホームに戻る
-            </Link>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              演習問題に挑戦
-            </h1>
-            <p className="text-xl text-gray-600 mb-2">
-              空き時間に合わせて問題数を選択してください
-            </p>
-            <p className="text-lg text-gray-500">
-              全{availableQuestions}問から重複なしでランダム出題されます
-            </p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center">
+            <Loader2 className="w-12 h-12 animate-spin text-blue-500" />
+            <p className="mt-4 text-gray-600">準備中です...</p>
           </div>
-
-          {/* 問題数選択カード */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {questionCountOptions.map((option) => (
-              <motion.div
-                key={option.count}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="card cursor-pointer border-2 border-transparent hover:border-primary-200 transition-all duration-200"
-                onClick={() => handleQuestionCountSelect(option.count)}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
-                    <Target className="w-6 h-6 text-primary-600 mr-3" />
-                    <h3 className="text-2xl font-bold text-gray-900">{option.label}</h3>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Clock className="w-4 h-4 mr-1" />
-                    {option.time}
-                  </div>
-                </div>
-                <p className="text-gray-600 mb-4">{option.description}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">
-                    {option.count <= availableQuestions 
-                      ? `全${availableQuestions}問中${option.count}問を重複なしで出題`
-                      : `利用可能な問題数: ${availableQuestions}問`
-                    }
-                  </span>
-                  <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                    <ArrowRight className="w-4 h-4 text-primary-600" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* 注意事項 */}
-          <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-start">
-              <Brain className="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-2">学習のポイント</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• 短時間でも継続的な学習が効果的です</li>
-                  <li>• 間違えた問題は復習機能で再度挑戦できます</li>
-                  <li>• 学習履歴は24時間保存されます</li>
-                  <li>• 選択した問題数分の重複しない問題が出題されます</li>
-                  <li>• 利用可能な問題数: {availableQuestions}問</li>
-                </ul>
-              </div>
+        ) : (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-lg"
+          >
+            <div className="text-center mb-8">
+              <Brain className="w-12 h-12 mx-auto text-blue-500 mb-4" />
+              <h1 className="text-3xl font-bold text-gray-800">問題演習</h1>
+              <p className="text-gray-500 mt-2">問題数を選択して、実力を試しましょう</p>
             </div>
-          </div>
-        </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {questionCountOptions.map((option) => (
+                <motion.button
+                  key={option.count}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleQuestionCountSelect(option.count)}
+                  className="p-6 text-left bg-white rounded-lg border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-300"
+                >
+                  <div className="text-2xl font-bold text-gray-800">{option.label}</div>
+                  <div className="text-sm text-gray-500 mt-1">{option.time}</div>
+                  <p className="text-gray-600 mt-2">{option.description}</p>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-12 h-12 animate-spin text-blue-500" />
+        <p className="ml-4 text-gray-600">問題を読み込んでいます...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-red-500">
+        <p>エラー: {error}</p>
       </div>
     );
   }
 
   if (allQuestions.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">問題を読み込み中...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // 学習履歴がある場合の復元確認
-  const savedHistory = localStorage.getItem('quizHistory');
-  let hasIncompleteHistory = false;
-  if (savedHistory) {
-    try {
-      const history: QuizHistory = JSON.parse(savedHistory);
-      const isRecent = Date.now() - history.timestamp < 24 * 60 * 60 * 1000;
-      hasIncompleteHistory = isRecent && !history.completed;
-    } catch (error) {
-      // エラーが発生した場合は履歴を無視
-    }
-  }
-
-  if (hasIncompleteHistory && answeredQuestions === 0) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="max-w-md mx-auto px-4">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">学習を続けますか？</h2>
-            <p className="text-gray-600 mb-6">
-              前回の学習履歴が見つかりました。続きから学習を再開しますか？
-            </p>
-            <div className="space-y-3">
-              <button
-                onClick={() => {
-                  const history: QuizHistory = JSON.parse(savedHistory!);
-                  setAnswers(history.answers);
-                  setCorrectAnswers(history.correctAnswers);
-                  setCurrentQuestionIndex(history.currentQuestionIndex);
-                  setSelectedAnswer(history.answers[allQuestions[history.currentQuestionIndex]?.question] || null);
-                  setIsReviewMode(history.isReviewMode || false);
-                }}
-                className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                続きから学習を再開
-              </button>
-              <button
-                onClick={clearHistory}
-                className="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                新しい学習を開始
-              </button>
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <p className="text-gray-600 mb-4">問題が見つかりませんでした。</p>
+        <button
+          onClick={() => setShowQuestionCountSelector(true)}
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+        >
+          問題数を選択し直す
+        </button>
       </div>
     );
   }
