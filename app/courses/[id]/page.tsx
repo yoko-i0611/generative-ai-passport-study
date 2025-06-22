@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
-import { courses } from '@/data/courses';
+import { courses } from '../../../data/courses';
 import { 
   ArrowLeft, 
   BookOpen, 

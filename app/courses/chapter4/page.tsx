@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ChevronLeft, BookOpen, Brain, CheckCircle, Circle, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { courses } from '@/data/courses';
+import { courses } from '../../../data/courses';
 import ReactMarkdown from 'react-markdown';
 
 const getBadgeClass = (color: string) => {

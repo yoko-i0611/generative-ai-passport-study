@@ -3,7 +3,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { courses } from '@/data/courses';
+import { courses } from '../data/courses';
+import LearningProgress from './components/LearningProgress';
+import ComprehensiveProgress from './components/ComprehensiveProgress';
 import { 
   BookOpen, 
   Brain, 
@@ -16,6 +18,9 @@ import {
   Clock,
   Star
 } from 'lucide-react';
+
+// 環境変数からチャット機能の有効/無効を取得
+const isChatEnabled = process.env.NEXT_PUBLIC_ENABLE_CHAT === 'true';
 
 export default function HomePage() {
   const getColorGradient = (color: string) => {
@@ -76,9 +81,11 @@ export default function HomePage() {
               </Link>
             </nav>
             <div className="flex items-center space-x-4">
-              <Link href="#contact" className="btn-primary">
-                質問する
-              </Link>
+              {isChatEnabled && (
+                <Link href="/chat" className="btn-primary">
+                  質問する
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -159,6 +166,31 @@ export default function HomePage() {
                 </div>
               </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 学習進捗セクション */}
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-8"
+          >
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              あなたの学習進捗
+            </h2>
+            <p className="text-lg text-gray-600">
+              問題演習の履歴から習得レベルを分析し、最適な学習パスを提案します
+            </p>
+          </motion.div>
+          
+          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <LearningProgress />
+            <ComprehensiveProgress />
           </div>
         </div>
       </section>

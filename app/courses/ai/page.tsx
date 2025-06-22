@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { courses } from '@/data/courses';
+import { courses } from '../../../data/courses';
 import { ChevronLeft, Clock, BookOpen, CheckCircle, Brain, Circle } from 'lucide-react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
