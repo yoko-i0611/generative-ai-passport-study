@@ -14,21 +14,21 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://ai-learning-platform.vercel.app'),
+  metadataBase: new URL('https://generative-ai-passport-study.vercel.app'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'AI学習プラットフォーム - 生成AIと情報リテラシーを学ぶ',
     description: 'AI（人工知能）、生成AI、情報リテラシー、プロンプト制作を学ぶオンライン学習プラットフォーム。',
-    url: 'https://ai-learning-platform.vercel.app',
+    url: 'https://generative-ai-passport-study.vercel.app',
     siteName: 'AI学習プラットフォーム',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/api/og',
         width: 1200,
         height: 630,
-        alt: 'AI学習プラットフォーム',
+        alt: 'AI学習プラットフォーム - トップページ',
       },
     ],
     locale: 'ja_JP',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AI学習プラットフォーム - 生成AIと情報リテラシーを学ぶ',
     description: 'AI（人工知能）、生成AI、情報リテラシー、プロンプト制作を学ぶオンライン学習プラットフォーム。',
-    images: ['/og-image.jpg'],
+    images: ['/api/og'],
   },
   robots: {
     index: true,
