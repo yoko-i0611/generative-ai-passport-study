@@ -51,12 +51,14 @@ export default function QuizPage() {
     { count: 10, label: '10問', time: '約5分', description: '短時間でサクッと復習' },
     { count: 20, label: '20問', time: '約10分', description: '標準的な演習時間' },
     { count: 30, label: '30問', time: '約15分', description: 'じっくりと学習' },
-    { count: 50, label: '50問', time: '約25分', description: '全問題に挑戦' },
+    { count: 50, label: '50問', time: '約25分', description: '模擬試験レベル' },
+    { count: 100, label: '100問', time: '約50分', description: '全問題制覇・完全マスター' },
   ];
 
   // ローカルストレージから学習履歴を読み込み
   useEffect(() => {
     const savedHistory = localStorage.getItem('quizHistory');
+    
     if (savedHistory) {
       try {
         const history: QuizHistory = JSON.parse(savedHistory);
@@ -65,17 +67,17 @@ export default function QuizPage() {
         
         if (isRecent && !history.completed && history.selectedQuestionCount) {
           // 履歴がある場合は、APIから問題を取得
+          console.log('📋 保存された履歴を復元中...');
           fetchQuestions(history.selectedQuestionCount, history);
-        } else {
-          setIsLoading(false);
+          return;
         }
       } catch (error) {
         console.error('学習履歴の読み込みに失敗しました:', error);
-        setIsLoading(false);
       }
-    } else {
-      setIsLoading(false);
     }
+    
+    // 履歴がない場合や無効な場合は問題数選択画面を表示
+    setIsLoading(false);
   }, []);
 
   const fetchQuestions = async (count: number, history?: QuizHistory) => {
@@ -87,6 +89,10 @@ export default function QuizPage() {
         throw new Error('問題の取得に失敗しました');
       }
       const data = await response.json();
+      
+      // デバッグ情報を追加
+      console.log('📊 問題データ取得成功:', data.questions.length, '問');
+      
       setAllQuestions(data.questions); // data.questionsから配列を取得
       setAvailableQuestions(data.totalQuestions); // 利用可能な問題数を設定
       
@@ -98,8 +104,10 @@ export default function QuizPage() {
         setQuizCompleted(false);
         setIsReviewMode(history.isReviewMode || false);
         setSelectedQuestionCount(history.selectedQuestionCount || null);
-        setShowQuestionCountSelector(false);
       }
+      
+      // 問題数選択画面を隠す
+      setShowQuestionCountSelector(false);
 
     } catch (err) {
       setError(err instanceof Error ? err.message : '不明なエラーが発生しました');
@@ -201,6 +209,27 @@ export default function QuizPage() {
     setCorrectAnswers(newCorrectAnswers);
     setShowResult(true);
 
+    // リアルタイム学習履歴を記録
+    console.log('🎯 問題回答記録開始:', {
+      question: currentQuestion.question.substring(0, 50) + '...',
+      chapter: currentQuestion.chapter,
+      selectedAnswer,
+      correctAnswer: currentQuestion.correctAnswer,
+      isCorrect
+    });
+    
+    try {
+      LearningHistoryManager.recordAnswer(
+        currentQuestion.question,
+        selectedAnswer,
+        isCorrect,
+        Date.now()
+      );
+      console.log('✅ リアルタイム学習履歴記録成功');
+    } catch (error) {
+      console.error('❌ 学習履歴記録エラー:', error);
+    }
+
     // 学習履歴を保存
     saveHistory(newAnswers, newCorrectAnswers, currentQuestionIndex, false);
   };
@@ -220,19 +249,42 @@ export default function QuizPage() {
       saveHistory(answers, correctAnswers, currentQuestionIndex, true);
       
       // 総合学習履歴にセッションを追加
-      const sessionDuration = Math.round((Date.now() - sessionStartTime) / 1000); // 秒単位
+      const currentTime = Date.now();
+      const sessionDuration = sessionStartTime > 0 ? Math.round((currentTime - sessionStartTime) / 1000) : 0; // 秒単位
       const finalAccuracy = Math.round((correctAnswers / allQuestions.length) * 100);
       
-      LearningHistoryManager.addSession({
-        timestamp: Date.now(),
-        answers,
+      // デバッグ情報
+      console.log('Session End Debug:', {
+        sessionStartTime,
+        currentTime,
+        rawDuration: currentTime - sessionStartTime,
+        sessionDuration,
+        finalAccuracy
+      });
+      
+      console.log('🏁 セッション完了 - 学習履歴に追加中...', {
+        answers: Object.keys(answers).length,
         correctAnswers,
         totalQuestions: allQuestions.length,
         accuracy: finalAccuracy,
-        duration: sessionDuration,
-        selectedQuestionCount: selectedQuestionCount || allQuestions.length,
-        isReviewMode,
+        duration: sessionDuration
       });
+      
+      try {
+        LearningHistoryManager.addSession({
+          timestamp: currentTime,
+          answers,
+          correctAnswers,
+          totalQuestions: allQuestions.length,
+          accuracy: finalAccuracy,
+          duration: Math.max(0, sessionDuration), // 負の値を防ぐ
+          selectedQuestionCount: selectedQuestionCount || allQuestions.length,
+          isReviewMode,
+        });
+        console.log('✅ セッション学習履歴記録成功 - タイムスタンプ:', new Date(currentTime));
+      } catch (error) {
+        console.error('❌ セッション学習履歴記録エラー:', error);
+      }
     }
   };
 
@@ -659,9 +711,16 @@ export default function QuizPage() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
           <div className="mb-8">
             <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                問題 {currentQuestionIndex + 1}
-              </h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  問題 {currentQuestionIndex + 1}
+                </h3>
+                {currentQuestion?.chapter && (
+                  <span className="text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                    {currentQuestion.chapter}
+                  </span>
+                )}
+              </div>
               <p className="text-gray-700">{currentQuestion?.question}</p>
             </div>
 

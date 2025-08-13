@@ -12,7 +12,11 @@ export default function Chat() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [lastRequestTime, setLastRequestTime] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // レート制限（秒）
+  const RATE_LIMIT_SECONDS = 3;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -26,11 +30,25 @@ export default function Chat() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
+    // レート制限チェック
+    const now = Date.now();
+    if (now - lastRequestTime < RATE_LIMIT_SECONDS * 1000) {
+      setError(`${RATE_LIMIT_SECONDS}秒後に再度お試しください。`);
+      return;
+    }
+
+    // メッセージ長さチェック
+    if (input.length > 1000) {
+      setError('メッセージが長すぎます。1000文字以内で入力してください。');
+      return;
+    }
+
     const userMessage = input.trim();
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
     setError('');
+    setLastRequestTime(now);
 
     try {
       const response = await fetch('/api/chat', {

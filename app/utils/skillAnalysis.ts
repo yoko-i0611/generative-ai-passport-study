@@ -177,11 +177,11 @@ export const generateProgressData = (skillAnalysis: SkillAnalysis) => {
         skillAnalysis.chapterLevels.chapter5
       ],
       backgroundColor: [
-        'rgba(59, 130, 246, 0.8)',
-        'rgba(16, 185, 129, 0.8)',
-        'rgba(245, 158, 11, 0.8)',
-        'rgba(239, 68, 68, 0.8)',
-        'rgba(139, 92, 246, 0.8)'
+        'rgba(59, 130, 246, 0.8)',   // primary - 第1章
+        'rgba(16, 185, 129, 0.8)',   // secondary - 第2章
+        'rgba(245, 158, 11, 0.8)',   // info - 第3章
+        'rgba(239, 68, 68, 0.8)',    // warning - 第4章
+        'rgba(139, 92, 246, 0.8)'    // accent - 第5章
       ],
       borderColor: [
         'rgba(59, 130, 246, 1)',

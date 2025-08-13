@@ -9,32 +9,46 @@ interface ComprehensiveProgressProps {
   className?: string;
 }
 
-// 学習領域と章の対応関係
+// 学習領域と章の対応関係（現在の5章構成に対応）
 const getChapterForArea = (area: string): string => {
   // 実際に保存されている章名（'chapter1', 'chapter2'など）を日本語の章名に変換
   const chapterMapping: { [key: string]: string } = {
-    'chapter1': '第1章 生成AIの基礎知識',
-    'chapter2': '第2章 プロンプトエンジニアリング', 
-    'chapter3': '第3章 生成AIの活用方法',
-    'chapter4': '第4章 生成AIの倫理とリスク',
-    'chapter5': '第5章 生成AIの最新トレンド',
-    // 日本語の学習領域名も対応（念のため）
-    '生成AIの基礎知識': '第1章 生成AIの基礎知識',
-    '生成AIの仕組み': '第1章 生成AIの基礎知識',
-    '機械学習': '第1章 生成AIの基礎知識',
-    'ディープラーニング': '第1章 生成AIの基礎知識',
-    'プロンプトエンジニアリング': '第2章 プロンプトエンジニアリング',
-    'プロンプト設計': '第2章 プロンプトエンジニアリング',
-    'プロンプト技法': '第2章 プロンプトエンジニアリング',
-    '生成AIの活用方法': '第3章 生成AIの活用方法',
-    'ビジネス活用': '第3章 生成AIの活用方法',
-    '実践的活用': '第3章 生成AIの活用方法',
-    '生成AIの倫理とリスク': '第4章 生成AIの倫理とリスク',
-    '倫理的考慮': '第4章 生成AIの倫理とリスク',
-    'リスク管理': '第4章 生成AIの倫理とリスク',
-    '生成AIの最新トレンド': '第5章 生成AIの最新トレンド',
-    '最新技術': '第5章 生成AIの最新トレンド',
-    '将来展望': '第5章 生成AIの最新トレンド'
+    'chapter1': '第1章 AI（人工知能）',
+    'chapter2': '第2章 生成AI',
+    'chapter3': '第3章 情報リテラシー',
+    'chapter4': '第4章 テキスト生成AIのプロンプト制作と実例',
+    'chapter5': '第5章 実践と応用',
+    // 日本語の学習領域名も対応
+    'AI（人工知能）': '第1章 AI（人工知能）',
+    'AI基礎': '第1章 AI（人工知能）',
+    'AIの基礎知識': '第1章 AI（人工知能）',
+    '機械学習': '第1章 AI（人工知能）',
+    'ディープラーニング': '第1章 AI（人工知能）',
+    'ニューラルネットワーク': '第1章 AI（人工知能）',
+    '生成AI': '第2章 生成AI',
+    '生成AIの基礎': '第2章 生成AI',
+    'GPT': '第2章 生成AI',
+    'BERT': '第2章 生成AI',
+    'Transformer': '第2章 生成AI',
+    'LLM': '第2章 生成AI',
+    '大規模言語モデル': '第2章 生成AI',
+    '情報リテラシー': '第3章 情報リテラシー',
+    'AI倫理': '第3章 情報リテラシー',
+    'AIバイアス': '第3章 情報リテラシー',
+    'プライバシー': '第3章 情報リテラシー',
+    'セキュリティ': '第3章 情報リテラシー',
+    'プロンプトエンジニアリング': '第4章 テキスト生成AIのプロンプト制作と実例',
+    'プロンプト設計': '第4章 テキスト生成AIのプロンプト制作と実例',
+    'プロンプト技法': '第4章 テキスト生成AIのプロンプト制作と実例',
+    'Zero-Shot': '第4章 テキスト生成AIのプロンプト制作と実例',
+    'Few-Shot': '第4章 テキスト生成AIのプロンプト制作と実例',
+    'Chain-of-Thought': '第4章 テキスト生成AIのプロンプト制作と実例',
+    '実践と応用': '第5章 実践と応用',
+    'AI活用事例': '第5章 実践と応用',
+    'ビジネス活用': '第5章 実践と応用',
+    '実践的活用': '第5章 実践と応用',
+    'AI技術動向': '第5章 実践と応用',
+    '将来展望': '第5章 実践と応用'
   };
   
   return chapterMapping[area] || '該当なし';
@@ -49,21 +63,35 @@ const getChapterUrl = (area: string): string => {
     'chapter4': '/courses/chapter4',
     'chapter5': '/courses/chapter5',
     // 日本語の学習領域名も対応
-    '生成AIの基礎知識': '/courses/chapter1',
-    '生成AIの仕組み': '/courses/chapter1',
+    'AI（人工知能）': '/courses/chapter1',
+    'AI基礎': '/courses/chapter1',
+    'AIの基礎知識': '/courses/chapter1',
     '機械学習': '/courses/chapter1',
     'ディープラーニング': '/courses/chapter1',
-    'プロンプトエンジニアリング': '/courses/chapter2',
-    'プロンプト設計': '/courses/chapter2',
-    'プロンプト技法': '/courses/chapter2',
-    '生成AIの活用方法': '/courses/chapter3',
-    'ビジネス活用': '/courses/chapter3',
-    '実践的活用': '/courses/chapter3',
-    '生成AIの倫理とリスク': '/courses/chapter4',
-    '倫理的考慮': '/courses/chapter4',
-    'リスク管理': '/courses/chapter4',
-    '生成AIの最新トレンド': '/courses/chapter5',
-    '最新技術': '/courses/chapter5',
+    'ニューラルネットワーク': '/courses/chapter1',
+    '生成AI': '/courses/chapter2',
+    '生成AIの基礎': '/courses/chapter2',
+    'GPT': '/courses/chapter2',
+    'BERT': '/courses/chapter2',
+    'Transformer': '/courses/chapter2',
+    'LLM': '/courses/chapter2',
+    '大規模言語モデル': '/courses/chapter2',
+    '情報リテラシー': '/courses/chapter3',
+    'AI倫理': '/courses/chapter3',
+    'AIバイアス': '/courses/chapter3',
+    'プライバシー': '/courses/chapter3',
+    'セキュリティ': '/courses/chapter3',
+    'プロンプトエンジニアリング': '/courses/chapter4',
+    'プロンプト設計': '/courses/chapter4',
+    'プロンプト技法': '/courses/chapter4',
+    'Zero-Shot': '/courses/chapter4',
+    'Few-Shot': '/courses/chapter4',
+    'Chain-of-Thought': '/courses/chapter4',
+    '実践と応用': '/courses/chapter5',
+    'AI活用事例': '/courses/chapter5',
+    'ビジネス活用': '/courses/chapter5',
+    '実践的活用': '/courses/chapter5',
+    'AI技術動向': '/courses/chapter5',
     '将来展望': '/courses/chapter5'
   };
   
@@ -77,11 +105,45 @@ export default function ComprehensiveProgress({ className = '' }: ComprehensiveP
 
   useEffect(() => {
     loadProgressData();
+    
+    // ローカルストレージの変更を監視
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'comprehensiveLearningHistory') {
+        console.log('🔄 総合学習進捗が更新されました - 再読み込み');
+        loadProgressData();
+      }
+    };
+    
+    // カスタムイベントを監視（同一タブ内での更新）
+    const handleCustomUpdate = (e: any) => {
+      console.log('🔄 総合進捗カスタムイベント受信 - 再読み込み');
+      loadProgressData();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('learningHistoryUpdated', handleCustomUpdate);
+    
+    // 定期的な更新（5秒間隔）
+    const interval = setInterval(() => {
+      loadProgressData();
+    }, 5000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('learningHistoryUpdated', handleCustomUpdate);
+      clearInterval(interval);
+    };
   }, []);
 
   const loadProgressData = () => {
     const learningStats = LearningHistoryManager.getLearningStats();
     const recent = LearningHistoryManager.getRecentSessions(5);
+    
+    // デバッグ情報
+    console.log('📊 ComprehensiveProgress 読み込みデータ:', learningStats);
+    console.log('📝 Recent Sessions:', recent);
+    console.log('📈 ChapterProgress 詳細:', learningStats.chapterProgress);
+    
     setStats(learningStats);
     setRecentSessions(recent);
   };
@@ -120,12 +182,30 @@ export default function ComprehensiveProgress({ className = '' }: ComprehensiveP
   };
 
   const formatDuration = (seconds: number) => {
+    if (seconds === 0 || isNaN(seconds)) {
+      return '未計測';
+    }
+    
+    // 異常に大きな値の場合はエラー表示
+    if (seconds > 86400) { // 24時間 = 86400秒
+      console.error('異常な時間値を検出:', seconds);
+      return 'エラー';
+    }
+    
     const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}分${remainingSeconds}秒`;
+    const remainingSeconds = Math.floor(seconds % 60);
+    
+    if (minutes === 0) {
+      return `${remainingSeconds}秒`;
+    } else if (remainingSeconds === 0) {
+      return `${minutes}分`;
+    } else {
+      return `${minutes}分${remainingSeconds}秒`;
+    }
   };
 
   const formatDate = (timestamp: number) => {
+    console.log('🕐 日付フォーマット:', { timestamp, date: new Date(timestamp) });
     return new Date(timestamp).toLocaleDateString('ja-JP', {
       month: 'short',
       day: 'numeric',
@@ -190,46 +270,15 @@ export default function ComprehensiveProgress({ className = '' }: ComprehensiveP
 
       {/* 詳細情報 */}
       <div className="space-y-4">
-        {/* 推奨学習領域 */}
+        {/* 得意領域 */}
         {stats.recommendedFocus.length > 0 && (
-          <div className="bg-yellow-50 rounded-lg p-4">
+          <div className="bg-green-50 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Target className="w-4 h-4 text-yellow-600" />
-              <h4 className="font-medium text-yellow-800">推奨学習領域</h4>
+              <Target className="w-4 h-4 text-green-600" />
+              <h4 className="font-medium text-green-800">得意領域</h4>
             </div>
             <div className="flex flex-wrap gap-2">
               {stats.recommendedFocus.map((area: string, index: number) => {
-                const chapter = getChapterForArea(area);
-                const chapterUrl = getChapterUrl(area);
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm"
-                  >
-                    <span>{area}</span>
-                    <Link 
-                      href={chapterUrl}
-                      className="flex items-center gap-1 px-2 py-0.5 bg-yellow-200 rounded-full text-xs hover:bg-yellow-300 transition-colors cursor-pointer"
-                    >
-                      <BookOpen className="w-3 h-3" />
-                      <span>{chapter}</span>
-                    </Link>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* 強い領域 */}
-        {stats.strongAreas.length > 0 && (
-          <div className="bg-green-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Award className="w-4 h-4 text-green-600" />
-              <h4 className="font-medium text-green-800">得意な領域</h4>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {stats.strongAreas.map((area: string, index: number) => {
                 const chapter = getChapterForArea(area);
                 const chapterUrl = getChapterUrl(area);
                 return (
@@ -283,6 +332,31 @@ export default function ComprehensiveProgress({ className = '' }: ComprehensiveP
           </div>
         )}
 
+        {/* スキル別分析 */}
+        {stats.strongSkills?.length > 0 && (
+          <div className="bg-green-50 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Target className="w-4 h-4 text-green-600" />
+              <h4 className="font-medium text-green-800">詳細スキル分析（正答率の高い領域）</h4>
+            </div>
+            
+            {/* 正答率の高いスキル */}
+            <div>
+              <h5 className="text-sm font-medium text-green-700 mb-2">習得済みスキル</h5>
+              <div className="flex flex-wrap gap-2">
+                {stats.strongSkills.map((skill: string, index: number) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* 直近の演習履歴 */}
         <div>
           <button
@@ -330,12 +404,28 @@ export default function ComprehensiveProgress({ className = '' }: ComprehensiveP
 
       {/* 更新ボタン */}
       <div className="mt-6 pt-4 border-t border-gray-200">
-        <button
-          onClick={loadProgressData}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors"
-        >
-          進捗を更新
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={loadProgressData}
+            className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors"
+          >
+            進捗を更新
+          </button>
+          <button
+            onClick={() => {
+              if (confirm('学習履歴をすべてリセットしますか？\n\n現在の日時: ' + new Date().toLocaleString('ja-JP'))) {
+                // 両方のストレージをクリア
+                LearningHistoryManager.clearHistory();
+                localStorage.removeItem('quizHistory'); // 旧形式もクリア
+                console.log('🗑️ 学習履歴を完全削除しました - 現在時刻:', new Date());
+                loadProgressData();
+              }
+            }}
+            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition-colors text-sm"
+          >
+            リセット
+          </button>
+        </div>
       </div>
     </div>
   );

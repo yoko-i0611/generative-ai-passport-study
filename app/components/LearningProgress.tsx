@@ -3,25 +3,76 @@
 import { useState, useEffect } from 'react';
 import { LearningHistory, SkillAnalysis } from '@/types';
 import { calculateSkillLevel, generateProgressData } from '@/app/utils/skillAnalysis';
+import { LearningHistoryManager } from '@/app/utils/learningHistory';
 import { Brain, Target, TrendingUp, Clock, CheckCircle } from 'lucide-react';
 
 export default function LearningProgress() {
   const [skillAnalysis, setSkillAnalysis] = useState<SkillAnalysis | null>(null);
   const [hasHistory, setHasHistory] = useState(false);
 
-  useEffect(() => {
-    // ローカルストレージから学習履歴を読み込み
-    const savedHistory = localStorage.getItem('quizHistory');
-    if (savedHistory) {
-      try {
-        const history: LearningHistory = JSON.parse(savedHistory);
-        const analysis = calculateSkillLevel(history);
-        setSkillAnalysis(analysis);
+  const loadProgressData = () => {
+    // 新しい学習履歴システムから読み込み
+    try {
+      const stats = LearningHistoryManager.getLearningStats();
+      console.log('📊 LearningProgress 読み込みデータ:', stats);
+      
+      if (stats.totalSessions > 0 || Object.keys(stats.chapterProgress).length > 0) {
+        // 統計データからスキル分析データに変換
+        const analysisData: SkillAnalysis = {
+          overallLevel: stats.overallAccuracy,
+          chapterLevels: {
+            chapter1: stats.chapterProgress.chapter1?.accuracy || 0,
+            chapter2: stats.chapterProgress.chapter2?.accuracy || 0,
+            chapter3: stats.chapterProgress.chapter3?.accuracy || 0,
+            chapter4: stats.chapterProgress.chapter4?.accuracy || 0,
+            chapter5: stats.chapterProgress.chapter5?.accuracy || 0,
+          },
+          weakAreas: stats.weakAreas,
+          recommendedTopics: stats.recommendedFocus.slice(0, 5),
+          nextLearningPath: stats.recommendedFocus.length > 0 ? [stats.recommendedFocus[0]] : ['基礎から復習しましょう']
+        };
+        
+        console.log('📈 LearningProgress 変換データ:', analysisData);
+        setSkillAnalysis(analysisData);
         setHasHistory(true);
-      } catch (error) {
-        console.error('学習履歴の読み込みに失敗しました:', error);
+      } else {
+        setHasHistory(false);
       }
+    } catch (error) {
+      console.error('学習履歴の読み込みに失敗しました:', error);
     }
+  };
+
+  useEffect(() => {
+    loadProgressData();
+    
+    // ローカルストレージの変更を監視
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'comprehensiveLearningHistory') {
+        console.log('🔄 学習履歴が更新されました - 進捗を再読み込み');
+        loadProgressData();
+      }
+    };
+    
+    // カスタムイベントを監視（同一タブ内での更新）
+    const handleCustomUpdate = (e: any) => {
+      console.log('🔄 カスタムイベント受信 - 進捗を再読み込み');
+      loadProgressData();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('learningHistoryUpdated', handleCustomUpdate);
+    
+    // 定期的な更新（5秒間隔）
+    const interval = setInterval(() => {
+      loadProgressData();
+    }, 5000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('learningHistoryUpdated', handleCustomUpdate);
+      clearInterval(interval);
+    };
   }, []);
 
   if (!hasHistory) {
@@ -151,6 +202,16 @@ export default function LearningProgress() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* 更新ボタン */}
+      <div className="flex justify-center">
+        <button
+          onClick={loadProgressData}
+          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors"
+        >
+          進捗を更新
+        </button>
       </div>
 
       {/* 注意事項 */}

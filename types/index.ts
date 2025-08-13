@@ -2,11 +2,11 @@ export type Course = {
   id: string;
   title: string;
   description: string;
-  difficulty: '初級' | '中級' | '上級' | '第1章' | '第2章' | '第3章' | '第4章' | '第5章';
+  difficulty: '初級' | '中級' | '上級' | '第1章' | '第2章' | '第3章' | '第4章' | '第5章' | '第6章' | '第7章' | '第8章' | '第9章' | '第10章';
   time: string;
   link: string;
   image: string;
-  color: 'primary' | 'secondary' | 'accent' | 'info' | 'yellow';
+  color: 'primary' | 'secondary' | 'accent' | 'info' | 'yellow' | 'warning';
   content: string; // 教材コンテンツ
   quiz: Quiz[];
 };
@@ -15,7 +15,7 @@ export type Quiz = {
   id: string;
   title: string;
   description: string;
-  difficulty: '初級' | '中級' | '上級' | '第1章' | '第2章' | '第3章' | '第4章' | '第5章';
+  difficulty: '初級' | '中級' | '上級' | '第1章' | '第2章' | '第3章' | '第4章' | '第5章' | '第6章' | '第7章' | '第8章' | '第9章' | '第10章';
   questions: Question[];
 };
 
@@ -23,12 +23,13 @@ export type Question = {
   id: number;
   question: string;
   options: string[];
-  correctAnswer: string;
+  correctAnswer: string | string[]; // 単一選択または複数選択に対応
   explanation: string;
   course?: string;
   chapter?: string;
   section?: string;
   difficulty?: 'easy' | 'medium' | 'hard';
+  skillCategory?: string; // 細かいスキルカテゴリ
 };
 
 // 学習履歴の拡張型定義
@@ -48,6 +49,11 @@ export type LearningHistory = {
     chapter3: number;
     chapter4: number;
     chapter5: number;
+    chapter6: number;
+    chapter7: number;
+    chapter8: number;
+    chapter9: number;
+    chapter10: number;
   };
   weakAreas: string[];
   learningPath: string[];
@@ -84,8 +90,19 @@ export type ComprehensiveLearningHistory = {
       lastAttempted: number;
     };
   };
+  skillProgress: {
+    [skillCategory: string]: {
+      totalAnswered: number;
+      totalCorrect: number;
+      accuracy: number;
+      chapter: string;
+      lastAttempted: number;
+    };
+  };
   weakAreas: string[];
   strongAreas: string[];
+  weakSkills: string[];
+  strongSkills: string[];
   learningTrend: 'improving' | 'stable' | 'declining';
   recommendedFocus: string[];
 };
