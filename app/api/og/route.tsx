@@ -76,6 +76,8 @@ export async function GET(request: NextRequest) {
                 lineHeight: '1.1',
                 marginBottom: '24px',
                 color: '#1F2937',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
               <span
@@ -88,8 +90,7 @@ export async function GET(request: NextRequest) {
               >
                 生成AIパスポート
               </span>
-              <br />
-              試験対策プラットフォーム
+              <span>試験対策プラットフォーム</span>
             </div>
 
             {/* 説明文 */}
@@ -136,6 +137,8 @@ export async function GET(request: NextRequest) {
                   fontSize: '18px',
                   fontWeight: '600',
                   backgroundColor: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
               >
                 問題演習に挑戦
@@ -191,6 +194,8 @@ export async function GET(request: NextRequest) {
                   height: '100%',
                   padding: '24px',
                   position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}
               >
                 {/* ブラウザのドット */}
@@ -207,7 +212,7 @@ export async function GET(request: NextRequest) {
                 </div>
 
                 {/* コンテンツバー */}
-                <div style={{ marginBottom: '16px' }}>
+                <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ width: '80%', height: '16px', backgroundColor: '#F3F4F6', borderRadius: '4px', marginBottom: '8px' }} />
                   <div style={{ width: '60%', height: '16px', backgroundColor: '#F3F4F6', borderRadius: '4px', marginBottom: '8px' }} />
                   <div style={{ width: '90%', height: '16px', backgroundColor: '#F3F4F6', borderRadius: '4px', marginBottom: '8px' }} />
