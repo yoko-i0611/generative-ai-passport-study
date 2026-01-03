@@ -53,6 +53,7 @@ export default function QuizPage() {
     { count: 30, label: '30問', time: '約15分', description: 'じっくりと学習' },
     { count: 50, label: '50問', time: '約25分', description: '模擬試験レベル' },
     { count: 100, label: '100問', time: '約50分', description: '全問題制覇・完全マスター' },
+    { count: 300, label: '300問', time: '約150分', description: '全問題制覇・完全マスター' },
   ];
 
   // ローカルストレージから学習履歴を読み込み

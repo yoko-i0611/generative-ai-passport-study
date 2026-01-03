@@ -1,0 +1,513 @@
+# コンポーネント設定ファイル - Component Configuration
+# UIコンポーネントとフィーチャーの汎用設定
+
+component_metadata:
+  name: "Learning Platform Components"
+  version: "1.0.0"
+  framework: "React + Next.js"
+  styling: "Tailwind CSS"
+  
+# レイアウトコンポーネント
+layout_components:
+  header:
+    component_name: "Header"
+    props:
+      logo:
+        text: "AI Learning Platform"
+        image: null
+        link: "/"
+      navigation:
+        items:
+          - label: "ホーム"
+            href: "/"
+            icon: "home"
+          - label: "コース"
+            href: "/courses"
+            icon: "book"
+          - label: "問題演習"
+            href: "/quiz"
+            icon: "brain"
+          - label: "チャット"
+            href: "/chat"
+            icon: "message-circle"
+      mobile_responsive: true
+      
+  footer:
+    component_name: "Footer"
+    props:
+      copyright: "© 2024 AI Learning Platform"
+      links:
+        - label: "プライバシーポリシー"
+          href: "/privacy"
+        - label: "利用規約"
+          href: "/terms"
+        - label: "お問い合わせ"
+          href: "/contact"
+      social_links: []
+      
+  sidebar:
+    component_name: "Sidebar"
+    props:
+      collapsible: true
+      default_collapsed: false
+      navigation_items:
+        - type: "section"
+          title: "学習コンテンツ"
+          items:
+            - label: "全コース"
+              href: "/courses"
+              icon: "library"
+            - label: "進捗管理"
+              href: "/progress"
+              icon: "chart-line"
+        - type: "section"
+          title: "実践練習"
+          items:
+            - label: "問題演習"
+              href: "/quiz"
+              icon: "brain"
+            - label: "AIチャット"
+              href: "/chat"
+              icon: "message-circle"
+
+# コンテンツコンポーネント
+content_components:
+  course_card:
+    component_name: "CourseCard"
+    props:
+      course:
+        id: "string"
+        title: "string"
+        description: "string"
+        icon: "string"
+        difficulty: "beginner | intermediate | advanced"
+        estimated_hours: "number"
+        progress: "number"
+      onClick: "function"
+      variant: "default | compact | featured"
+      
+  chapter_list:
+    component_name: "ChapterList"
+    props:
+      chapters:
+        - id: "string"
+          title: "string"
+          description: "string"
+          completed: "boolean"
+          progress: "number"
+          estimated_hours: "number"
+      onChapterClick: "function"
+      show_progress: true
+      
+  progress_indicator:
+    component_name: "ProgressIndicator"
+    props:
+      progress: "number"  # 0-100
+      size: "sm | md | lg"
+      show_percentage: true
+      color: "blue | green | yellow | red"
+      animated: true
+      
+  achievement_badge:
+    component_name: "AchievementBadge"
+    props:
+      achievement:
+        id: "string"
+        title: "string"
+        description: "string"
+        icon: "string"
+        earned: "boolean"
+        earned_date: "string"
+      size: "sm | md | lg"
+      
+# インタラクティブコンポーネント
+interactive_components:
+  quiz_question:
+    component_name: "QuizQuestion"
+    props:
+      question:
+        id: "number"
+        question: "string"
+        type: "single_choice | multiple_choice"
+        options:
+          - text: "string"
+            is_correct: "boolean"
+        explanation: "string"
+        difficulty: "basic | intermediate | advanced"
+      onAnswer: "function"
+      show_explanation: "boolean"
+      
+  quiz_timer:
+    component_name: "QuizTimer"
+    props:
+      duration_minutes: "number"
+      onTimeUp: "function"
+      warning_threshold: 10  # 秒
+      auto_submit: true
+      
+  chat_interface:
+    component_name: "ChatInterface"
+    props:
+      messages:
+        - role: "user | assistant"
+          content: "string"
+          timestamp: "string"
+      onSendMessage: "function"
+      is_loading: "boolean"
+      placeholder: "AIに質問してみましょう..."
+      max_length: 1000
+      
+  # ハイブリッドカードUI（画像＋テキスト管理）
+  hybrid_content_card:
+    component_name: "HybridContentCard"
+    props:
+      slide_image: "string"  # スライド画像のパス
+      key_points: "array"    # 要点リスト
+      version_info: "object" # バージョン情報（version, last_updated, token_limit等）
+      text_content: "string" # CMS管理のテキストエリア
+      highlight_keywords: "array"  # 赤シートモード用の重要語句
+      
+  # AI講師チャット（オート・レクチャーモード）
+  context_aware_chat:
+    component_name: "ContextAwareChat"
+    props:
+      trigger_button_text: "💬 AI講師の解説を聞く"
+      mode: "drawer"  # drawer（下からせり上がる）推奨
+      auto_trigger_explanation: true  # ユーザー入力を待たずにAIが喋り出す
+      
+      # AIへのシステム命令（プロンプトエンジニアリング）
+      system_instruction: |
+        あなたは「生成AIパスポート試験」のプロフェッショナル講師です。
+        ユーザーは現在、以下の【教科書データ】について学習しようとしています。
+        
+        【教科書データ】
+        {reference_content}
+        
+        ## あなたのタスク
+        1. 会話の冒頭で、上記データを**初学者にもわかるように噛み砕いて、短く要約して**説明してください。
+        2. 専門用語（「自己回帰型」や「ハルシネーション」など）は、日常的な例え話を使って補足してください。
+        3. 解説の最後は、ユーザーが質問しやすいように「〜について、もっと詳しく知りたい点はありますか？」と結んでください。
+        
+        ## 禁止事項
+        - 教科書データをそのままコピペして表示すること。
+        - 長すぎる解説（スマホの1画面に収まる程度に留めること）。
+        - 教科書データにない情報を断言すること（推測する場合は「一般的には〜」と注釈をつけること）。
+      
+      # ストリーミング生成設定
+      streaming: true  # 文字がパラパラと表示される演出を有効化
+      stream_delay_ms: 30  # ストリーミングの表示間隔（ミリ秒）
+      
+  search_bar:
+    component_name: "SearchBar"
+    props:
+      placeholder: "コースや問題を検索..."
+      onSearch: "function"
+      suggestions: "array"
+      real_time_search: true
+      
+  # 重要語句の赤シートモード
+  red_sheet_mode:
+    component_name: "RedSheetMode"
+    props:
+      enabled: true
+      highlight_tag: "<red>"  # マークアップタグ
+      toggle_button_text: "重要語句を隠す"
+      default_state: "visible"  # visible | hidden
+      
+  # 詳細アコーディオン（原文を読む）
+  content_accordion:
+    component_name: "ContentAccordion"
+    props:
+      trigger_text: "📖 原文を読む"
+      collapsible: true
+      default_expanded: false
+      content: "string"  # 展開時に表示する長文コンテンツ
+
+# フォームコンポーネント
+form_components:
+  input_field:
+    component_name: "InputField"
+    props:
+      type: "text | email | password | number"
+      label: "string"
+      placeholder: "string"
+      required: "boolean"
+      error: "string"
+      help_text: "string"
+      
+  select_field:
+    component_name: "SelectField"
+    props:
+      label: "string"
+      options:
+        - value: "string"
+          label: "string"
+      placeholder: "選択してください"
+      required: "boolean"
+      multiple: "boolean"
+      
+  checkbox_field:
+    component_name: "CheckboxField"
+    props:
+      label: "string"
+      checked: "boolean"
+      required: "boolean"
+      description: "string"
+      
+  radio_group:
+    component_name: "RadioGroup"
+    props:
+      name: "string"
+      label: "string"
+      options:
+        - value: "string"
+          label: "string"
+      required: "boolean"
+
+# フィードバックコンポーネント
+feedback_components:
+  toast:
+    component_name: "Toast"
+    props:
+      type: "success | error | warning | info"
+      title: "string"
+      message: "string"
+      duration: 5000  # ミリ秒
+      closable: true
+      
+  modal:
+    component_name: "Modal"
+    props:
+      isOpen: "boolean"
+      onClose: "function"
+      title: "string"
+      size: "sm | md | lg | xl"
+      closable: true
+      overlay_closable: true
+      
+  alert:
+    component_name: "Alert"
+    props:
+      type: "success | error | warning | info"
+      title: "string"
+      message: "string"
+      closable: "boolean"
+      icon: "boolean"
+      
+  loading_spinner:
+    component_name: "LoadingSpinner"
+    props:
+      size: "sm | md | lg"
+      color: "blue | gray"
+      text: "string"
+
+# ナビゲーションコンポーネント
+navigation_components:
+  breadcrumb:
+    component_name: "Breadcrumb"
+    props:
+      items:
+        - label: "string"
+          href: "string"
+          current: "boolean"
+      separator: "/"
+      
+  pagination:
+    component_name: "Pagination"
+    props:
+      current_page: "number"
+      total_pages: "number"
+      onPageChange: "function"
+      show_first_last: true
+      show_prev_next: true
+      
+  tabs:
+    component_name: "Tabs"
+    props:
+      tabs:
+        - id: "string"
+          label: "string"
+          content: "ReactNode"
+          disabled: "boolean"
+      default_tab: "string"
+      onChange: "function"
+
+# データ表示コンポーネント
+data_display_components:
+  table:
+    component_name: "Table"
+    props:
+      columns:
+        - key: "string"
+          title: "string"
+          sortable: "boolean"
+          width: "string"
+      data: "array"
+      sortable: true
+      pagination: true
+      selectable: "boolean"
+      
+  card:
+    component_name: "Card"
+    props:
+      title: "string"
+      subtitle: "string"
+      content: "ReactNode"
+      actions: "ReactNode"
+      hover_effect: true
+      
+  stats_card:
+    component_name: "StatsCard"
+    props:
+      title: "string"
+      value: "string | number"
+      change: "number"
+      change_type: "increase | decrease | neutral"
+      icon: "string"
+      
+  chart:
+    component_name: "Chart"
+    props:
+      type: "line | bar | pie | doughnut"
+      data: "object"
+      options: "object"
+      responsive: true
+
+# ユーティリティコンポーネント
+utility_components:
+  icon:
+    component_name: "Icon"
+    props:
+      name: "string"
+      size: "number | sm | md | lg"
+      color: "string"
+      
+  avatar:
+    component_name: "Avatar"
+    props:
+      src: "string"
+      alt: "string"
+      size: "sm | md | lg"
+      fallback: "string"
+      
+  badge:
+    component_name: "Badge"
+    props:
+      text: "string"
+      variant: "primary | secondary | success | warning | error"
+      size: "sm | md | lg"
+      
+  skeleton:
+    component_name: "Skeleton"
+    props:
+      width: "string | number"
+      height: "string | number"
+      lines: "number"
+      animated: true
+
+# テーマ設定
+theme_config:
+  colors:
+    primary: "#3B82F6"
+    secondary: "#10B981"
+    accent: "#F59E0B"
+    success: "#22C55E"
+    warning: "#F59E0B"
+    error: "#EF4444"
+    gray:
+      50: "#F9FAFB"
+      100: "#F3F4F6"
+      500: "#6B7280"
+      900: "#111827"
+      
+  typography:
+    font_family: 
+      sans: ["Inter", "system-ui", "sans-serif"]
+      mono: ["JetBrains Mono", "monospace"]
+    font_sizes:
+      xs: "0.75rem"
+      sm: "0.875rem"
+      base: "1rem"
+      lg: "1.125rem"
+      xl: "1.25rem"
+      "2xl": "1.5rem"
+      
+  spacing:
+    xs: "0.25rem"
+    sm: "0.5rem"
+    md: "1rem"
+    lg: "1.5rem"
+    xl: "3rem"
+    
+  breakpoints:
+    sm: "640px"
+    md: "768px"
+    lg: "1024px"
+    xl: "1280px"
+    
+  border_radius:
+    sm: "0.125rem"
+    md: "0.375rem"
+    lg: "0.5rem"
+    xl: "1rem"
+
+# アニメーション設定
+animation_config:
+  transitions:
+    duration:
+      fast: "150ms"
+      normal: "300ms"
+      slow: "500ms"
+    timing: "ease-in-out"
+    
+  hover_effects:
+    scale: 1.05
+    brightness: 1.1
+    
+  loading_animations:
+    spinner: true
+    pulse: true
+    skeleton: true
+
+# アクセシビリティ設定
+accessibility_config:
+  keyboard_navigation: true
+  screen_reader_support: true
+  high_contrast_mode: true
+  focus_indicators: true
+  aria_labels: true
+  
+  color_contrast:
+    normal_text: 4.5  # WCAG AA
+    large_text: 3     # WCAG AA
+    
+# レスポンシブ設定
+responsive_config:
+  mobile_first: true
+  breakpoints:
+    mobile: "max-width: 639px"
+    tablet: "640px to 1023px"
+    desktop: "min-width: 1024px"
+    
+  components:
+    mobile_navigation: true
+    collapsible_sidebar: true
+    touch_friendly_buttons: true
+
+# パフォーマンス設定
+performance_config:
+  lazy_loading: true
+  code_splitting: true
+  image_optimization: true
+  prefetching: true
+  
+  bundle_analysis:
+    enabled: true
+    threshold_kb: 500
+    
+# 国際化設定
+i18n_components:
+  text_direction: "ltr"
+  date_format: "YYYY/MM/DD"
+  number_format: "ja-JP"
+  currency: "JPY"

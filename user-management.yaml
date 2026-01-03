@@ -1,0 +1,452 @@
+# ユーザー管理システム設定 - User Management Configuration
+# 認証・認可・プロフィール管理設定
+
+user_management_metadata:
+  name: "AI Learning Platform User Management"
+  version: "1.0.0"
+  authentication_provider: "supabase"  # or "nextauth", "clerk", "firebase"
+  
+# 認証設定
+authentication:
+  providers:
+    email_password:
+      enabled: true
+      email_verification: true
+      password_requirements:
+        min_length: 8
+        require_uppercase: true
+        require_lowercase: true
+        require_numbers: true
+        require_special_chars: false
+        
+    social_login:
+      google:
+        enabled: true
+        client_id: "${GOOGLE_CLIENT_ID}"
+        client_secret: "${GOOGLE_CLIENT_SECRET}"
+        scopes: ["email", "profile"]
+        
+      github:
+        enabled: true
+        client_id: "${GITHUB_CLIENT_ID}"
+        client_secret: "${GITHUB_CLIENT_SECRET}"
+        
+      apple:
+        enabled: false
+        
+    magic_link:
+      enabled: true
+      expiration_minutes: 15
+      
+    two_factor:
+      enabled: false  # 将来実装
+      methods: ["totp", "sms"]
+
+# ユーザープロフィール
+user_profile:
+  required_fields:
+    - email
+    - display_name
+    
+  optional_fields:
+    - avatar_url
+    - bio
+    - occupation
+    - learning_goals
+    - experience_level
+    - preferred_language
+    - timezone
+    - notification_preferences
+    
+  custom_fields:
+    student_verification:
+      type: "boolean"
+      description: "学生認証済み"
+      
+    company_name:
+      type: "string"
+      description: "所属企業名"
+      
+    industry:
+      type: "select"
+      options: ["IT", "製造業", "金融", "教育", "医療", "その他"]
+      
+    ai_experience:
+      type: "select"
+      options: ["初心者", "中級者", "上級者", "専門家"]
+
+# 権限・ロール管理
+authorization:
+  roles:
+    admin:
+      permissions:
+        - "users:read"
+        - "users:write"
+        - "users:delete"
+        - "content:read"
+        - "content:write"
+        - "content:delete"
+        - "billing:read"
+        - "billing:write"
+        - "analytics:read"
+        
+    moderator:
+      permissions:
+        - "users:read"
+        - "content:read"
+        - "content:moderate"
+        - "support:handle"
+        
+    instructor:
+      permissions:
+        - "content:read"
+        - "content:write"
+        - "students:read"
+        - "progress:read"
+        
+    student:
+      permissions:
+        - "profile:read"
+        - "profile:write"
+        - "content:read"
+        - "progress:read"
+        - "progress:write"
+        
+  subscription_permissions:
+    free:
+      content_access: ["chapter1", "chapter2"]
+      features: ["basic_quiz", "limited_chat"]
+      
+    basic:
+      content_access: ["all_chapters"]
+      features: ["unlimited_quiz", "standard_chat", "certificates"]
+      
+    premium:
+      content_access: ["all_chapters", "exclusive_content"]
+      features: ["unlimited_quiz", "unlimited_chat", "priority_support", "advanced_analytics"]
+
+# セッション管理
+session_management:
+  session_duration: "7 days"
+  refresh_token_duration: "30 days"
+  concurrent_sessions: 3
+  
+  security:
+    secure_cookies: true
+    same_site: "strict"
+    httponly: true
+    
+  auto_logout:
+    inactivity_timeout: "24 hours"
+    warning_minutes: 5
+
+# プロフィール画像
+avatar_management:
+  upload_enabled: true
+  max_file_size: "5MB"
+  allowed_formats: ["jpg", "jpeg", "png", "webp"]
+  
+  storage:
+    provider: "supabase_storage"  # or "cloudinary", "aws_s3"
+    bucket: "avatars"
+    
+  image_processing:
+    resize: "256x256"
+    quality: 80
+    format: "webp"
+
+# 通知設定
+notification_preferences:
+  channels:
+    email:
+      enabled: true
+      types:
+        - course_updates
+        - payment_notifications
+        - learning_reminders
+        - achievement_notifications
+        
+    in_app:
+      enabled: true
+      types:
+        - system_messages
+        - learning_progress
+        - chat_responses
+        
+    push:
+      enabled: false  # 将来実装
+      
+  frequency_settings:
+    daily_digest: true
+    weekly_summary: true
+    immediate_alerts: true
+
+# プライバシー設定
+privacy_settings:
+  profile_visibility:
+    options: ["public", "students_only", "private"]
+    default: "students_only"
+    
+  progress_sharing:
+    enabled: true
+    default: false
+    
+  data_retention:
+    account_deletion: "immediate"
+    data_export: "available"
+    
+  tracking_consent:
+    analytics: "required"
+    marketing: "optional"
+    performance: "required"
+
+# ユーザーオンボーディング
+onboarding:
+  welcome_flow:
+    steps:
+      - step: "profile_setup"
+        required_fields: ["display_name", "learning_goals"]
+        
+      - step: "skill_assessment"
+        quiz_questions: 10
+        adaptive: true
+        
+      - step: "plan_selection"
+        show_trial: true
+        recommend_plan: true
+        
+      - step: "first_lesson"
+        guided_tour: true
+        
+  tutorial_system:
+    interactive_guides: true
+    tooltips: true
+    progress_tracking: true
+
+# 学習進捗管理
+progress_tracking:
+  metrics:
+    completion_rate:
+      chapters: true
+      lessons: true
+      quizzes: true
+      
+    time_tracking:
+      study_sessions: true
+      total_time: true
+      daily_average: true
+      
+    performance:
+      quiz_scores: true
+      streak_tracking: true
+      improvement_rate: true
+      
+    engagement:
+      login_frequency: true
+      feature_usage: true
+      chat_interactions: true
+
+# ソーシャル機能
+social_features:
+  study_groups:
+    enabled: false  # 将来実装
+    max_members: 10
+    
+  leaderboards:
+    enabled: true
+    categories: ["quiz_scores", "study_time", "streak"]
+    privacy_respecting: true
+    
+  achievements:
+    enabled: true
+    badge_system: true
+    public_display: true
+    
+  forums:
+    enabled: false  # 将来実装
+
+# アカウント管理
+account_management:
+  profile_editing:
+    real_time_validation: true
+    change_confirmation: true
+    
+  password_management:
+    change_password: true
+    password_history: 5
+    reset_via_email: true
+    
+  email_management:
+    change_email: true
+    verification_required: true
+    notification_on_change: true
+    
+  account_deletion:
+    self_service: true
+    confirmation_required: true
+    grace_period_days: 30
+    data_retention_policy: "delete_all"
+
+# 管理者機能
+admin_features:
+  user_management:
+    search_users: true
+    bulk_operations: true
+    user_impersonation: false
+    
+  content_moderation:
+    reported_content: true
+    automated_filtering: true
+    
+  analytics_dashboard:
+    user_metrics: true
+    engagement_stats: true
+    retention_analysis: true
+    
+  support_tools:
+    ticket_system: true
+    user_communication: true
+
+# データベース設計
+database_schema:
+  users:
+    id: "uuid PRIMARY KEY"
+    email: "varchar UNIQUE NOT NULL"
+    display_name: "varchar"
+    avatar_url: "varchar"
+    subscription_plan: "varchar DEFAULT 'free'"
+    subscription_status: "varchar"
+    created_at: "timestamp"
+    updated_at: "timestamp"
+    last_login_at: "timestamp"
+    
+  user_profiles:
+    user_id: "uuid FOREIGN KEY"
+    bio: "text"
+    occupation: "varchar"
+    company_name: "varchar"
+    industry: "varchar"
+    learning_goals: "text[]"
+    experience_level: "varchar"
+    timezone: "varchar"
+    
+  user_progress:
+    user_id: "uuid FOREIGN KEY"
+    course_id: "varchar"
+    chapter_id: "varchar"
+    completion_rate: "decimal"
+    quiz_scores: "jsonb"
+    study_time_minutes: "integer"
+    last_accessed_at: "timestamp"
+    
+  user_sessions:
+    id: "uuid PRIMARY KEY"
+    user_id: "uuid FOREIGN KEY"
+    token: "varchar"
+    expires_at: "timestamp"
+    created_at: "timestamp"
+
+# セキュリティ対策
+security_measures:
+  rate_limiting:
+    login_attempts: "5 per 15 minutes"
+    password_reset: "3 per hour"
+    api_requests: "100 per minute"
+    
+  fraud_prevention:
+    device_fingerprinting: true
+    suspicious_activity_detection: true
+    
+  data_protection:
+    encryption_at_rest: true
+    encryption_in_transit: true
+    field_level_encryption: ["password", "payment_data"]
+    
+  audit_logging:
+    user_actions: true
+    admin_actions: true
+    security_events: true
+    retention_period: "1 year"
+
+# GDPR・プライバシー対応
+gdpr_compliance:
+  data_processing_basis:
+    - "contract_performance"
+    - "legitimate_interest"
+    
+  user_rights:
+    access_request: true
+    rectification: true
+    erasure: true
+    portability: true
+    objection: true
+    
+  consent_management:
+    granular_consent: true
+    consent_withdrawal: true
+    consent_records: true
+    
+  data_minimization:
+    purpose_limitation: true
+    storage_limitation: true
+    accuracy_requirement: true
+
+# API設計
+api_endpoints:
+  authentication:
+    - "POST /api/auth/login"
+    - "POST /api/auth/register"
+    - "POST /api/auth/logout"
+    - "POST /api/auth/refresh"
+    - "POST /api/auth/forgot-password"
+    
+  profile:
+    - "GET /api/user/profile"
+    - "PUT /api/user/profile"
+    - "POST /api/user/avatar"
+    - "DELETE /api/user/account"
+    
+  progress:
+    - "GET /api/user/progress"
+    - "POST /api/user/progress"
+    - "GET /api/user/achievements"
+
+# 実装優先度
+implementation_priority:
+  phase1_essential:
+    - email_password_auth
+    - basic_profile_management
+    - subscription_integration
+    - progress_tracking
+    
+  phase2_important:
+    - social_login
+    - avatar_upload
+    - notification_system
+    - admin_dashboard
+    
+  phase3_nice_to_have:
+    - two_factor_auth
+    - social_features
+    - advanced_analytics
+    - forum_integration
+
+# 運用・監視
+operational_monitoring:
+  metrics:
+    - daily_active_users
+    - monthly_active_users
+    - registration_rate
+    - churn_rate
+    - session_duration
+    
+  alerts:
+    - failed_login_spike
+    - unusual_traffic_patterns
+    - system_errors
+    - performance_degradation
+    
+  health_checks:
+    - authentication_service
+    - database_connectivity
+    - external_providers

@@ -1,0 +1,594 @@
+# 学習プラットフォーム - コンテンツ設定ファイル
+# Learning Platform - Content Configuration File
+
+metadata:
+  name: "生成AIパスポート試験対策"
+  description: "生成AI技術の基礎から実践応用まで体系的に学習できるプラットフォーム"
+  version: "1.0.0"
+  language: "ja"
+  target_audience: "生成AIを学習したい全ての人"
+  estimated_total_hours: 11
+  exam_duration_minutes: 90
+
+# 学習コース定義
+courses:
+  - id: "generative-ai-passport"
+    title: "生成AIパスポート試験対策"
+    description: "生成AI技術の基礎から実践応用まで体系的に学習"
+    icon: "🤖"
+    category: "AI"
+    difficulty: "beginner-to-intermediate"
+    estimated_hours: 11
+    
+    chapters:
+      - id: "chapter1"
+        title: "AI（人工知能）"
+        description: "AI技術の基礎概念と歴史"
+        estimated_hours: 2
+        order: 1
+        
+        sections:
+          - id: "ai-basics"
+            title: "AI基礎概念"
+            content:
+              - topic: "ANI（Artificial Narrow Intelligence）"
+                description: "特定のタスクに特化したAI"
+              - topic: "AGI（Artificial General Intelligence）"
+                description: "人間と同等の汎用的な知能を持つAI"
+              - topic: "ASI（Artificial Super Intelligence）"
+                description: "人間を超越した知能を持つAI"
+                
+          - id: "ai-history"
+            title: "AIの歴史"
+            content:
+              - topic: "第一次AIブーム（1956-1970年代）"
+                description: "探索と推論に焦点を当てたAI研究"
+              - topic: "第二次AIブーム（1980年代）"
+                description: "エキスパートシステムの発展"
+              - topic: "第三次AIブーム（2010年代-現在）"
+                description: "ディープラーニングとビッグデータの活用"
+                
+          - id: "machine-learning"
+            title: "機械学習"
+            content:
+              - topic: "教師あり学習"
+                description: "入力データと正解データのペアで学習"
+              - topic: "教師なし学習"
+                description: "正解データなしでパターンを発見"
+              - topic: "強化学習"
+                description: "環境との相互作用を通じて最適な行動を学習"
+              - topic: "半教師あり学習"
+                description: "一部のデータにのみ正解ラベルが付いている"
+
+      - id: "chapter2"
+        title: "生成AI（ジェネレーティブAI）"
+        description: "技術転換とモデル系譜を軸にした生成AIの全体像"
+        estimated_hours: 3
+        order: 2
+        
+        sections:
+          - id: "unit01-generative-model-evolution"
+            title: "Unit 01: 生成モデルの誕生と進化"
+            # カード表示用の情報（ユーザーが見る表面）
+            card_display:
+              slide_image: "assets/slides/ch2_unit01_model_evolution.png"
+              key_points:
+                - "インプットからアウトプットの革命へ：識別（認識）から生成へ"
+                - "CNN：画像の局所的な特徴から全体を認識"
+                - "VAE：データを圧縮・再構築して生成"
+                - "GAN：生成器と識別器が競い合って高品質データを生成"
+                - "Transformer：Self-Attentionと並列処理で文脈を一括計算"
+              version_info:
+                version: "4.0"
+                last_updated: "2024-12"
+            # AI講師用の参照コンテンツ（裏面データ）
+            reference_content: |
+              【このユニットの狙い】現在の生成AIが、どのような技術的課題を乗り越えて生まれたのか、その「家系図」を理解します。
+              
+              ## 1. インプットからアウトプットの革命へ
+              
+              2012〜2013年のディープラーニングのブレークスルーは、画像認識などの「識別（インプット）」の革命でした。対して、現在の生成AIの台頭は、新たなデータを創り出す**「生成（アウトプット）の革命」**と言えます。
+              
+              ## 2. 生成モデルの基礎技術
+              
+              生成AIに至るまでには、いくつかの重要な技術的マイルストーンがあります。
+              
+              ### CNN（畳み込みニューラルネットワーク）
+              画像の「局所的な特徴（線や色）」から全体を認識する技術。画像生成の基礎となりました。
+              
+              ### VAE（変分自己符号化器）
+              データを圧縮（エンコード）し、再構築（デコード）する過程でデータを生成します。
+              
+              ### GAN（敵対的生成ネットワーク）
+              「偽札を作る犯人（生成器）」と「警察（識別器）」が競い合うように学習し、非常に高品質なデータを生成します。
+              
+              ## 3. 自然言語処理の転換点：Transformer
+              
+              かつて主流だったRNN（回帰型ニューラルネットワーク）やLSTMは、文章を「先頭から順番に」処理していたため、長文になると文脈を忘れてしまう弱点がありました。
+              
+              2017年に登場したTransformerは、この課題を解決しました。
+              
+              - **Self-Attention（自己注意機構）**：文中の単語同士の関係性（重要度）を一括で計算します。
+              - **並列処理**：逐次処理ではなく一度に計算するため、学習速度が飛躍的に向上しました。
+              
+              これが、現在の大規模言語モデル（LLM）のすべての基盤となっています。
+              
+          - id: "unit02-paradigm-shift"
+            title: "Unit 02: 画像生成技術のパラダイムシフト"
+            card_display:
+              slide_image: "assets/slides/ch2_unit02_diffusion_vs_autoregressive.png"
+              key_points:
+                - "従来技術：拡散モデル（Diffusion Model）- ノイズ除去方式"
+                - "最新技術：自己回帰型（Autoregressive）- 左上から順次描画"
+                - "メリット：画像内の文字生成が可能に"
+                - "試験対策：拡散モデルと自己回帰型の仕組みの違いは正誤問題の鉄板"
+              version_info:
+                version: "4.0"
+                last_updated: "2024-12"
+            reference_content: |
+              【このユニットの狙い】試験頻出の「拡散モデル」と「自己回帰型」の違いを明確にします。
+              
+              ## 1. 従来技術：拡散モデル（Diffusion Model）
+              
+              Stable Diffusionや初期のDALL-Eで採用されていた方式です。ノイズ（砂嵐のような画像）から、徐々にノイズを除去していくことで、鮮明な画像を浮かび上がらせます。高品質ですが、「画像の中に文字を書く」といった細かい制御は苦手でした。
+              
+              ## 2. 最新技術：自己回帰型（Autoregressive）
+              
+              GPT-4oに統合された画像生成機能や、最新のo3/o4モデルでは、**「自己回帰型」**が採用されています。
+              
+              - **仕組み**：テキスト生成と同じように、画像をトークン（断片）として扱い、画像の左上から右下へ、一つずつ描画していきます。
+              - **メリット**：これにより、看板の文字や細かい線の描写が劇的に正確になりました。
+              
+              ⚠️ **試験対策の要点**
+              
+              - 「拡散モデル」と「自己回帰型」の仕組みの違い（ノイズ除去 vs 順次描画）は正誤問題の鉄板です。
+              - 「なぜ自己回帰型になったか？」の理由は**「画像内の文字生成が可能になったから」**と覚えましょう。
+              
+          - id: "unit03-openai-omni-series"
+            title: "Unit 03: OpenAIモデルの系譜①（Omni系列）"
+            card_display:
+              slide_image: "assets/slides/ch2_unit03_openai_omni_series.png"
+              key_points:
+                - "'o'はOmni（全て）の意"
+                - "ネイティブ・マルチモーダル：テキスト・音声・画像を単一モデルで処理"
+                - "低レイテンシ（高速応答）"
+                - "リアルタイム体験に最適：通訳、カメラ越しの状況説明"
+              version_info:
+                version: "4.0"
+                last_updated: "2024-12"
+            reference_content: |
+              【このユニットの狙い】GPT-4oなどの「マルチモーダル・即応性」重視のモデル群を理解します。
+              
+              ## 1. 「o」はOmni（全て）の意
+              
+              GPT-4oに代表される「Omni」系列は、テキスト・音声・画像を単一のモデルで処理する**「ネイティブ・マルチモーダル」**モデルです。
+              
+              ## 2. 特徴と得意領域
+              
+              - **低レイテンシ（高速応答）**：人間との会話のように、瞬時に反応します。
+              - **リアルタイム体験**：通訳機能や、カメラ越しの状況説明など、ライブ感が求められるタスクに最適です。
+              - **苦手なこと**：複雑な論理パズルや、長時間の深い思考が必要な数学的課題では、後述するReasoningモデルに劣ります。
+              
+          - id: "unit04-openai-reasoning-series"
+            title: "Unit 04: OpenAIモデルの系譜②（Reasoning系列）"
+            card_display:
+              slide_image: "assets/slides/ch2_unit04_openai_reasoning_series.png"
+              key_points:
+                - "'思考の連鎖'を行う推論モデル"
+                - "GPT-5 Thinking：ハルシネーションが約80%減少"
+                - "GPT-4.1：最大100万トークン対応"
+                - "GPT-4o（オムニ）とGPT-o4（推論）は別モデル"
+              version_info:
+                version: "4.0"
+                last_updated: "2024-12"
+                token_limit: "100万トークン"
+                hallucination_reduction: "約80%減少"
+            reference_content: |
+              【このユニットの狙い】「推論特化型」と呼ばれる新世代モデルの特徴と数値を暗記します。
+              
+              ## 1. 「思考の連鎖」を行う推論モデル
+              
+              GPT-o1 / o3 / o4 などの「oシリーズ」および GPT-5 Thinking は、**「Reasoning（推論）特化型」です。ユーザーに回答を返す前に、内部で「Chain-of-Thought（思考の連鎖）」**と呼ばれるプロセスを経て、じっくりと考えてから答えを出します。
+              
+              ## 2. 試験に出る！最新スペック数値
+              
+              この分野は数値データが試験で問われます。以下の数字を必ず押さえてください。
+              
+              ⚠️ **試験対策の重要数値（2025-2026基準）**
+              
+              - **GPT-5 Thinking**：o3モデルと比較して、ハルシネーション（幻覚）が約80%減少したと報告されています。
+              - **GPT-4.1**：開発者向けの実務モデルとして、最大100万トークンという長コンテキストに対応しています。
+              
+              ## 3. 名前の紛らわしさに注意
+              
+              - GPT-4o（オムニ）と GPT-o4（推論）は、名前は似ていますが全く別のモデルです。
+              - 前者は「速さ・体験」、後者は「深さ・正確性」です。
+              
+          - id: "unit05-autonomous-ai-agents"
+            title: "Unit 05: 自律型AIエージェント"
+            card_display:
+              slide_image: "assets/slides/ch2_unit05_autonomous_agents.png"
+              key_points:
+                - "Operator：ブラウザ操作エージェント（2025年1月公開）"
+                - "Codex：開発エージェント（2025年5月公開）"
+                - "Operator：ECサイト購入、レストラン予約、フォーム入力"
+                - "Codex：GitHubプルリク、バグ修正、機能追加"
+              version_info:
+                version: "4.0"
+                last_updated: "2024-12"
+            reference_content: |
+              【このユニットの狙い】単なるチャットボットを超え、PC操作や開発を代行するエージェント機能を区別します。
+              
+              ## 1. Operator（ブラウザ操作エージェント）
+              
+              2025年1月に公開されたOperatorは、人間がブラウザで行う操作を代行します。
+              
+              - **できること**：ECサイトでの商品購入、レストラン予約、フォーム入力など。
+              - **特徴**：画面を画像として認識し、クリックや入力を自律的に行います。
+              
+              ## 2. Codex（開発エージェント）
+              
+              2025年5月に公開されたCodexは、ソフトウェアエンジニアリングに特化しています。
+              
+              - **できること**：GitHubのプルリクエスト作成、バグ修正、機能追加。
+              - **特徴**：クラウド上のサンドボックス（隔離環境）でコードを実行し、テストが通るまで自律的に修正を繰り返します。
+              
+          - id: "unit06-competitive-models"
+            title: "Unit 06: 競合モデルの最新動向（Google & Anthropic）"
+            card_display:
+              slide_image: "assets/slides/ch2_unit06_competitive_models.png"
+              key_points:
+                - "Gemini 2.5 Pro：最大約104万トークン対応"
+                - "Gemini 2.5 Flash：高速・低コスト"
+                - "Claude 4 / Opus 4.1：安全性とハイブリッド設計"
+                - "Microsoft Copilot：GPT-5ベース、Microsoft 365統合"
+              version_info:
+                version: "4.0"
+                last_updated: "2024-12"
+            reference_content: |
+              【このユニットの狙い】OpenAI以外の主要モデルの「バージョン番号」と「設計思想（キャラクター）」を整理します。
+              
+              ## 1. Google Gemini ファミリー
+              
+              ### 最新世代：Gemini 2.5 系列
+              
+              - **2.5 Pro**：最上位モデル。最大約104万トークン対応。
+              - **2.5 Flash**：高速・低コスト。
+              
+              ### 強み：ネイティブ・マルチモーダル
+              
+              最初から画像や音声を理解するように設計されています。「ネイティブAudioモデル」による低遅延な会話が特徴です。
+              
+              ## 2. Anthropic Claude ファミリー
+              
+              ### 最新世代：Claude 4 / Opus 4.1
+              
+              - **Opus 4.1**：最上位モデル。エージェント的タスクや実運用のコーディングに強い。
+              - **Sonnet 4**：バランス型。
+              
+              ### 強み：安全性とハイブリッド設計
+              
+              - **Constitutional AI（憲法AI）**：「無害・正直・役に立つ」を最優先する設計思想。
+              - **拡張推論モード**：外部ツールを並列で呼び出しながら長時間のタスクを遂行します。
+              
+              ## 3. Microsoft Copilot
+              
+              - **特徴**：ビジネス統合。WordやExcel、TeamsなどのMicrosoft 365アプリ内で、GPT-5ベースのAIを安全な環境（商用データ保護）で利用できます。
+
+      - id: "chapter3"
+        title: "情報リテラシー"
+        description: "AI活用における法的・倫理的考慮事項"
+        estimated_hours: 2
+        order: 3
+        
+        sections:
+          - id: "legal-considerations"
+            title: "法的考慮事項"
+            content:
+              - topic: "著作権法"
+                description: "著作者の死後70年まで保護"
+              - topic: "個人情報保護法"
+                description: "個人の権利利益を保護"
+              - topic: "不正競争防止法"
+                description: "公正な競争環境の維持"
+              - topic: "GDPR"
+                description: "EU一般データ保護規則"
+                
+          - id: "ai-ethics"
+            title: "AI倫理"
+            content:
+              - topic: "公平性（Fairness）"
+                description: "バイアスの排除と公正な判断"
+              - topic: "説明可能性（Explainability）"
+                description: "AI判断の根拠を説明可能にする"
+              - topic: "透明性（Transparency）"
+                description: "AIシステムの動作を透明化"
+              - topic: "責任性（Accountability）"
+                description: "AI利用における責任の明確化"
+                
+          - id: "security"
+            title: "セキュリティ"
+            content:
+              - topic: "プライバシー保護"
+                description: "個人情報の適切な管理"
+              - topic: "差分プライバシー"
+                description: "数学的ノイズによる個人特定防止"
+              - topic: "フィッシング対策"
+                description: "不正アクセス防止策"
+              - topic: "ソーシャルエンジニアリング対策"
+                description: "人間の心理を狙った攻撃への対策"
+
+      - id: "chapter4"
+        title: "テキスト生成AIのプロンプト制作と実例"
+        description: "効果的なプロンプト設計技術"
+        estimated_hours: 2
+        order: 4
+        
+        sections:
+          - id: "prompt-engineering"
+            title: "プロンプトエンジニアリング"
+            content:
+              - topic: "Zero-Shotプロンプティング"
+                description: "事前の例示なしで直接タスクを指示"
+              - topic: "Few-Shotプロンプティング"
+                description: "いくつかの例を提示してタスクを学習"
+              - topic: "Chain-of-Thoughtプロンプティング"
+                description: "段階的思考過程で複雑な問題を解決"
+              - topic: "ロールプレイ技法"
+                description: "特定の役割を設定して専門的回答を取得"
+                
+          - id: "prompt-design"
+            title: "プロンプト設計"
+            content:
+              - topic: "明確性"
+                description: "具体的で明確な指示の提供"
+              - topic: "コンテキスト"
+                description: "適切な背景情報の提供"
+              - topic: "制約設定"
+                description: "出力形式や長さの明示"
+              - topic: "例示活用"
+                description: "期待する出力の具体例を提示"
+                
+          - id: "prompt-security"
+            title: "プロンプトセキュリティ"
+            content:
+              - topic: "プロンプトインジェクション対策"
+                description: "悪意のあるプロンプトの検証とフィルタリング"
+              - topic: "ハルシネーション対策"
+                description: "情報源や根拠の明記要求"
+              - topic: "バージョン管理"
+                description: "プロンプトの改善履歴追跡"
+
+      - id: "chapter5"
+        title: "実践と応用"
+        description: "AI技術の実用的活用と将来展望"
+        estimated_hours: 2
+        order: 5
+        
+        sections:
+          - id: "business-applications"
+            title: "ビジネス応用"
+            content:
+              - topic: "AI導入戦略"
+                description: "組織全体でのAI理解と協力"
+              - topic: "ROI測定"
+                description: "AI投資効果の測定と評価"
+              - topic: "リスク管理"
+                description: "AI利用に伴うリスクの識別と対策"
+              - topic: "人材育成"
+                description: "AI時代に必要なスキルの習得"
+                
+          - id: "governance"
+            title: "AIガバナンス"
+            content:
+              - topic: "AI事業者ガイドライン"
+                description: "AI開発・利用の指針"
+              - topic: "責任あるAI"
+                description: "説明可能で公平なAIシステム"
+              - topic: "国際標準化"
+                description: "相互運用性と安全性の確保"
+              - topic: "監査・モニタリング"
+                description: "継続的な品質管理"
+                
+          - id: "future-trends"
+            title: "将来展望"
+            content:
+              - topic: "マルチモーダルAI"
+                description: "テキスト・画像・音声の統合処理"
+              - topic: "AIエージェント"
+                description: "自律的にタスクを実行するAI"
+              - topic: "量子AI"
+                description: "量子コンピューティングとAIの融合"
+              - topic: "人間とAIの協働"
+                description: "創造性と倫理を保持した協力関係"
+
+# 問題演習設定
+quiz_configuration:
+  total_questions: 100
+  questions_per_chapter: 20
+  question_types:
+    - type: "multiple_choice"
+      options: 4
+      weight: 90
+    - type: "multiple_select"
+      options: 4
+      weight: 10
+      
+  difficulty_levels:
+    - level: "basic"
+      weight: 40
+    - level: "intermediate"
+      weight: 50
+    - level: "advanced"
+      weight: 10
+      
+  scoring:
+    passing_score: 70
+    max_score: 100
+    time_limit_minutes: 90
+
+# チャット機能設定
+chat_configuration:
+  model: "gpt-4"
+  context_window: 8192
+  temperature: 0.7
+  max_tokens: 1000
+  
+  system_prompt: |
+    あなたは生成AI技術の専門講師です。
+    学習者の質問に対して、分かりやすく正確な回答を提供してください。
+    技術的な概念は具体例を交えて説明し、実践的なアドバイスも含めてください。
+    
+  features:
+    - name: "質問応答"
+      description: "AI技術に関する質問への回答"
+    - name: "学習サポート"
+      description: "理解度に応じた補足説明"
+    - name: "実践アドバイス"
+      description: "実際の活用方法の提案"
+
+# 学習進捗管理
+progress_tracking:
+  metrics:
+    - name: "chapter_completion"
+      description: "章別完了率"
+    - name: "quiz_scores"
+      description: "問題演習スコア"
+    - name: "time_spent"
+      description: "学習時間"
+    - name: "weak_areas"
+      description: "弱点領域の特定"
+      
+  achievements:
+    - id: "first_quiz"
+      title: "初回挑戦"
+      description: "初めて問題演習に挑戦"
+      icon: "🎯"
+    - id: "chapter_master"
+      title: "章マスター"
+      description: "1つの章を完全制覇"
+      icon: "📚"
+    - id: "quiz_perfect"
+      title: "完全制覇"
+      description: "問題演習で満点取得"
+      icon: "🏆"
+    - id: "study_streak"
+      title: "継続学習"
+      description: "7日間連続学習"
+      icon: "🔥"
+
+# UI/UX設定
+interface_configuration:
+  theme:
+    primary_color: "#3B82F6"
+    secondary_color: "#10B981"
+    accent_color: "#F59E0B"
+    
+  responsive_design:
+    breakpoints:
+      mobile: "640px"
+      tablet: "768px"
+      desktop: "1024px"
+      
+  accessibility:
+    - feature: "keyboard_navigation"
+      enabled: true
+    - feature: "screen_reader_support"
+      enabled: true
+    - feature: "high_contrast_mode"
+      enabled: true
+    - feature: "font_size_adjustment"
+      enabled: true
+
+# 技術スタック設定
+technology_stack:
+  frontend:
+    framework: "Next.js 14"
+    language: "TypeScript"
+    styling: "Tailwind CSS"
+    icons: "Lucide React"
+    
+  backend:
+    api: "Next.js API Routes"
+    ai_integration: "OpenAI API"
+    
+  deployment:
+    platform: "Vercel"
+    environment_variables:
+      - name: "OPENAI_API_KEY"
+        required: true
+        description: "OpenAI APIキー"
+      - name: "NEXT_PUBLIC_ENABLE_CHAT"
+        required: false
+        description: "チャット機能の有効化"
+      - name: "NEXT_PUBLIC_APP_URL"
+        required: true
+        description: "アプリケーションURL"
+
+# セキュリティ設定
+security_configuration:
+  api_protection:
+    - method: "origin_check"
+      description: "リクエスト元の検証"
+    - method: "referer_check"
+      description: "参照元ヘッダーの検証"
+    - method: "rate_limiting"
+      description: "リクエスト頻度制限"
+    - method: "input_validation"
+      description: "入力データの検証"
+    - method: "bot_detection"
+      description: "ボット・クローラーの検出"
+      
+  security_headers:
+    - header: "X-Frame-Options"
+      value: "DENY"
+    - header: "X-Content-Type-Options"
+      value: "nosniff"
+    - header: "Referrer-Policy"
+      value: "strict-origin-when-cross-origin"
+    - header: "X-XSS-Protection"
+      value: "1; mode=block"
+
+# 拡張性設定
+extensibility:
+  plugin_architecture:
+    enabled: true
+    supported_types:
+      - "content_providers"
+      - "quiz_generators"
+      - "progress_analyzers"
+      - "ai_models"
+      
+  internationalization:
+    supported_languages:
+      - code: "ja"
+        name: "日本語"
+        default: true
+      - code: "en"
+        name: "English"
+        default: false
+        
+  analytics:
+    learning_analytics: true
+    user_behavior_tracking: true
+    performance_monitoring: true
+    
+# データ形式設定
+data_formats:
+  export_formats:
+    - format: "csv"
+      description: "表計算ソフト対応形式"
+    - format: "json"
+      description: "プログラム処理用形式"
+    - format: "yaml"
+      description: "設定ファイル形式"
+    - format: "markdown"
+      description: "文書形式"
+      
+  import_formats:
+    - format: "yaml"
+      description: "コンテンツ設定ファイル"
+    - format: "json"
+      description: "データ交換形式"
+    - format: "csv"
+      description: "問題データ一括登録"

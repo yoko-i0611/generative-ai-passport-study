@@ -1,0 +1,297 @@
+{
+  "version": "1.0.0",
+  "units": [
+    {
+      "chapter": 1,
+      "sectionId": "unit01-ai-definition-history",
+      "sectionTitle": "AIの定義と歴史",
+      "questionCount": 4,
+      "questionIds": [
+        "unit_001",
+        "unit_002",
+        "unit_003",
+        "unit_004"
+      ]
+    },
+    {
+      "chapter": 1,
+      "sectionId": "unit02-machine-learning",
+      "sectionTitle": "機械学習の仕組み（4つの学習手法）",
+      "questionCount": 4,
+      "questionIds": [
+        "unit_005",
+        "unit_006",
+        "unit_007",
+        "unit_008"
+      ]
+    },
+    {
+      "chapter": 1,
+      "sectionId": "unit03-deep-learning",
+      "sectionTitle": "ディープラーニングとニューラルネットワーク",
+      "questionCount": 3,
+      "questionIds": [
+        "unit_009",
+        "unit_010",
+        "unit_011"
+      ]
+    },
+    {
+      "chapter": 1,
+      "sectionId": "unit04-overfitting-bias",
+      "sectionTitle": "学習の精度と課題（過学習とバイアス）",
+      "questionCount": 4,
+      "questionIds": [
+        "unit_012",
+        "unit_013",
+        "unit_014",
+        "unit_015"
+      ]
+    },
+    {
+      "chapter": 2,
+      "sectionId": "unit01-generative-model-evolution",
+      "sectionTitle": "生成モデルの誕生と進化",
+      "questionCount": 7,
+      "questionIds": [
+        "unit_016",
+        "unit_017",
+        "unit_018",
+        "unit_019",
+        "unit_020",
+        "unit_021",
+        "unit_022"
+      ]
+    },
+    {
+      "chapter": 2,
+      "sectionId": "unit02-paradigm-shift",
+      "sectionTitle": "画像生成技術のパラダイムシフト",
+      "questionCount": 4,
+      "questionIds": [
+        "unit_023",
+        "unit_024",
+        "unit_025",
+        "unit_026"
+      ]
+    },
+    {
+      "chapter": 2,
+      "sectionId": "unit03-openai-omni-series",
+      "sectionTitle": "OpenAIモデルの系譜①（Omni系列）",
+      "questionCount": 3,
+      "questionIds": [
+        "unit_027",
+        "unit_028",
+        "unit_029"
+      ]
+    },
+    {
+      "chapter": 2,
+      "sectionId": "unit04-openai-reasoning-series",
+      "sectionTitle": "OpenAIモデルの系譜②（Reasoning系列）",
+      "questionCount": 3,
+      "questionIds": [
+        "unit_030",
+        "unit_031",
+        "unit_032"
+      ]
+    },
+    {
+      "chapter": 2,
+      "sectionId": "unit05-autonomous-ai-agents",
+      "sectionTitle": "自律型AIエージェント",
+      "questionCount": 3,
+      "questionIds": [
+        "unit_033",
+        "unit_034",
+        "unit_035"
+      ]
+    },
+    {
+      "chapter": 2,
+      "sectionId": "unit06-competitive-models",
+      "sectionTitle": "競合モデルの最新動向（Google & Anthropic & Microsoft）",
+      "questionCount": 3,
+      "questionIds": [
+        "unit_036",
+        "unit_037",
+        "unit_038"
+      ]
+    },
+    {
+      "chapter": 3,
+      "sectionId": "unit01-generative-ai-modality",
+      "sectionTitle": "生成AIができることと主なサービス",
+      "questionCount": 5,
+      "questionIds": [
+        "unit_039",
+        "unit_040",
+        "unit_041",
+        "unit_042",
+        "unit_043"
+      ]
+    },
+    {
+      "chapter": 3,
+      "sectionId": "unit02-deepfake",
+      "sectionTitle": "ディープフェイク技術とその危険性",
+      "questionCount": 3,
+      "questionIds": [
+        "unit_044",
+        "unit_045",
+        "unit_046"
+      ]
+    },
+    {
+      "chapter": 3,
+      "sectionId": "unit03-rag",
+      "sectionTitle": "RAG（検索拡張生成）",
+      "questionCount": 6,
+      "questionIds": [
+        "unit_047",
+        "unit_048",
+        "unit_049",
+        "unit_050",
+        "unit_051",
+        "unit_052"
+      ]
+    },
+    {
+      "chapter": 3,
+      "sectionId": "unit04-ai-agent",
+      "sectionTitle": "AIエージェント",
+      "questionCount": 25,
+      "questionIds": [
+        "unit_053",
+        "unit_054",
+        "unit_056",
+        "unit_057",
+        "unit_058",
+        "unit_059",
+        "unit_060",
+        "unit_061",
+        "unit_062",
+        "unit_063",
+        "unit_064",
+        "unit_065",
+        "unit_066",
+        "unit_067",
+        "unit_068",
+        "unit_069",
+        "unit_070",
+        "unit_071",
+        "unit_072",
+        "unit_073",
+        "unit_074",
+        "unit_075",
+        "unit_076",
+        "unit_077"
+      ]
+    },
+    {
+      "chapter": 4,
+      "sectionId": "unit01-internet-literacy",
+      "sectionTitle": "インターネットリテラシーの基礎",
+      "questionCount": 4,
+      "questionIds": [
+        "unit_078",
+        "unit_079",
+        "unit_080",
+        "unit_081"
+      ]
+    },
+    {
+      "chapter": 4,
+      "sectionId": "unit02-personal-info-ai",
+      "sectionTitle": "個人情報保護と生成AI",
+      "questionCount": 5,
+      "questionIds": [
+        "unit_082",
+        "unit_083",
+        "unit_084",
+        "unit_085",
+        "unit_086"
+      ]
+    },
+    {
+      "chapter": 4,
+      "sectionId": "unit03-copyright",
+      "sectionTitle": "制作物に関わる権利（知的財産権）",
+      "questionCount": 6,
+      "questionIds": [
+        "unit_087",
+        "unit_088",
+        "unit_089",
+        "unit_090",
+        "unit_091",
+        "unit_092"
+      ]
+    },
+    {
+      "chapter": 4,
+      "sectionId": "unit04-ai-guidelines",
+      "sectionTitle": "AI社会の基本理念とAI社会原則",
+      "questionCount": 5,
+      "questionIds": [
+        "unit_093",
+        "unit_094",
+        "unit_095",
+        "unit_096",
+        "unit_097"
+      ]
+    },
+    {
+      "chapter": 5,
+      "sectionId": "unit01-llm-params",
+      "sectionTitle": "LLMの仕組みとパラメータ",
+      "questionCount": 4,
+      "questionIds": [
+        "unit_098",
+        "unit_099",
+        "unit_100",
+        "unit_101"
+      ]
+    },
+    {
+      "chapter": 5,
+      "sectionId": "unit02-prompt-basics",
+      "sectionTitle": "プロンプトエンジニアリング基礎",
+      "questionCount": 4,
+      "questionIds": [
+        "unit_102",
+        "unit_103",
+        "unit_104",
+        "unit_105"
+      ]
+    },
+    {
+      "chapter": 5,
+      "sectionId": "unit03-advanced-prompting",
+      "sectionTitle": "応用プロンプティング（高度な思考制御技法）",
+      "questionCount": 5,
+      "questionIds": [
+        "unit_106",
+        "unit_107",
+        "unit_108",
+        "unit_109",
+        "unit_110"
+      ]
+    },
+    {
+      "chapter": 5,
+      "sectionId": "unit04-business-risk",
+      "sectionTitle": "ビジネス活用とリスク管理",
+      "questionCount": 7,
+      "questionIds": [
+        "unit_111",
+        "unit_112",
+        "unit_113",
+        "unit_114",
+        "unit_115",
+        "unit_116",
+        "unit_117"
+      ]
+    }
+  ]
+}

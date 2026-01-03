@@ -1,0 +1,394 @@
+# 課金システム設定ファイル - Billing & Monetization Configuration
+# 学習プラットフォームの収益化機能設定
+
+billing_metadata:
+  name: "AI Learning Platform Billing System"
+  version: "1.0.0"
+  currency: "JPY"
+  tax_rate: 0.10  # 消費税10%
+  billing_cycle: "monthly"
+  
+# サブスクリプションプラン
+subscription_plans:
+  free:
+    id: "free"
+    name: "無料プラン"
+    description: "基本的な学習機能を利用可能"
+    price: 0
+    billing_period: "unlimited"
+    features:
+      content_access:
+        chapters: 2  # 最初の2章のみ
+        quiz_questions: 20  # 1日20問まで
+        chat_messages: 5   # 1日5回まで
+      support:
+        community: true
+        email: false
+        priority: false
+      additional:
+        progress_tracking: true
+        certificates: false
+        export_data: false
+        offline_access: false
+        
+  basic:
+    id: "basic"
+    name: "ベーシックプラン"
+    description: "全コンテンツにアクセス可能"
+    price: 980
+    billing_period: "monthly"
+    stripe_price_id: "price_basic_monthly_jpy"
+    features:
+      content_access:
+        chapters: "unlimited"
+        quiz_questions: "unlimited"
+        chat_messages: 100  # 1日100回まで
+      support:
+        community: true
+        email: true
+        priority: false
+      additional:
+        progress_tracking: true
+        certificates: true
+        export_data: true
+        offline_access: false
+        
+  premium:
+    id: "premium"
+    name: "プレミアムプラン"
+    description: "全機能+個別サポート"
+    price: 1980
+    billing_period: "monthly"
+    stripe_price_id: "price_premium_monthly_jpy"
+    features:
+      content_access:
+        chapters: "unlimited"
+        quiz_questions: "unlimited"
+        chat_messages: "unlimited"
+      support:
+        community: true
+        email: true
+        priority: true
+        one_on_one: true
+      additional:
+        progress_tracking: true
+        certificates: true
+        export_data: true
+        offline_access: true
+        custom_study_plan: true
+        advanced_analytics: true
+        
+  annual_basic:
+    id: "annual_basic"
+    name: "ベーシック年間プラン"
+    description: "年間払いで2ヶ月分お得"
+    price: 9800  # 10ヶ月分の価格
+    billing_period: "yearly"
+    stripe_price_id: "price_basic_yearly_jpy"
+    discount_rate: 0.17  # 17%割引
+    features:
+      content_access:
+        chapters: "unlimited"
+        quiz_questions: "unlimited"
+        chat_messages: 100
+      support:
+        community: true
+        email: true
+        priority: false
+      additional:
+        progress_tracking: true
+        certificates: true
+        export_data: true
+        offline_access: false
+
+# 支払いプロバイダー設定
+payment_providers:
+  stripe:
+    enabled: true
+    public_key: "${STRIPE_PUBLISHABLE_KEY}"
+    secret_key: "${STRIPE_SECRET_KEY}"
+    webhook_secret: "${STRIPE_WEBHOOK_SECRET}"
+    supported_methods:
+      - "card"
+      - "apple_pay"
+      - "google_pay"
+    currencies: ["jpy"]
+    
+  paypal:
+    enabled: false
+    client_id: "${PAYPAL_CLIENT_ID}"
+    client_secret: "${PAYPAL_CLIENT_SECRET}"
+    
+# 使用量ベース課金
+usage_based_billing:
+  enabled: true
+  metrics:
+    ai_chat_messages:
+      free_tier: 5      # 無料枠
+      basic_tier: 100   # ベーシックプラン
+      premium_tier: "unlimited"
+      overage_price: 10  # 超過1回あたり10円
+      
+    quiz_attempts:
+      free_tier: 20
+      basic_tier: "unlimited"
+      premium_tier: "unlimited"
+      
+    content_exports:
+      free_tier: 0
+      basic_tier: 10
+      premium_tier: "unlimited"
+      overage_price: 100  # 超過1回あたり100円
+
+# フリーミアム戦略
+freemium_strategy:
+  trial_period:
+    duration_days: 14
+    full_access: true
+    auto_downgrade: true
+    
+  content_gating:
+    free_chapters: [1, 2]  # 第1章、第2章のみ無料
+    preview_length: 300    # 有料章のプレビュー文字数
+    
+  feature_limitations:
+    free_plan:
+      daily_quiz_limit: 20
+      daily_chat_limit: 5
+      export_disabled: true
+      certificate_disabled: true
+      
+# 課金UI設定
+billing_ui:
+  pricing_page:
+    show_monthly_toggle: true
+    highlight_plan: "basic"
+    show_feature_comparison: true
+    testimonials: true
+    
+  checkout_flow:
+    provider: "stripe"
+    collect_billing_address: true
+    tax_calculation: true
+    proration: true
+    
+  account_management:
+    subscription_management: true
+    invoice_history: true
+    payment_method_update: true
+    cancellation_flow: true
+    
+# 課金分析
+billing_analytics:
+  metrics:
+    - name: "mrr"
+      description: "月間経常収益"
+    - name: "churn_rate"
+      description: "解約率"
+    - name: "ltv"
+      description: "顧客生涯価値"
+    - name: "conversion_rate"
+      description: "無料→有料転換率"
+    - name: "arpu"
+      description: "ユーザー1人当たり売上"
+      
+  cohort_analysis:
+    enabled: true
+    retention_tracking: true
+    
+# 割引・クーポン設定
+discounts:
+  coupon_codes:
+    - code: "WELCOME20"
+      type: "percentage"
+      value: 20
+      duration: "once"
+      valid_plans: ["basic", "premium"]
+      expires_at: "2024-12-31"
+      
+    - code: "STUDENT50"
+      type: "percentage"
+      value: 50
+      duration: "repeating"
+      valid_plans: ["basic"]
+      verification_required: true
+      
+  promotional_pricing:
+    black_friday:
+      discount: 30
+      duration: "2024-11-29 to 2024-12-02"
+      
+# 税金・コンプライアンス
+tax_compliance:
+  japan:
+    consumption_tax: 0.10
+    invoice_required: true
+    qualified_invoice_issuer: true
+    
+  international:
+    vat_handling: "reverse_charge"
+    tax_id_collection: true
+    
+# リテンション戦略
+retention_strategies:
+  dunning_management:
+    retry_schedule: [1, 3, 7, 14]  # 日数
+    email_templates:
+      - template: "payment_failed_1"
+        send_after_days: 1
+      - template: "payment_failed_final"
+        send_after_days: 14
+        
+  win_back_campaigns:
+    cancelled_users:
+      discount_offer: 50
+      duration_months: 2
+      
+  loyalty_program:
+    enabled: false  # 将来実装
+    
+# APIキー・シークレット管理
+api_keys:
+  required_env_vars:
+    - name: "STRIPE_PUBLISHABLE_KEY"
+      description: "Stripe公開可能キー"
+      example: "pk_test_..."
+    - name: "STRIPE_SECRET_KEY"
+      description: "Stripeシークレットキー"
+      example: "sk_test_..."
+    - name: "STRIPE_WEBHOOK_SECRET"
+      description: "Stripeウェブフックシークレット"
+      example: "whsec_..."
+    - name: "DATABASE_URL"
+      description: "ユーザー・課金データベースURL"
+      example: "postgresql://..."
+      
+# データベース設計
+database_schema:
+  users:
+    fields:
+      - id: "uuid"
+      - email: "string"
+      - stripe_customer_id: "string"
+      - current_plan: "string"
+      - subscription_status: "string"
+      - trial_ends_at: "timestamp"
+      - created_at: "timestamp"
+      
+  subscriptions:
+    fields:
+      - id: "uuid"
+      - user_id: "uuid"
+      - stripe_subscription_id: "string"
+      - plan_id: "string"
+      - status: "string"
+      - current_period_start: "timestamp"
+      - current_period_end: "timestamp"
+      - cancel_at_period_end: "boolean"
+      
+  usage_records:
+    fields:
+      - id: "uuid"
+      - user_id: "uuid"
+      - metric: "string"
+      - quantity: "integer"
+      - recorded_at: "timestamp"
+      
+# セキュリティ設定
+billing_security:
+  webhook_verification:
+    enabled: true
+    signature_validation: true
+    
+  pci_compliance:
+    card_data_handling: "stripe_handles"
+    tokenization: true
+    
+  fraud_prevention:
+    radar_enabled: true
+    risk_scoring: true
+    3d_secure: "automatic"
+    
+# 多言語・多通貨
+internationalization:
+  supported_currencies:
+    - code: "JPY"
+      symbol: "¥"
+      default: true
+    - code: "USD"
+      symbol: "$"
+      default: false
+      
+  localized_pricing:
+    enabled: true
+    purchasing_power_parity: false
+    
+# 通知・メール設定
+notifications:
+  billing_emails:
+    - type: "subscription_created"
+      template: "welcome_paid_user"
+    - type: "payment_succeeded"
+      template: "payment_receipt"
+    - type: "payment_failed"
+      template: "payment_failed_notice"
+    - type: "subscription_cancelled"
+      template: "cancellation_confirmation"
+      
+  in_app_notifications:
+    - type: "trial_ending"
+      trigger: "3_days_before"
+    - type: "usage_limit_reached"
+      trigger: "90_percent_usage"
+      
+# 実装ロードマップ
+implementation_phases:
+  phase1:
+    duration: "2-3 weeks"
+    features:
+      - stripe_integration
+      - basic_subscription_plans
+      - payment_ui
+      - usage_tracking
+      
+  phase2:
+    duration: "1-2 weeks"
+    features:
+      - billing_dashboard
+      - invoice_management
+      - cancellation_flow
+      
+  phase3:
+    duration: "2-3 weeks"
+    features:
+      - advanced_analytics
+      - coupon_system
+      - dunning_management
+      
+# コスト見積もり
+development_costs:
+  frontend_development: "50-80時間"
+  backend_development: "80-120時間"
+  testing_qa: "30-40時間"
+  
+monthly_operational_costs:
+  stripe_fees: "3.6% + ¥50/transaction"
+  database_hosting: "¥2,000-5,000"
+  email_service: "¥1,000-3,000"
+  monitoring_tools: "¥2,000-4,000"
+  
+# 法的考慮事項
+legal_requirements:
+  terms_of_service:
+    subscription_terms: true
+    cancellation_policy: true
+    refund_policy: true
+    
+  privacy_policy:
+    billing_data_handling: true
+    third_party_processors: true
+    
+  consumer_protection:
+    cooling_off_period: "8日間"
+    clear_pricing_display: true
+    auto_renewal_disclosure: true

@@ -1,0 +1,580 @@
+# 問題演習データ - Quiz Data Configuration
+# 生成AIパスポート試験対策用問題データベース
+
+quiz_metadata:
+  name: "生成AIパスポート試験対策問題集"
+  version: "1.0.0"
+  total_questions: 300
+  language: "ja"
+  estimated_time_minutes: 270
+  passing_score: 70
+
+chapters:
+  - chapter_id: "chapter1"
+    title: "AI（人工知能）"
+    question_range: [1, 60]
+    
+    questions:
+      - id: 1
+        question: "「ANI」「AGI」の説明として、最も正しい記述を1つ選びなさい"
+        type: "single_choice"
+        options:
+          - text: "ANIは特定のタスクを実行するために設計されたAIで、AGIは人間と同じレベルの認知能力を持つAIを指す"
+            is_correct: true
+          - text: "ANIは人間と対話する能力を持つAIで、AGIは人間と対話する能力を持たないAIを指す"
+            is_correct: false
+          - text: "ANIは既に商用化されているAIで、AGIは実用化される直前のAIを指す"
+            is_correct: false
+          - text: "ANIは複数のタスクを同時に実行する能力を持つAIで、AGIは1つのタスクに特化したAIを指す"
+            is_correct: false
+        explanation: "ANI（Artificial Narrow Intelligence）は特定のタスクに特化したAI、AGI（Artificial General Intelligence）は人間と同等の汎用的な知能を持つAIです。"
+        difficulty: "basic"
+        tags: ["ANI", "AGI", "AI分類"]
+
+      - id: 2
+        question: "三度のAIブームに関する記述として正しい文章を1つ選びなさい"
+        type: "single_choice"
+        options:
+          - text: "第二次AIブームは1990年代に始まり、ルールベースのシステムが注目された"
+            is_correct: false
+          - text: "第三次AIブームは2010年代に始まり、ビッグデータの活用とディープラーニング技術の発展が主な特徴である"
+            is_correct: true
+          - text: "第一次AIブームではエキスパートシステムが主に開発され、その結果としてAIの非実用的なシステムが増えたため「AIの冬」が訪れた"
+            is_correct: false
+          - text: "第二次AIブームでは、ビッグデータとディープラーニングが主に活用され、AI技術が広く普及した"
+            is_correct: false
+        explanation: "第三次AIブームは2010年代から始まり、ビッグデータの活用とディープラーニング技術の発展が主な特徴です。"
+        difficulty: "basic"
+        tags: ["AIブーム", "AI歴史", "ディープラーニング"]
+
+      - id: 3
+        question: "クラスタリングについて正しく説明している文章を1つ選びなさい"
+        type: "single_choice"
+        options:
+          - text: "与えられたデータを似た特徴やパターンを持つグループに分類することである"
+            is_correct: true
+          - text: "データの未知の因果関連を予測するための統計的手法である"
+            is_correct: false
+          - text: "過去のデータを基に未来の値を予測する手法である"
+            is_correct: false
+          - text: "与えられたデータをランダムに2つのグループに分ける手法である"
+            is_correct: false
+        explanation: "クラスタリングは、データを似た特徴やパターンを持つグループに分類する教師なし学習の手法です。"
+        difficulty: "basic"
+        tags: ["クラスタリング", "教師なし学習", "機械学習"]
+
+      - id: 4
+        question: "過学習を防ぐための代表的な手法をすべて選びなさい（複数選択可）"
+        type: "multiple_choice"
+        options:
+          - text: "ドロップアウト"
+            is_correct: true
+          - text: "シーケンスの並行処理"
+            is_correct: false
+          - text: "RLHF"
+            is_correct: false
+          - text: "正則化"
+            is_correct: true
+        explanation: "ドロップアウトと正則化は過学習を防ぐ代表的な手法です。シーケンスの並行処理やRLHFは過学習防止の手法ではありません。"
+        difficulty: "intermediate"
+        tags: ["過学習", "ドロップアウト", "正則化"]
+
+      - id: 5
+        question: "ルールベースを用いたAIの問題点について正しく記述している文章を1つ選びなさい"
+        type: "single_choice"
+        options:
+          - text: "機械学習に比べ、簡単なタスクを遂行させる際にもコストが多くかかってしまう"
+            is_correct: false
+          - text: "複雑な問題に対処するために大量のルールが必要であり、それらの管理が困難になる"
+            is_correct: true
+          - text: "適切な量の高品質な訓練データがない場合、モデルは適切に学習できないことがある"
+            is_correct: false
+          - text: "条件分岐が多い問題に対して対処することができない"
+            is_correct: false
+        explanation: "ルールベースAIは複雑な問題に対処するため大量のルールが必要となり、それらの管理が困難になることが主な問題点です。"
+        difficulty: "intermediate"
+        tags: ["ルールベース", "エキスパートシステム", "AI課題"]
+
+  - chapter_id: "chapter2"
+    title: "生成AI（ジェネレーティブAI）"
+    question_range: [61, 120]
+    
+    questions:
+      - id: 21
+        question: "Transformerを構成する二つの主要な技術を答えなさい"
+        type: "multiple_choice"
+        options:
+          - text: "自己注意機構（Self-Attention）"
+            is_correct: true
+          - text: "位置エンコーディング（Positional Encoding）"
+            is_correct: true
+          - text: "畳み込み演算（Convolution）"
+            is_correct: false
+          - text: "リカレント構造（Recurrent Structure）"
+            is_correct: false
+        explanation: "Transformerは、自己注意機構（Self-Attention）と位置エンコーディング（Positional Encoding）を主要な技術として構成されています。これにより、並列処理と長距離依存関係の学習が可能になりました。"
+        difficulty: "intermediate"
+        tags: ["Transformer", "自己注意機構", "位置エンコーディング"]
+
+      - id: 22
+        question: "GPT-4oと従来の拡散モデルの画像生成方式の違いは何か。最も適切な説明を1つ選びなさい"
+        type: "single_choice"
+        options:
+          - text: "GPT-4oは拡散モデルを採用しているため、従来と変わらない"
+            is_correct: false
+          - text: "GPT-4oは自己回帰型を採用し、左上から順次描画することで、画像内の文字生成が可能になった"
+            is_correct: true
+          - text: "拡散モデルは自己回帰型を採用しており、GPT-4oと同様の方式である"
+            is_correct: false
+          - text: "どちらもノイズ除去方式を採用しており、技術的な違いはない"
+            is_correct: false
+        explanation: "GPT-4oは自己回帰型（Autoregressive）を採用し、画像をトークンとして左上から順次描画する方式です。これにより、従来の拡散モデル（ノイズ除去方式）では困難だった画像内の文字生成が可能になりました。"
+        difficulty: "intermediate"
+        tags: ["GPT-4o", "拡散モデル", "自己回帰型", "画像生成"]
+
+      - id: 23
+        question: "GPT-4oの「o」が表す意味として正しいものはどれか"
+        type: "single_choice"
+        options:
+          - text: "Omni（全ての）- テキスト、画像、音声を統合的に処理できる"
+            is_correct: true
+          - text: "Original（オリジナル）- 最初のGPT-4モデルである"
+            is_correct: false
+          - text: "Optimal（最適）- 最適化されたモデルである"
+            is_correct: false
+          - text: "Online（オンライン）- オンライン専用のモデルである"
+            is_correct: false
+        explanation: "GPT-4oの「o」は「Omni（全ての）」を意味し、テキスト、画像、音声を統合的に処理できるオムニモーダルモデルであることを表します。"
+        difficulty: "basic"
+        tags: ["GPT-4o", "Omni", "マルチモーダル"]
+
+      - id: 24
+        question: "GPT-5 Thinkingのハルシネーション減少率として正しい数値を1つ選びなさい"
+        type: "single_choice"
+        options:
+          - text: "約50%減少"
+            is_correct: false
+          - text: "約60%減少"
+            is_correct: false
+          - text: "約80%減少"
+            is_correct: true
+          - text: "約90%減少"
+            is_correct: false
+        explanation: "GPT-5 Thinkingでは、従来モデルと比較して約80%ものハルシネーション（幻覚）減少を実現しています。これは、推論プロセスを明示的に扱うReasoning系列の特徴です。"
+        difficulty: "intermediate"
+        tags: ["GPT-5 Thinking", "ハルシネーション", "Reasoning系列"]
+
+      - id: 25
+        question: "OpenAIのReasoning系列（o1/o3/o4）の特徴として最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "推論能力と正確性に特化し、数学や論理推論に強い"
+            is_correct: true
+          - text: "汎用的なタスクに特化し、全ての分野で最高性能を発揮する"
+            is_correct: false
+          - text: "画像生成に特化し、視覚的コンテンツの作成に優れている"
+            is_correct: false
+          - text: "音声処理に特化し、リアルタイム会話に最適化されている"
+            is_correct: false
+        explanation: "Reasoning系列（o1/o3/o4）は、推論能力と正確性に特化したモデルで、数学、論理推論、科学的計算など、正確な答えが求められるタスクに優れています。"
+        difficulty: "intermediate"
+        tags: ["Reasoning系列", "推論能力", "o1", "o3", "o4"]
+
+      - id: 26
+        question: "OperatorとCodexの役割の違いとして正しい記述を1つ選びなさい"
+        type: "single_choice"
+        options:
+          - text: "Operatorはブラウザ操作に特化、Codexはコード生成・開発に特化している"
+            is_correct: true
+          - text: "Operatorはコード生成に特化、Codexはブラウザ操作に特化している"
+            is_correct: false
+          - text: "両方とも同じ役割を持ち、違いはない"
+            is_correct: false
+          - text: "Operatorは音声処理、Codexは画像処理に特化している"
+            is_correct: false
+        explanation: "Operatorはブラウザ操作に特化したAIエージェントで、複数のサイトを巡回して情報を収集します。一方、Codexはコード生成・開発に特化したエージェントで、GitHub Copilotの基盤技術でもあります。"
+        difficulty: "basic"
+        tags: ["Operator", "Codex", "AIエージェント", "自律型AI"]
+
+      - id: 27
+        question: "GAN（Generative Adversarial Networks）の説明として最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "生成器と識別器が競い合いながら学習し、高品質な生成データを作り出す"
+            is_correct: true
+          - text: "ノイズを除去することで画像を生成する方式"
+            is_correct: false
+          - text: "左上から順次描画することで画像を生成する方式"
+            is_correct: false
+          - text: "エンコーダとデコーダで画像を圧縮・復元する方式"
+            is_correct: false
+        explanation: "GANは、生成器（Generator）と識別器（Discriminator）の2つのネットワークが敵対的に競い合うことで、より高品質な生成データを作り出す仕組みです。2014年にイアン・グッドフェローによって提唱されました。"
+        difficulty: "basic"
+        tags: ["GAN", "生成モデル", "生成器", "識別器"]
+
+      - id: 28
+        question: "CNNが画像認識に適している理由として最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "畳み込み演算により画像の局所的な特徴を効率的に抽出できるため"
+            is_correct: true
+          - text: "時系列データの処理に優れているため"
+            is_correct: false
+          - text: "自然言語処理に特化しているため"
+            is_correct: false
+          - text: "並列処理ができないため"
+            is_correct: false
+        explanation: "CNNは畳み込み演算により、画像の局所的な特徴（エッジ、テクスチャなど）を効率的に抽出できるため、画像認識に適しています。"
+        difficulty: "basic"
+        tags: ["CNN", "畳み込みニューラルネットワーク", "画像認識"]
+
+      - id: 29
+        question: "生成モデルの進化の順序として正しいものはどれか"
+        type: "single_choice"
+        options:
+          - text: "CNN（特徴抽出）→ GAN（生成技術）→ Transformer（アーキテクチャ革新）→ 大規模言語モデル（実用化）"
+            is_correct: true
+          - text: "Transformer → CNN → GAN → 大規模言語モデル"
+            is_correct: false
+          - text: "大規模言語モデル → GAN → CNN → Transformer"
+            is_correct: false
+          - text: "GAN → Transformer → CNN → 大規模言語モデル"
+            is_correct: false
+        explanation: "生成モデルの進化は「CNN（特徴抽出）→ GAN（生成技術）→ Transformer（アーキテクチャ革新）→ 大規模言語モデル（実用化）」という流れで発展してきました。"
+        difficulty: "intermediate"
+        tags: ["生成モデル", "技術史", "CNN", "GAN", "Transformer"]
+
+      - id: 30
+        question: "拡散モデル（Diffusion Model）の説明として最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "ノイズから始めて、徐々にノイズを除去していくことで画像を生成する方式"
+            is_correct: true
+          - text: "左上から順次描画することで画像を生成する方式"
+            is_correct: false
+          - text: "生成器と識別器が競い合うことで画像を生成する方式"
+            is_correct: false
+          - text: "エンコーダとデコーダで画像を圧縮・復元する方式"
+            is_correct: false
+        explanation: "拡散モデルは、ノイズ（霧のようなもの）から始めて、徐々にノイズを除去していくことで画像を生成する方式です。Stable Diffusionなどで採用されていました。"
+        difficulty: "intermediate"
+        tags: ["拡散モデル", "Diffusion Model", "画像生成", "Stable Diffusion"]
+
+      - id: 31
+        question: "自己回帰型（Autoregressive）画像生成の特徴として正しいものはどれか"
+        type: "single_choice"
+        options:
+          - text: "画像をトークンとして扱い、左上から右下へ一つずつ描画していく方式"
+            is_correct: true
+          - text: "ノイズを除去することで画像を生成する方式"
+            is_correct: false
+          - text: "生成器と識別器が競い合う方式"
+            is_correct: false
+          - text: "全体を一度に生成する方式"
+            is_correct: false
+        explanation: "自己回帰型画像生成は、画像をトークンとして扱い、左上から右下へ一つずつ描画していく方式です。GPT-4oやo3に統合された最新の画像生成機能が採用しています。"
+        difficulty: "intermediate"
+        tags: ["自己回帰型", "Autoregressive", "画像生成", "GPT-4o"]
+
+      - id: 32
+        question: "GPT-4oのコンテキストウィンドウのサイズとして正しいものはどれか"
+        type: "single_choice"
+        options:
+          - text: "128Kトークン"
+            is_correct: true
+          - text: "32Kトークン"
+            is_correct: false
+          - text: "64Kトークン"
+            is_correct: false
+          - text: "256Kトークン"
+            is_correct: false
+        explanation: "GPT-4oは、128Kトークンのコンテキストウィンドウを備えており、長文の理解や大量の情報を同時に処理することができます。"
+        difficulty: "basic"
+        tags: ["GPT-4o", "コンテキストウィンドウ", "トークン"]
+
+      - id: 33
+        question: "Gemini 2.5シリーズにおける各モデルの主な役割を述べよ。正しい記述を1つ選びなさい"
+        type: "single_choice"
+        options:
+          - text: "Gemini Flashは高速で軽量、Gemini Proはバランス型、Gemini Ultraは最高性能を追求"
+            is_correct: true
+          - text: "全てのモデルが同じ性能で、サイズのみが異なる"
+            is_correct: false
+          - text: "Gemini Flashが最高性能で、Ultraが軽量型である"
+            is_correct: false
+          - text: "Gemini Proが最高性能で、FlashとUltraは補助的な役割"
+            is_correct: false
+        explanation: "Gemini 2.5シリーズは、Gemini Flash（高速・軽量）、Gemini Pro（バランス型）、Gemini Ultra（最高性能）という異なる役割を持った複数のサイズを提供しています。"
+        difficulty: "intermediate"
+        tags: ["Gemini 2.5", "Google", "モデル比較"]
+
+      - id: 34
+        question: "Claude 4の特徴として最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "長文処理能力に優れ、200Kトークン以上のコンテキストウィンドウを備えている"
+            is_correct: true
+          - text: "画像生成に特化しており、テキスト処理は苦手"
+            is_correct: false
+          - text: "音声処理に特化しており、リアルタイム会話に最適化されている"
+            is_correct: false
+          - text: "計算能力に特化しており、コード生成には対応していない"
+            is_correct: false
+        explanation: "Claude 4は、Anthropicが開発したモデルで、長文処理能力に優れており、200Kトークン以上のコンテキストウィンドウを備えています。また、安全性と説明可能性を重視しています。"
+        difficulty: "intermediate"
+        tags: ["Claude 4", "Anthropic", "長文処理", "コンテキストウィンドウ"]
+
+      - id: 35
+        question: "自律型AIエージェントの特徴として正しいものはどれか"
+        type: "single_choice"
+        options:
+          - text: "計画→実行→評価→修正のサイクルを繰り返しながら目標を達成する"
+            is_correct: true
+          - text: "単一のタスクのみを実行し、複数のステップは実行できない"
+            is_correct: false
+          - text: "人間の指示なしでは動作しない"
+            is_correct: false
+          - text: "情報を生成するだけで、実際の行動は実行しない"
+            is_correct: false
+        explanation: "自律型AIエージェントは、単一のタスクを実行するのではなく、「計画→実行→評価→修正」というサイクルを繰り返しながら、目標を達成するシステムです。"
+        difficulty: "intermediate"
+        tags: ["AIエージェント", "自律型AI", "Operator", "Codex"]
+
+      - id: 36
+        question: "Transformerモデルの革新的な機能として最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "自己注意機構（Self-Attention）により、並列処理と長距離依存関係の学習が可能"
+            is_correct: true
+          - text: "畳み込み演算により、画像の局所的な特徴を抽出"
+            is_correct: false
+          - text: "リカレント構造により、時系列データを処理"
+            is_correct: false
+          - text: "生成器と識別器が競い合って学習"
+            is_correct: false
+        explanation: "Transformerの革新的な機能は自己注意機構（Self-Attention）で、これにより並列処理と長距離依存関係の学習が可能になりました。これがGPTやBERTなどの大規模言語モデルの基礎技術となっています。"
+        difficulty: "basic"
+        tags: ["Transformer", "自己注意機構", "並列処理"]
+
+      - id: 37
+        question: "RAGシステムが情報の最新性と正確性を高める仕組みを説明せよ。最も適切な説明を1つ選びなさい"
+        type: "single_choice"
+        options:
+          - text: "外部の知識ベースを検索して、その情報を参照しながら回答を生成するため、最新の情報と正確な情報源に基づいた回答が可能"
+            is_correct: true
+          - text: "モデル内部の知識のみを使用するため、常に正確な情報を提供できる"
+            is_correct: false
+          - text: "インターネットを直接検索するため、常に最新の情報を提供できる"
+            is_correct: false
+          - text: "ユーザーの入力のみを基に回答するため、情報の正確性が高い"
+            is_correct: false
+        explanation: "RAG（Retrieval-Augmented Generation）システムは、外部の知識ベースを検索して、その情報を参照しながら回答を生成するため、モデル内部の知識に限定されず、最新の情報と正確な情報源に基づいた回答が可能になります。"
+        difficulty: "intermediate"
+        tags: ["RAG", "情報検索", "知識ベース", "ハルシネーション抑制"]
+
+      - id: 38
+        question: "AI事業者ガイドライン第1.1版に関する記述として正しいものはどれか"
+        type: "single_choice"
+        options:
+          - text: "AI開発者、AI提供者、AI利用者の各段階における責任とガイドラインが定義されている"
+            is_correct: true
+          - text: "AI開発者のみを対象としたガイドラインである"
+            is_correct: false
+          - text: "AI利用者のみを対象としたガイドラインである"
+            is_correct: false
+          - text: "AI技術の使用を禁止する内容となっている"
+            is_correct: false
+        explanation: "AI事業者ガイドライン第1.1版は、AI開発者、AI提供者、AI利用者の各段階における責任とガイドラインを定義しており、AI開発・利用の指針を示しています。"
+        difficulty: "basic"
+        tags: ["AI事業者ガイドライン", "法規制", "AI開発者", "AI提供者"]
+
+      - id: 39
+        question: "VAE（Variational Autoencoder）におけるエンコーダとデコーダの役割として正しいものはどれか"
+        type: "single_choice"
+        options:
+          - text: "エンコーダは入力データを潜在ベクトルに変換し、デコーダはその潜在ベクトルから元のデータを生成する"
+            is_correct: true
+          - text: "エンコーダとデコーダは両方とも元のデータを再現する"
+            is_correct: false
+          - text: "エンコーダはノイズを除去し、デコーダは画像を生成する"
+            is_correct: false
+          - text: "デコーダは入力データを潜在ベクトルに変換し、エンコーダはその潜在ベクトルから元のデータを生成する"
+            is_correct: false
+        explanation: "VAEでは、エンコーダが入力データを潜在ベクトル（低次元の表現）に変換し、デコーダがその潜在ベクトルから元のデータを生成します。"
+        difficulty: "intermediate"
+        tags: ["VAE", "エンコーダ", "デコーダ", "潜在ベクトル"]
+
+      - id: 40
+        question: "OpenAIのOmni系列とReasoning系列の主な違いとして最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "Omni系列は汎用性と統合性に優れ、Reasoning系列は推論能力と正確性に特化している"
+            is_correct: true
+          - text: "Omni系列は推論能力に特化し、Reasoning系列は汎用性に優れている"
+            is_correct: false
+          - text: "両系列は同じ特徴を持ち、違いはない"
+            is_correct: false
+          - text: "Omni系列は音声処理のみ、Reasoning系列はテキスト処理のみに特化している"
+            is_correct: false
+        explanation: "Omni系列（GPT-4oなど）は汎用性と統合性（テキスト、画像、音声を統合処理）に優れ、Reasoning系列（o1/o3/o4など）は推論能力と正確性に特化しています。"
+        difficulty: "intermediate"
+        tags: ["Omni系列", "Reasoning系列", "GPT-4o", "o1", "モデル比較"]
+
+  - chapter_id: "chapter3"
+    title: "情報リテラシー"
+    question_range: [121, 180]
+    
+    questions:
+      - id: 41
+        question: "AIのバイアスが生じる主な原因は何か"
+        type: "single_choice"
+        options:
+          - text: "学習データに含まれる人間のバイアス"
+            is_correct: true
+          - text: "AIの計算能力の限界"
+            is_correct: false
+          - text: "ハードウェアの性能"
+            is_correct: false
+          - text: "プログラミング言語の制約"
+            is_correct: false
+        explanation: "AIのバイアスは、学習データに含まれる人間の偏見や社会的なバイアスが反映されることで生じます。"
+        difficulty: "basic"
+        tags: ["AIバイアス", "学習データ", "公平性"]
+
+      - id: 42
+        question: "個人情報保護法の目的として最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "企業の利益を保護する"
+            is_correct: false
+          - text: "個人の権利利益を保護する"
+            is_correct: true
+          - text: "政府の権限を強化する"
+            is_correct: false
+          - text: "技術の発展を促進する"
+            is_correct: false
+        explanation: "個人情報保護法は、個人の権利利益を保護することを目的として制定されています。"
+        difficulty: "basic"
+        tags: ["個人情報保護法", "プライバシー", "法律"]
+
+  - chapter_id: "chapter4"
+    title: "テキスト生成AIのプロンプト制作と実例"
+    question_range: [181, 240]
+    
+    questions:
+      - id: 61
+        question: "プロンプトエンジニアリングの目的として最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "AIの処理速度を向上させる"
+            is_correct: false
+          - text: "AIから望ましい出力を得る"
+            is_correct: true
+          - text: "AIのメモリ使用量を削減する"
+            is_correct: false
+          - text: "AIの学習データを増やす"
+            is_correct: false
+        explanation: "プロンプトエンジニアリングは、AIから望ましい出力を得るために、効果的な指示（プロンプト）を設計する技術です。"
+        difficulty: "basic"
+        tags: ["プロンプトエンジニアリング", "プロンプト設計", "AI活用"]
+
+      - id: 62
+        question: "Zero-Shotプロンプティングの特徴として最も適切なものはどれか"
+        type: "single_choice"
+        options:
+          - text: "事前の例示なしで直接タスクを指示する"
+            is_correct: true
+          - text: "多くの例を提示してからタスクを指示する"
+            is_correct: false
+          - text: "プロンプトを暗号化してから指示する"
+            is_correct: false
+          - text: "複数のAIに同時に指示する"
+            is_correct: false
+        explanation: "Zero-Shotプロンプティングは、事前の例示なしで、直接タスクを指示する手法です。"
+        difficulty: "intermediate"
+        tags: ["Zero-Shot", "プロンプティング", "タスク指示"]
+
+  - chapter_id: "chapter5"
+    title: "実践と応用"
+    question_range: [241, 300]
+    
+    questions:
+      - id: 81
+        question: "AI技術の進歩方向として最も適切でないものはどれか"
+        type: "single_choice"
+        options:
+          - text: "マルチモーダルAI"
+            is_correct: false
+          - text: "AIエージェント"
+            is_correct: false
+          - text: "量子AI"
+            is_correct: false
+          - text: "単一モーダルAI"
+            is_correct: true
+        explanation: "AI技術の進歩方向としては、マルチモーダルAI、AIエージェント、量子AIなどが挙げられます。単一モーダルAIは既存の技術であり、進歩方向ではありません。"
+        difficulty: "intermediate"
+        tags: ["AI技術動向", "マルチモーダル", "技術進歩"]
+
+      - id: 82
+        question: "AI倫理において最も重要な要素は何か？"
+        type: "single_choice"
+        options:
+          - text: "AIの性能向上"
+            is_correct: false
+          - text: "人間の価値観の尊重"
+            is_correct: true
+          - text: "コストの削減"
+            is_correct: false
+          - text: "処理速度の向上"
+            is_correct: false
+        explanation: "AI倫理において最も重要な要素は、人間の価値観の尊重です。AI技術は人間の利益のために開発・利用されるべきです。"
+        difficulty: "basic"
+        tags: ["AI倫理", "人間中心", "価値観"]
+
+# 問題分析データ
+analytics:
+  difficulty_distribution:
+    basic: 40
+    intermediate: 50
+    advanced: 10
+    
+  chapter_distribution:
+    chapter1: 60
+    chapter2: 60
+    chapter3: 60
+    chapter4: 60
+    chapter5: 60
+    
+  question_types:
+    single_choice: 90
+    multiple_choice: 10
+    
+  common_tags:
+    - "AI基礎"
+    - "機械学習"
+    - "ディープラーニング"
+    - "生成AI"
+    - "プロンプトエンジニアリング"
+    - "AI倫理"
+    - "情報リテラシー"
+    - "実践応用"
+
+# クイズ生成設定
+generation_settings:
+  randomization:
+    question_order: true
+    option_order: true
+    
+  adaptive_difficulty:
+    enabled: true
+    adjustment_threshold: 0.7
+    
+  feedback_system:
+    immediate_feedback: true
+    detailed_explanations: true
+    progress_tracking: true
+    
+  time_management:
+    per_question_time: 54  # 270分/300問 = 54秒/問
+    warning_time: 10       # 残り10秒で警告
+    auto_submit: true      # 時間切れで自動提出
