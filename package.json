@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check": "npm run lint && npm run build",
+    "check:before-change": "./scripts/check-before-change.sh",
+    "phase-check": "./scripts/phase-check.sh"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.3.22",
