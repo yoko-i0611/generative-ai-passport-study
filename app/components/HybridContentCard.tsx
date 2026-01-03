@@ -41,23 +41,31 @@ export default function HybridContentCard({
   const [showExplanations, setShowExplanations] = useState(false);
   const [showFullText, setShowFullText] = useState(false);
   const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
+  const [imageError, setImageError] = useState(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (slideImage && imageContainerRef.current) {
+      setImageError(false);
       const img = new window.Image();
       img.onload = () => {
         const aspectRatio = img.width / img.height;
         setImageAspectRatio(aspectRatio);
       };
-      img.src = slideImage;
+      img.onerror = () => {
+        console.error('Failed to load image:', slideImage);
+        setImageError(true);
+        setImageAspectRatio(null);
+      };
+      // Next.jsのpublicディレクトリの画像は/から始まるパスで参照
+      img.src = slideImage.startsWith('/') ? slideImage : `/${slideImage}`;
     }
   }, [slideImage]);
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
       {/* 上部：スライド画像 */}
-      {slideImage && (
+      {slideImage && !imageError && (
         <div 
           ref={imageContainerRef}
           className="relative w-full bg-gradient-to-br from-blue-50 to-indigo-100"
@@ -74,6 +82,7 @@ export default function HybridContentCard({
             className="object-contain p-4"
             priority={false}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            onError={() => setImageError(true)}
           />
         </div>
       )}
@@ -124,9 +133,20 @@ export default function HybridContentCard({
           </ul>
         </div>
 
-        {/* アクションボタン（4列レイアウト） */}
+        {/* アクションボタン（動的列レイアウト） */}
         <div className="mb-6 border-t border-gray-200 pt-4">
-          <div className="grid grid-cols-4 gap-3">
+          {(() => {
+            const buttonCount = [
+              textContent,
+              (unitPoint || learningTips || (importantExplanations && importantExplanations.length > 0)),
+              (quizQuestions && quizQuestions.length > 0 && sectionId && onOpenQuiz),
+              (sectionId && title && onOpenChat)
+            ].filter(Boolean).length;
+            const gridCols = buttonCount === 1 ? 'grid-cols-1' : 
+                           buttonCount === 2 ? 'grid-cols-2' : 
+                           buttonCount === 3 ? 'grid-cols-3' : 'grid-cols-4';
+            return (
+              <div className={`grid ${gridCols} gap-3 w-full`}>
             {/* テキストを開くボタン */}
             {textContent && (
               <button
@@ -181,7 +201,9 @@ export default function HybridContentCard({
                 </span>
               </button>
             )}
-          </div>
+              </div>
+            );
+          })()}
         </div>
 
         {/* テキストコンテンツ（アコーディオン展開時） */}
