@@ -677,7 +677,7 @@ export default function Chapter2Page() {
     return shuffled;
   };
   
-  const [questions] = useState(() => getAllUnitQuestions());
+  const [questions, setQuestions] = useState(() => getAllUnitQuestions());
   
   // ユニット別確認問題の状態管理
   const [unitQuizOpen, setUnitQuizOpen] = useState(false);
