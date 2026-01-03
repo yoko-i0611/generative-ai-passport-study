@@ -79,47 +79,14 @@ export async function POST(req: Request) {
       );
     }
 
-    const { message } = await req.json();
-
-    if (!message || typeof message !== 'string') {
-      return new Response(
-        JSON.stringify({ error: 'Invalid message format' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // メッセージの長さ制限（悪用防止）
-    if (message.length > 1000) {
-      return new Response(
-        JSON.stringify({ error: 'メッセージが長すぎます。1000文字以内で入力してください。' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // 空のメッセージやスパムっぽいメッセージのチェック
-    if (message.trim().length < 3) {
-      return new Response(
-        JSON.stringify({ error: '質問内容を具体的に入力してください。' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // `message`を`messages`配列形式に変換
-    const messages = [{ role: 'user' as const, content: message }];
-
-    // システムプロンプトを追加
-    const systemMessage = {
-      role: 'system' as const,
-      content: `あなたは親切で知識豊富な生成AIパスポート試験対策の学習アシスタントです。
+    const body = await req.json();
+    
+    // `messages`配列または`message`単一文字列の両方に対応
+    let messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [];
+    let systemMessage: { role: 'system'; content: string };
+    
+    // デフォルトのシステムプロンプト
+    const defaultSystemPrompt = `あなたは親切で知識豊富な生成AIパスポート試験対策の学習アシスタントです。
 
 【基本姿勢】
 - 学習者に寄り添い、親切で丁寧な対応を心がける
@@ -150,8 +117,66 @@ export async function POST(req: Request) {
 - 分からない場合は「詳しくは分かりませんが、一般的には...」として説明を試みる
 - 常に学習者の立場に立って、親身になって対応する
 
-あなたの目標は学習者が生成AIパスポート試験に合格し、AIリテラシーを身につけることです。`
-    };
+あなたの目標は学習者が生成AIパスポート試験に合格し、AIリテラシーを身につけることです。`;
+    
+    if (body.messages && Array.isArray(body.messages)) {
+      // `messages`配列が送信された場合（ContextAwareChatから）
+      messages = body.messages;
+      // システムメッセージが既に含まれているかチェック
+      const existingSystemMessage = messages.find(m => m.role === 'system');
+      if (existingSystemMessage) {
+        // システムメッセージが既に含まれている場合はそれを使用
+        systemMessage = existingSystemMessage as { role: 'system'; content: string };
+        // messagesからシステムメッセージを除外（generateTextに渡す際に重複を避けるため）
+        messages = messages.filter(m => m.role !== 'system');
+      } else {
+        // システムメッセージがなければデフォルトを追加
+        systemMessage = {
+          role: 'system' as const,
+          content: defaultSystemPrompt
+        };
+      }
+    } else if (body.message && typeof body.message === 'string') {
+      // `message`単一文字列が送信された場合（後方互換性のため）
+      const message = body.message;
+      
+      // メッセージの長さ制限（悪用防止）
+      if (message.length > 1000) {
+        return new Response(
+          JSON.stringify({ error: 'メッセージが長すぎます。1000文字以内で入力してください。' }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      // 空のメッセージやスパムっぽいメッセージのチェック
+      if (message.trim().length < 3) {
+        return new Response(
+          JSON.stringify({ error: '質問内容を具体的に入力してください。' }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      // `message`を`messages`配列形式に変換
+      messages = [{ role: 'user' as const, content: message }];
+      systemMessage = {
+        role: 'system' as const,
+        content: defaultSystemPrompt
+      };
+    } else {
+      return new Response(
+        JSON.stringify({ error: 'Invalid request format. Expected "messages" array or "message" string.' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     console.log('Processing chat request with messages:', messages.length);
 
