@@ -60,23 +60,35 @@ export default function QuizPage() {
 
   // ローカルストレージから学習履歴を読み込み
   useEffect(() => {
-    const savedHistory = localStorage.getItem('quizHistory');
-    
-    if (savedHistory) {
-      try {
-        const history: QuizHistory = JSON.parse(savedHistory);
-        // 24時間以内の履歴のみ有効とする
-        const isRecent = Date.now() - history.timestamp < 24 * 60 * 60 * 1000;
-        
-        if (isRecent && !history.completed && history.selectedQuestionCount) {
-          // 履歴がある場合は、APIから問題を取得
-          console.log('📋 保存された履歴を復元中...');
-          fetchQuestions(history.selectedQuestionCount, history);
-          return;
+    try {
+      const savedHistory = localStorage.getItem('quizHistory');
+      
+      if (savedHistory) {
+        try {
+          const history: QuizHistory = JSON.parse(savedHistory);
+          // 基本的な構造チェック
+          if (history && typeof history === 'object' && history.timestamp) {
+            // 24時間以内の履歴のみ有効とする
+            const isRecent = Date.now() - history.timestamp < 24 * 60 * 60 * 1000;
+            
+            if (isRecent && !history.completed && history.selectedQuestionCount) {
+              // 履歴がある場合は、APIから問題を取得
+              console.log('📋 保存された履歴を復元中...');
+              fetchQuestions(history.selectedQuestionCount, history);
+              return;
+            }
+          } else {
+            console.warn('📋 学習履歴の形式が不正です。削除します。');
+            localStorage.removeItem('quizHistory');
+          }
+        } catch (parseError) {
+          console.error('📋 学習履歴のパースに失敗しました:', parseError);
+          // 不正なデータを削除
+          localStorage.removeItem('quizHistory');
         }
-      } catch (error) {
-        console.error('学習履歴の読み込みに失敗しました:', error);
       }
+    } catch (error) {
+      console.error('学習履歴の読み込みに失敗しました:', error);
     }
     
     // 履歴がない場合や無効な場合は問題数選択画面を表示

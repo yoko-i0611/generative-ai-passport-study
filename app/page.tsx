@@ -336,6 +336,77 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* フッター */}
+      <footer className="bg-gray-800 text-white mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* 左側: アプリ情報 */}
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
+                  <Brain className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold">生成AIパスポート試験対策</span>
+              </div>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                生成AIパスポート試験の学習をサポートするアプリです。
+                問題演習や学習分析機能を通じて、効率的な学習をサポートします。
+              </p>
+            </div>
+
+            {/* 右側: リンク */}
+            <div className="grid grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold mb-4">クイックリンク</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/" className="text-gray-300 hover:text-white transition-colors text-sm">
+                      ホーム
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#courses" className="text-gray-300 hover:text-white transition-colors text-sm">
+                      コース
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/quiz" className="text-gray-300 hover:text-white transition-colors text-sm">
+                      問題演習
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/analytics" className="text-gray-300 hover:text-white transition-colors text-sm">
+                      学習分析
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-4">その他</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/terms" className="text-gray-300 hover:text-white transition-colors text-sm">
+                      利用規約
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/privacy" className="text-gray-300 hover:text-white transition-colors text-sm">
+                      プライバシーポリシー
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* 著作権表示 */}
+          <div className="mt-8 pt-8 border-t border-gray-700">
+            <p className="text-center text-gray-400 text-sm">
+              © {new Date().getFullYear()} 生成AIパスポート試験対策. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 } 

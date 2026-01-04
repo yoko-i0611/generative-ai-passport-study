@@ -70,15 +70,27 @@ export class LearningHistoryManager {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
-        const history = JSON.parse(stored);
-        console.log('📋 学習履歴読み込み成功:', {
-          totalSessions: history.totalSessions,
-          chapterKeys: Object.keys(history.chapterProgress || {}),
-          skillKeys: Object.keys(history.skillProgress || {}),
-          weakAreas: history.weakAreas?.length || 0,
-          strongAreas: history.strongAreas?.length || 0
-        });
-        return history;
+        try {
+          const history = JSON.parse(stored);
+          // 基本的な構造チェック
+          if (history && typeof history === 'object') {
+            console.log('📋 学習履歴読み込み成功:', {
+              totalSessions: history.totalSessions,
+              chapterKeys: Object.keys(history.chapterProgress || {}),
+              skillKeys: Object.keys(history.skillProgress || {}),
+              weakAreas: history.weakAreas?.length || 0,
+              strongAreas: history.strongAreas?.length || 0
+            });
+            return history;
+          } else {
+            console.warn('📋 学習履歴の形式が不正です。初期状態にリセットします。');
+            localStorage.removeItem(this.STORAGE_KEY);
+          }
+        } catch (parseError) {
+          console.error('📋 学習履歴のパースに失敗しました:', parseError);
+          // 不正なデータを削除
+          localStorage.removeItem(this.STORAGE_KEY);
+        }
       } else {
         console.log('📋 学習履歴が見つかりません（初回利用）');
       }
