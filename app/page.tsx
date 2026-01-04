@@ -336,24 +336,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* フッター */}
-      <footer id="contact" className="bg-gray-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="col-span-1">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                お問い合わせ
-              </h2>
-              <p className="text-lg text-gray-300 mb-8">
-                ご質問やご相談がありましたら、お気軽にお問い合わせください。
-              </p>
-              <a href="mailto:support@example.com" className="btn-primary text-lg px-8 py-4">
-                メールで問い合わせる
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 } 

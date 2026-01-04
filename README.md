@@ -43,6 +43,15 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 # オプション: チャット機能の有効/無効（本番環境では false 推奨）
 NEXT_PUBLIC_ENABLE_CHAT=true
+
+# 問い合わせフォーム用: Gmail認証情報（オプション）
+# Gmailでメールを送信する場合は以下を設定:
+# 1. Gmailアカウントで2段階認証を有効にする
+# 2. Googleアカウント設定 > セキュリティ > 2段階認証プロセス > アプリパスワード
+#    からアプリパスワードを生成（16桁）
+GMAIL_USER=your-email@gmail.com
+GMAIL_APP_PASSWORD=your-16-digit-app-password
+CONTACT_RECIPIENT_EMAIL=your-email@gmail.com  # 受信先（指定しない場合は GMAIL_USER と同じ）
 ```
 
 ⚠️ **セキュリティ注意事項**: 
