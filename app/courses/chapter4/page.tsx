@@ -7,6 +7,7 @@ import { courses } from '../../../data/courses';
 import HybridContentCard from '../../components/HybridContentCard';
 import ChatButton from '../../components/ChatButton';
 import UnitQuizModal from '../../components/UnitQuizModal';
+import PurchaseGuard from '../../components/PurchaseGuard';
 
 const courseId = 'chapter4';
 
