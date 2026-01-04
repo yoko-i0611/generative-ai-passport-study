@@ -209,14 +209,14 @@ export default function AnalyticsPage() {
 
   // 章別進捗データを整理
   const chapterProgressData = Object.entries(stats.chapterProgress || {})
-    .filter(([chapter]) => chapter.startsWith('chapter'))
+    .filter(([chapter]: [string, any]) => chapter.startsWith('chapter'))
     .map(([chapter, progress]: [string, any]) => ({
       chapter,
       name: getChapterName(chapter),
       url: getChapterUrl(chapter),
       ...progress
     }))
-    .sort((a, b) => a.chapter.localeCompare(b.chapter));
+    .sort((a: { chapter: string }, b: { chapter: string }) => a.chapter.localeCompare(b.chapter));
 
   // 得意領域のデータを整理
   const strongAreasData = (stats.strongAreas || [])
