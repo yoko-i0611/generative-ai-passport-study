@@ -562,7 +562,8 @@ export default function Chapter5Page() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <PurchaseGuard>
+      <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-4">

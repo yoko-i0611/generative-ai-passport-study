@@ -1,11 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { courses } from '../data/courses';
 import LearningProgress from './components/LearningProgress';
 import ComprehensiveProgress from './components/ComprehensiveProgress';
+import { isPurchased } from './utils/purchase';
 import { 
   BookOpen, 
   Brain, 
@@ -23,6 +24,12 @@ import {
 const isChatEnabled = process.env.NEXT_PUBLIC_ENABLE_CHAT === 'true';
 
 export default function HomePage() {
+  const [purchased, setPurchased] = useState<boolean>(false);
+
+  useEffect(() => {
+    setPurchased(isPurchased());
+  }, []);
+
   const getColorGradient = (color: string) => {
     switch (color) {
       case 'primary':
@@ -73,12 +80,25 @@ export default function HomePage() {
               <Link href="#courses" className="text-gray-700 hover:text-primary-600 transition-colors">
                 コース
               </Link>
-              <Link href="/quiz" className="text-gray-700 hover:text-primary-600 transition-colors">
-                問題演習
-              </Link>
-              <Link href="/analytics" className="text-gray-700 hover:text-primary-600 transition-colors">
-                学習分析
-              </Link>
+              {purchased ? (
+                <>
+                  <Link href="/quiz" className="text-gray-700 hover:text-primary-600 transition-colors">
+                    問題演習
+                  </Link>
+                  <Link href="/analytics" className="text-gray-700 hover:text-primary-600 transition-colors">
+                    学習分析
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/purchase" className="text-gray-700 hover:text-primary-600 transition-colors">
+                    問題演習
+                  </Link>
+                  <Link href="/purchase" className="text-gray-700 hover:text-primary-600 transition-colors">
+                    学習分析
+                  </Link>
+                </>
+              )}
               <Link href="#features" className="text-gray-700 hover:text-primary-600 transition-colors">
                 利用方法
               </Link>
@@ -117,9 +137,15 @@ export default function HomePage() {
                   <Play className="w-5 h-5 mr-2" />
                   学習を始める
                 </Link>
-                <Link href="/quiz" className="btn-outline text-lg px-8 py-4 flex items-center justify-center">
-                  問題演習に挑戦
-                </Link>
+                {purchased ? (
+                  <Link href="/quiz" className="btn-outline text-lg px-8 py-4 flex items-center justify-center">
+                    問題演習に挑戦
+                  </Link>
+                ) : (
+                  <Link href="/purchase" className="btn-outline text-lg px-8 py-4 flex items-center justify-center">
+                    問題演習に挑戦
+                  </Link>
+                )}
               </div>
               <div className="mt-8 flex items-center space-x-6 text-sm text-gray-500">
                 <div className="flex items-center">
@@ -370,14 +396,26 @@ export default function HomePage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/quiz" className="text-gray-300 hover:text-white transition-colors text-sm">
-                      問題演習
-                    </Link>
+                    {purchased ? (
+                      <Link href="/quiz" className="text-gray-300 hover:text-white transition-colors text-sm">
+                        問題演習
+                      </Link>
+                    ) : (
+                      <Link href="/purchase" className="text-gray-300 hover:text-white transition-colors text-sm">
+                        問題演習
+                      </Link>
+                    )}
                   </li>
                   <li>
-                    <Link href="/analytics" className="text-gray-300 hover:text-white transition-colors text-sm">
-                      学習分析
-                    </Link>
+                    {purchased ? (
+                      <Link href="/analytics" className="text-gray-300 hover:text-white transition-colors text-sm">
+                        学習分析
+                      </Link>
+                    ) : (
+                      <Link href="/purchase" className="text-gray-300 hover:text-white transition-colors text-sm">
+                        学習分析
+                      </Link>
+                    )}
                   </li>
                 </ul>
               </div>
@@ -392,6 +430,11 @@ export default function HomePage() {
                   <li>
                     <Link href="/privacy" className="text-gray-300 hover:text-white transition-colors text-sm">
                       プライバシーポリシー
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/commerce" className="text-gray-300 hover:text-white transition-colors text-sm">
+                      特定商取引法に基づく表記
                     </Link>
                   </li>
                 </ul>

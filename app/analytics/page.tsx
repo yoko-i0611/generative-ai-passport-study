@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LearningHistoryManager } from '@/app/utils/learningHistory';
+import PurchaseGuard from '../components/PurchaseGuard';
 import { 
   BarChart3, 
   TrendingUp, 
@@ -233,7 +234,8 @@ export default function AnalyticsPage() {
     .filter((area: { accuracy: number }) => area.accuracy > 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50">
+    <PurchaseGuard>
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50">
       {/* ヘッダー */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -500,6 +502,7 @@ export default function AnalyticsPage() {
         </div>
       </div>
     </div>
+    </PurchaseGuard>
   );
 }
 

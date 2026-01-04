@@ -64,7 +64,10 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">第3条（利用料金）</h2>
               <p className="text-gray-700 leading-relaxed">
                 本アプリの利用は有料です。利用料金は、購入時に表示される金額とします。
-                購入後の返金は、特別な事情がない限り行いません。
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                デジタルコンテンツの性質上、原則として返品・返金には応じかねます。
+                ただし、サービスに重大な不具合がある場合や、当方に起因する問題が発生した場合は、個別に対応いたします。
               </p>
             </section>
 
@@ -77,6 +80,7 @@ export default function TermsPage() {
                 <li>本アプリの内容を無断で複製、転載、配布する行為</li>
                 <li>本アプリを商用目的で利用する行為</li>
                 <li>本アプリの運営を妨害する行為</li>
+                <li>不正な方法でアプリにアクセスする行為</li>
                 <li>その他、当方が不適切と判断する行為</li>
               </ul>
             </section>
@@ -98,10 +102,18 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">第7条（サポート）</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第7条（お問い合わせ）</h2>
               <p className="text-gray-700 leading-relaxed">
-                本アプリは低価格で提供されているため、個別のサポートは行いません。
-                アプリ内の機能（コース学習、問題演習、学習分析など）をご利用いただき、ご自身で学習を進めてください。
+                本アプリに関するお問い合わせは、以下までご連絡ください。
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                メールアドレス: <a href="mailto:info@tayoima.com" className="text-primary-600 hover:text-primary-700 underline">info@tayoima.com</a>
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                不具合の報告やご質問には、可能な範囲で対応いたします。
+              </p>
+              <p className="text-gray-600 text-sm mt-4">
+                返信までに3営業日程度かかる場合があります。
               </p>
             </section>
 

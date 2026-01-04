@@ -7,6 +7,7 @@ import { courses } from '../../../data/courses';
 import HybridContentCard from '../../components/HybridContentCard';
 import ChatButton from '../../components/ChatButton';
 import UnitQuizModal from '../../components/UnitQuizModal';
+import PurchaseGuard from '../../components/PurchaseGuard';
 
 const courseId = 'chapter3';
 
@@ -600,7 +601,8 @@ export default function Chapter3Page() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <PurchaseGuard>
+      <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         {/* ヘッダー */}
         <div className="mb-4">
@@ -835,5 +837,6 @@ export default function Chapter3Page() {
         />
       )}
     </div>
+    </PurchaseGuard>
   );
 } 

@@ -6,6 +6,7 @@ import { Brain, CheckCircle, XCircle, ArrowLeft, ArrowRight, RotateCcw, Clock, T
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { LearningHistoryManager } from '@/app/utils/learningHistory';
+import PurchaseGuard from '../components/PurchaseGuard';
 
 // Fisher-Yates shuffle algorithm
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -792,7 +793,8 @@ export default function QuizPage() {
   if (quizCompleted) {
     const finalAccuracy = Math.round((correctAnswers / allQuestions.length) * 100);
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <PurchaseGuard>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
             <div className="mb-8">
@@ -869,11 +871,13 @@ export default function QuizPage() {
           </div>
         </div>
       </div>
+      </PurchaseGuard>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <PurchaseGuard>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ヘッダー */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
@@ -1141,5 +1145,6 @@ export default function QuizPage() {
         )}
       </div>
     </div>
+    </PurchaseGuard>
   );
 } 

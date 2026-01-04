@@ -57,6 +57,14 @@ export default function PrivacyPage() {
               <p className="text-gray-700 leading-relaxed mt-4">
                 これらの情報は、ブラウザのローカルストレージに保存され、当方のサーバーには送信されません。
               </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                ただし、決済処理に必要な情報（メールアドレス、決済情報など）は、決済サービスStripe経由で処理されます。
+                Stripeのプライバシーポリシーについては、以下をご確認ください。
+                <br />
+                <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 underline">
+                  https://stripe.com/privacy
+                </a>
+              </p>
             </section>
 
             <section>
@@ -74,8 +82,13 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">第3条（個人情報の管理）</h2>
               <p className="text-gray-700 leading-relaxed">
-                本アプリで収集される情報は、利用者のブラウザのローカルストレージに保存されます。
+                本アプリで収集される学習データは、利用者のブラウザのローカルストレージに保存されます。
                 当方のサーバーには送信されず、第三者と共有されることはありません。
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                ただし、決済処理に必要な情報は、決済サービスStripeを通じて安全に処理されます。
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
                 利用者は、ブラウザの設定によりデータを削除することができます。
               </p>
             </section>
@@ -83,9 +96,8 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">第4条（Cookieについて）</h2>
               <p className="text-gray-700 leading-relaxed">
-                本アプリは、Cookieを使用する場合があります。
-                Cookieは、利用者のブラウザに保存される小さなテキストファイルです。
-                本アプリでは、機能の提供に必要な最小限のCookieのみを使用します。
+                本アプリは、機能の提供に必要な最小限のCookieを使用します。
+                Cookieは利用者のブラウザ設定で無効化できますが、一部機能が正常に動作しない場合があります。
               </p>
             </section>
 
@@ -115,8 +127,13 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">第8条（お問い合わせ）</h2>
               <p className="text-gray-700 leading-relaxed">
-                本プライバシーポリシーに関するお問い合わせは、本アプリの販売ページよりご連絡ください。
-                なお、本アプリは低価格で提供されているため、個別のサポートは行いません。
+                本プライバシーポリシーに関するお問い合わせは、以下までご連絡ください。
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                メールアドレス: <a href="mailto:info@tayoima.com" className="text-primary-600 hover:text-primary-700 underline">info@tayoima.com</a>
+              </p>
+              <p className="text-gray-600 text-sm mt-4">
+                ※ 返信までに3営業日程度かかる場合があります。
               </p>
             </section>
           </div>
