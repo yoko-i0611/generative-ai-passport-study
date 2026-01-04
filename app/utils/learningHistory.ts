@@ -94,6 +94,7 @@ export class LearningHistoryManager {
       totalCorrectAnswers: 0,
       overallAccuracy: 0,
       averageSessionDuration: 0,
+      averageTimePerQuestion: 0,
       lastSessionDate: 0,
       chapterProgress: {},
       skillProgress: {},
