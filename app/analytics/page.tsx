@@ -395,7 +395,7 @@ export default function AnalyticsPage() {
               得意領域
             </h2>
             <div className="flex flex-wrap gap-3">
-              {strongAreasData.map((area, index) => (
+              {strongAreasData.map((area: { chapter: string; name: string; url: string; accuracy: number }, index: number) => (
                 <Link
                   key={index}
                   href={area.url}
