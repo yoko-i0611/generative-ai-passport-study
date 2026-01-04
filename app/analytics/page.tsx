@@ -341,7 +341,7 @@ export default function AnalyticsPage() {
           
           {chapterProgressData.length > 0 ? (
             <div className="space-y-4">
-              {chapterProgressData.map((chapter) => (
+              {chapterProgressData.map((chapter: { chapter: string; name: string; url: string; accuracy: number }) => (
                 <div key={chapter.chapter} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
@@ -446,7 +446,7 @@ export default function AnalyticsPage() {
           
           {recentSessions.length > 0 ? (
             <div className="space-y-3">
-              {recentSessions.map((session, index) => (
+              {recentSessions.map((session: any, index: number) => (
                 <div key={session.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
