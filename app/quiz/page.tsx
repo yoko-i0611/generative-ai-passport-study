@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Question, Course, Quiz } from '@/types';
-import { Brain, CheckCircle, XCircle, ArrowLeft, ArrowRight, RotateCcw, Clock, Target, Loader2 } from 'lucide-react';
+import { Brain, CheckCircle, XCircle, ArrowLeft, ArrowRight, RotateCcw, Clock, Target, Loader2, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { LearningHistoryManager } from '@/app/utils/learningHistory';
@@ -45,14 +45,16 @@ export default function QuizPage() {
   const [sessionStartTime, setSessionStartTime] = useState<number>(0); // セッション開始時間
   const [showQuestionCountModal, setShowQuestionCountModal] = useState(false); // 問題数変更モーダルの表示状態
   const [availableQuestions, setAvailableQuestions] = useState(0); // 利用可能な問題数
-
+  const [questionStartTimes, setQuestionStartTimes] = useState<{ [questionId: string]: number }>({}); // 各問題の表示時刻
+  const [questionTimes, setQuestionTimes] = useState<{ [questionId: string]: number }>({}); // 各問題の解答時間（秒）
+  const [reviewModeSelector, setReviewModeSelector] = useState<'normal' | 'review'>('normal'); // 復習モード選択状態
   // 問題数オプション
   const questionCountOptions = [
     { count: 10, label: '10問', time: '約5分', description: '短時間でサクッと復習' },
     { count: 20, label: '20問', time: '約10分', description: '標準的な演習時間' },
     { count: 30, label: '30問', time: '約15分', description: 'じっくりと学習' },
-    { count: 50, label: '50問', time: '約25分', description: '模擬試験レベル' },
-    { count: 100, label: '100問', time: '約50分', description: '全問題制覇・完全マスター' },
+    { count: 60, label: '60問', time: '約60分', description: '本番試験レベル' },
+    { count: 100, label: '100問', time: '約50分', description: '集中的な演習' },
     { count: 300, label: '300問', time: '約150分', description: '全問題制覇・完全マスター' },
   ];
 
@@ -81,6 +83,91 @@ export default function QuizPage() {
     setIsLoading(false);
   }, []);
 
+  // 復習していない間違えた問題を取得（問題数選択なし、すべての間違えた問題を出題）
+  const fetchReviewQuestions = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      // 1. 全問題データを取得
+      const allQuestionsResponse = await fetch(`/api/quiz-questions?count=300`);
+      if (!allQuestionsResponse.ok) {
+        throw new Error('問題データの取得に失敗しました');
+      }
+      const allQuestionsData = await allQuestionsResponse.json();
+      const allQuestionsList: Question[] = allQuestionsData.questions;
+
+      // 2. 復習していない間違えた問題文のリストを取得
+      const unreviewedWrongQuestionTexts = LearningHistoryManager.getUnreviewedWrongQuestionTexts();
+      
+      if (unreviewedWrongQuestionTexts.length === 0) {
+        alert('復習する問題がありません。まず通常モードで問題演習を行ってください。');
+        setIsLoading(false);
+        return;
+      }
+
+      // 3. 問題データから間違えた問題をフィルタリング（正解判定が必要）
+      const history = LearningHistoryManager.getHistory();
+      const wrongQuestions: Question[] = [];
+      const wrongQuestionTextSet = new Set(unreviewedWrongQuestionTexts);
+
+      // 全問題データから、間違えた問題を抽出
+      allQuestionsList.forEach(question => {
+        if (wrongQuestionTextSet.has(question.question)) {
+          // 通常モードのセッションで間違えた問題か確認
+          let isWrong = false;
+          history.sessions.forEach(session => {
+            if (!session.isReviewMode && session.answers[question.question]) {
+              const userAnswer = session.answers[question.question];
+              if (userAnswer !== question.correctAnswer) {
+                isWrong = true;
+              }
+            }
+          });
+          
+          // 復習モードで正解した問題は除外
+          let isReviewed = false;
+          history.sessions.forEach(session => {
+            if (session.isReviewMode && session.answers[question.question]) {
+              const userAnswer = session.answers[question.question];
+              if (userAnswer === question.correctAnswer) {
+                isReviewed = true;
+              }
+            }
+          });
+
+          if (isWrong && !isReviewed) {
+            wrongQuestions.push(question);
+          }
+        }
+      });
+
+      if (wrongQuestions.length === 0) {
+        alert('復習する問題がありません。すべて復習済みです！');
+        setIsLoading(false);
+        return;
+      }
+
+      // 4. シャッフルしてすべての間違えた問題を出題
+      const shuffled = shuffleArray(wrongQuestions);
+
+      console.log('📊 復習問題データ取得成功:', shuffled.length, '問');
+
+      setAllQuestions(shuffled);
+      setAvailableQuestions(shuffled.length);
+      setSelectedQuestionCount(shuffled.length);
+      setIsReviewMode(true);
+      setSessionStartTime(Date.now());
+      setQuestionStartTimes({});
+      setQuestionTimes({});
+      setShowQuestionCountSelector(false);
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '不明なエラーが発生しました');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const fetchQuestions = async (count: number, history?: QuizHistory) => {
     setIsLoading(true);
     setError(null);
@@ -105,6 +192,8 @@ export default function QuizPage() {
         setQuizCompleted(false);
         setIsReviewMode(history.isReviewMode || false);
         setSelectedQuestionCount(history.selectedQuestionCount || null);
+        // 履歴から復元する場合も、新しいセッション開始時間を設定（計測を継続）
+        setSessionStartTime(Date.now());
       }
       
       // 問題数選択画面を隠す
@@ -132,16 +221,22 @@ export default function QuizPage() {
     localStorage.setItem('quizHistory', JSON.stringify(history));
   };
 
+  // 復習モード開始処理
+  const handleStartReviewMode = () => {
+    fetchReviewQuestions();
+  };
+
   // 問題数選択時の処理
   const handleQuestionCountSelect = (count: number) => {
-    // 学習履歴がある場合は確認
+
+    // 通常モード: 学習履歴がある場合は確認
     const savedHistory = localStorage.getItem('quizHistory');
     if (savedHistory) {
       try {
         const history: QuizHistory = JSON.parse(savedHistory);
         const isRecent = Date.now() - history.timestamp < 24 * 60 * 60 * 1000;
         
-        if (isRecent && !history.completed) {
+        if (isRecent && !history.completed && !history.isReviewMode) {
           const choice = window.confirm(
             `前回の学習履歴があります。\n\n` +
             `前回: ${history.answers ? Object.keys(history.answers).length : 0}問回答済み\n` +
@@ -167,6 +262,8 @@ export default function QuizPage() {
     setSelectedQuestionCount(count);
     setShowQuestionCountSelector(false);
     setSessionStartTime(Date.now());
+    setQuestionStartTimes({});
+    setQuestionTimes({});
     fetchQuestions(count);
     
     // 初期状態をリセット
@@ -180,6 +277,13 @@ export default function QuizPage() {
   };
 
   const currentQuestion = useMemo(() => allQuestions[currentQuestionIndex], [allQuestions, currentQuestionIndex]);
+  
+  // 選択肢の順序をシャッフル（問題が変わるたびに再シャッフル）
+  const shuffledOptions = useMemo(() => {
+    if (!currentQuestion || !currentQuestion.options) return [];
+    return shuffleArray([...currentQuestion.options]);
+  }, [currentQuestion, currentQuestionIndex]);
+
   const answeredQuestions = Object.keys(answers).length;
   const currentAccuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
 
@@ -194,14 +298,42 @@ export default function QuizPage() {
     setSelectedAnswer(answer);
   };
 
+  // 問題が表示された時刻を記録
+  useEffect(() => {
+    if (currentQuestion && allQuestions.length > 0) {
+      const questionId = currentQuestion.question;
+      // まだ記録されていない場合のみ記録（復元時は記録しない）
+      if (!questionStartTimes[questionId]) {
+        setQuestionStartTimes(prev => ({
+          ...prev,
+          [questionId]: Date.now()
+        }));
+      }
+    }
+  }, [currentQuestionIndex, currentQuestion, allQuestions.length]); // questionStartTimesは依存関係に含めない（無限ループを防ぐ）
+
   const handleSubmitAnswer = () => {
     if (!selectedAnswer || !currentQuestion) return;
 
     const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
+    const questionId = currentQuestion.question;
+    
+    // 解答時間を計算（問題表示時刻から現在時刻まで）
+    const startTime = questionStartTimes[questionId] || Date.now(); // フォールバック（念のため）
+    const answerTime = Date.now();
+    const timeSpent = Math.round((answerTime - startTime) / 1000); // 秒単位
+    
+    // 解答時間を記録（0秒以下は記録しない）
+    if (timeSpent > 0) {
+      setQuestionTimes(prev => ({
+        ...prev,
+        [questionId]: timeSpent
+      }));
+    }
     
     const newAnswers = {
       ...answers,
-      [currentQuestion.question]: selectedAnswer // 問題文をIDとして使用
+      [questionId]: selectedAnswer // 問題文をIDとして使用
     };
     
     const newCorrectAnswers = isCorrect ? correctAnswers + 1 : correctAnswers;
@@ -216,7 +348,8 @@ export default function QuizPage() {
       chapter: currentQuestion.chapter,
       selectedAnswer,
       correctAnswer: currentQuestion.correctAnswer,
-      isCorrect
+      isCorrect,
+      timeSpent
     });
     
     try {
@@ -254,13 +387,23 @@ export default function QuizPage() {
       const sessionDuration = sessionStartTime > 0 ? Math.round((currentTime - sessionStartTime) / 1000) : 0; // 秒単位
       const finalAccuracy = Math.round((correctAnswers / allQuestions.length) * 100);
       
+      // 実際の解答時間を記録（回答した問題のみ）
+      const actualQuestionTimes: { [questionId: string]: number } = {};
+      Object.keys(answers).forEach(questionId => {
+        if (questionTimes[questionId]) {
+          actualQuestionTimes[questionId] = questionTimes[questionId];
+        }
+      });
+      
       // デバッグ情報
       console.log('Session End Debug:', {
         sessionStartTime,
         currentTime,
         rawDuration: currentTime - sessionStartTime,
         sessionDuration,
-        finalAccuracy
+        finalAccuracy,
+        questionTimesCount: Object.keys(actualQuestionTimes).length,
+        totalAnswered: Object.keys(answers).length
       });
       
       console.log('🏁 セッション完了 - 学習履歴に追加中...', {
@@ -268,7 +411,8 @@ export default function QuizPage() {
         correctAnswers,
         totalQuestions: allQuestions.length,
         accuracy: finalAccuracy,
-        duration: sessionDuration
+        duration: sessionDuration,
+        questionTimes: Object.keys(actualQuestionTimes).length
       });
       
       try {
@@ -281,6 +425,7 @@ export default function QuizPage() {
           duration: Math.max(0, sessionDuration), // 負の値を防ぐ
           selectedQuestionCount: selectedQuestionCount || allQuestions.length,
           isReviewMode,
+          questionTimes: Object.keys(actualQuestionTimes).length > 0 ? actualQuestionTimes : undefined,
         });
         console.log('✅ セッション学習履歴記録成功 - タイムスタンプ:', new Date(currentTime));
       } catch (error) {
@@ -311,6 +456,8 @@ export default function QuizPage() {
     setCorrectAnswers(0);
     setQuizCompleted(false);
     setIsReviewMode(false);
+    setQuestionStartTimes({});
+    setQuestionTimes({});
     
     // 学習履歴をクリア
     localStorage.removeItem('quizHistory');
@@ -352,6 +499,7 @@ export default function QuizPage() {
     setCorrectAnswers(0);
     setQuizCompleted(false);
     setIsReviewMode(true);
+    setSessionStartTime(Date.now()); // 復習モードでも新しいセッション開始時間を設定
 
     // 復習用の履歴を保存
     const reviewHistory: QuizHistory = {
@@ -427,6 +575,8 @@ export default function QuizPage() {
       setQuizCompleted(false);
       setIsReviewMode(false);
       setSessionStartTime(Date.now());
+      setQuestionStartTimes({});
+      setQuestionTimes({});
       setShowQuestionCountModal(false);
       
       // 成功メッセージを表示
@@ -442,7 +592,7 @@ export default function QuizPage() {
     setShowQuestionCountModal(true);
   };
 
-  // TOPに戻る際の確認処理
+  // TOPに戻る際の確認処理（途中で辞めた場合もセッションを保存）
   const handleGoHome = () => {
     const hasProgress = Object.keys(answers).length > 0;
     
@@ -456,6 +606,37 @@ export default function QuizPage() {
       );
       
       if (choice) {
+        // 途中で辞めた場合でも、回答した問題のセッションを保存
+        const currentTime = Date.now();
+        const sessionDuration = sessionStartTime > 0 ? Math.round((currentTime - sessionStartTime) / 1000) : 0;
+        const answeredCount = Object.keys(answers).length;
+        const finalAccuracy = answeredCount > 0 ? Math.round((correctAnswers / answeredCount) * 100) : 0;
+        
+        // 実際の解答時間を記録（回答した問題のみ）
+        const actualQuestionTimes: { [questionId: string]: number } = {};
+        Object.keys(answers).forEach(questionId => {
+          if (questionTimes[questionId]) {
+            actualQuestionTimes[questionId] = questionTimes[questionId];
+          }
+        });
+        
+        try {
+          LearningHistoryManager.addSession({
+            timestamp: currentTime,
+            answers,
+            correctAnswers,
+            totalQuestions: answeredCount, // 回答した問題数
+            accuracy: finalAccuracy,
+            duration: Math.max(0, sessionDuration),
+            selectedQuestionCount: selectedQuestionCount || allQuestions.length,
+            isReviewMode,
+            questionTimes: Object.keys(actualQuestionTimes).length > 0 ? actualQuestionTimes : undefined,
+          });
+          console.log('✅ 途中終了セッション記録成功');
+        } catch (error) {
+          console.error('❌ 途中終了セッション記録エラー:', error);
+        }
+        
         // 履歴を保持してホームに戻る
         window.location.href = '/';
       }
@@ -495,7 +676,55 @@ export default function QuizPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* モード選択タブ */}
+            <div className="flex gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
+              <button
+                onClick={() => setReviewModeSelector('normal')}
+                className={`flex-1 py-2 px-4 rounded-md font-medium transition-colors ${
+                  reviewModeSelector === 'normal'
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                <Brain className="w-4 h-4 inline-block mr-2" />
+                通常モード
+              </button>
+              <button
+                onClick={() => setReviewModeSelector('review')}
+                className={`flex-1 py-2 px-4 rounded-md font-medium transition-colors ${
+                  reviewModeSelector === 'review'
+                    ? 'bg-white text-orange-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                <BookOpen className="w-4 h-4 inline-block mr-2" />
+                復習モード
+                <span className="ml-1 text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">推奨</span>
+              </button>
+            </div>
+
+            {reviewModeSelector === 'review' ? (
+              <div className="space-y-4">
+                <div className="p-6 bg-orange-50 border-2 border-orange-200 rounded-lg">
+                  <div className="flex items-center mb-3">
+                    <BookOpen className="w-6 h-6 text-orange-600 mr-3" />
+                    <h3 className="text-xl font-bold text-orange-800">復習モード</h3>
+                  </div>
+                  <p className="text-sm text-orange-800 mb-4">
+                    まだ復習していない間違えた問題から出題します。間隔を置いた復習で記憶の定着を促進します。
+                  </p>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleStartReviewMode}
+                    className="w-full py-4 px-6 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-colors shadow-md"
+                  >
+                    復習を開始する
+                  </motion.button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {questionCountOptions.map((option) => (
                 <motion.button
                   key={option.count}
@@ -509,7 +738,8 @@ export default function QuizPage() {
                   <p className="text-gray-600 mt-2">{option.description}</p>
                 </motion.button>
               ))}
-            </div>
+              </div>
+            )}
           </motion.div>
         )}
       </div>
@@ -726,7 +956,7 @@ export default function QuizPage() {
             </div>
 
             <div className="space-y-3">
-              {currentQuestion?.options.map((option, optionIndex) => (
+              {shuffledOptions.map((option, optionIndex) => (
                 <button
                   key={optionIndex}
                   onClick={() => handleAnswerSelect(option)}

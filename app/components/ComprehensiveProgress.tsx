@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LearningHistoryManager } from '@/app/utils/learningHistory';
-import { TrendingUp, TrendingDown, Minus, Target, Award, Clock, BarChart3, BookOpen } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Target, Award, Clock, BarChart3, BookOpen, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface ComprehensiveProgressProps {
   className?: string;
@@ -14,10 +14,16 @@ const getChapterForArea = (area: string): string => {
   // 実際に保存されている章名（'chapter1', 'chapter2'など）を日本語の章名に変換
   const chapterMapping: { [key: string]: string } = {
     'chapter1': '第1章 AI（人工知能）',
-    'chapter2': '第2章 生成AI',
-    'chapter3': '第3章 情報リテラシー',
-    'chapter4': '第4章 テキスト生成AIのプロンプト制作と実例',
-    'chapter5': '第5章 実践と応用',
+    'chapter2': '第2章 生成AI（ジェネレーティブAI）',
+    'chapter3': '第3章 現在の生成AIの動向',
+    'chapter4': '第4章 情報リテラシー・法律・倫理',
+    'chapter5': '第5章 テキスト生成AIのプロンプト制作と実例',
+    // 問題データの章カテゴリ名にも対応
+    '第1章 AI（人工知能）': '第1章 AI（人工知能）',
+    '第2章 生成AI（ジェネレーティブAI）': '第2章 生成AI（ジェネレーティブAI）',
+    '第3章 現在の生成AIの動向': '第3章 現在の生成AIの動向',
+    '第4章 情報リテラシー・法律・倫理': '第4章 情報リテラシー・法律・倫理',
+    '第5章 テキスト生成AIのプロンプト制作と実例': '第5章 テキスト生成AIのプロンプト制作と実例',
     // 日本語の学習領域名も対応
     'AI（人工知能）': '第1章 AI（人工知能）',
     'AI基礎': '第1章 AI（人工知能）',
@@ -25,30 +31,30 @@ const getChapterForArea = (area: string): string => {
     '機械学習': '第1章 AI（人工知能）',
     'ディープラーニング': '第1章 AI（人工知能）',
     'ニューラルネットワーク': '第1章 AI（人工知能）',
-    '生成AI': '第2章 生成AI',
-    '生成AIの基礎': '第2章 生成AI',
-    'GPT': '第2章 生成AI',
-    'BERT': '第2章 生成AI',
-    'Transformer': '第2章 生成AI',
-    'LLM': '第2章 生成AI',
-    '大規模言語モデル': '第2章 生成AI',
-    '情報リテラシー': '第3章 情報リテラシー',
-    'AI倫理': '第3章 情報リテラシー',
-    'AIバイアス': '第3章 情報リテラシー',
-    'プライバシー': '第3章 情報リテラシー',
-    'セキュリティ': '第3章 情報リテラシー',
+    '生成AI': '第2章 生成AI（ジェネレーティブAI）',
+    '生成AIの基礎': '第2章 生成AI（ジェネレーティブAI）',
+    'GPT': '第2章 生成AI（ジェネレーティブAI）',
+    'BERT': '第2章 生成AI（ジェネレーティブAI）',
+    'Transformer': '第2章 生成AI（ジェネレーティブAI）',
+    'LLM': '第2章 生成AI（ジェネレーティブAI）',
+    '大規模言語モデル': '第2章 生成AI（ジェネレーティブAI）',
+    '情報リテラシー': '第3章 現在の生成AIの動向',
+    'AI倫理': '第4章 情報リテラシー・法律・倫理',
+    'AIバイアス': '第4章 情報リテラシー・法律・倫理',
+    'プライバシー': '第4章 情報リテラシー・法律・倫理',
+    'セキュリティ': '第4章 情報リテラシー・法律・倫理',
     'プロンプトエンジニアリング': '第4章 テキスト生成AIのプロンプト制作と実例',
     'プロンプト設計': '第4章 テキスト生成AIのプロンプト制作と実例',
     'プロンプト技法': '第4章 テキスト生成AIのプロンプト制作と実例',
     'Zero-Shot': '第4章 テキスト生成AIのプロンプト制作と実例',
     'Few-Shot': '第4章 テキスト生成AIのプロンプト制作と実例',
     'Chain-of-Thought': '第4章 テキスト生成AIのプロンプト制作と実例',
-    '実践と応用': '第5章 実践と応用',
-    'AI活用事例': '第5章 実践と応用',
-    'ビジネス活用': '第5章 実践と応用',
-    '実践的活用': '第5章 実践と応用',
-    'AI技術動向': '第5章 実践と応用',
-    '将来展望': '第5章 実践と応用'
+    '実践と応用': '第5章 テキスト生成AIのプロンプト制作と実例',
+    'AI活用事例': '第5章 テキスト生成AIのプロンプト制作と実例',
+    'ビジネス活用': '第5章 テキスト生成AIのプロンプト制作と実例',
+    '実践的活用': '第5章 テキスト生成AIのプロンプト制作と実例',
+    'AI技術動向': '第5章 テキスト生成AIのプロンプト制作と実例',
+    '将来展望': '第5章 テキスト生成AIのプロンプト制作と実例'
   };
   
   return chapterMapping[area] || '該当なし';
@@ -77,16 +83,16 @@ const getChapterUrl = (area: string): string => {
     'LLM': '/courses/chapter2',
     '大規模言語モデル': '/courses/chapter2',
     '情報リテラシー': '/courses/chapter3',
-    'AI倫理': '/courses/chapter3',
-    'AIバイアス': '/courses/chapter3',
-    'プライバシー': '/courses/chapter3',
-    'セキュリティ': '/courses/chapter3',
-    'プロンプトエンジニアリング': '/courses/chapter4',
-    'プロンプト設計': '/courses/chapter4',
-    'プロンプト技法': '/courses/chapter4',
-    'Zero-Shot': '/courses/chapter4',
-    'Few-Shot': '/courses/chapter4',
-    'Chain-of-Thought': '/courses/chapter4',
+    'AI倫理': '/courses/chapter4',
+    'AIバイアス': '/courses/chapter4',
+    'プライバシー': '/courses/chapter4',
+    'セキュリティ': '/courses/chapter4',
+    'プロンプトエンジニアリング': '/courses/chapter5',
+    'プロンプト設計': '/courses/chapter5',
+    'プロンプト技法': '/courses/chapter5',
+    'Zero-Shot': '/courses/chapter5',
+    'Few-Shot': '/courses/chapter5',
+    'Chain-of-Thought': '/courses/chapter5',
     '実践と応用': '/courses/chapter5',
     'AI活用事例': '/courses/chapter5',
     'ビジネス活用': '/courses/chapter5',
@@ -256,9 +262,27 @@ export default function ComprehensiveProgress({ className = '' }: ComprehensiveP
         </div>
         <div className="bg-purple-50 rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-purple-600">
-            {formatDuration(stats.averageSessionDuration)}
+            {stats.averageTimePerQuestion > 0 
+              ? `${Math.round(stats.averageTimePerQuestion)}秒/問`
+              : formatDuration(stats.averageSessionDuration)
+            }
           </div>
-          <div className="text-sm text-gray-600">平均時間</div>
+          <div className="text-sm text-gray-600">
+            {stats.averageTimePerQuestion > 0 
+              ? '1問あたりの平均時間'
+              : '平均時間'
+            }
+          </div>
+          {stats.averageTimePerQuestion > 0 && (
+            <div className="text-xs text-gray-500 mt-1">
+              目標: 60秒/問
+              {stats.averageTimePerQuestion <= 60 ? (
+                <span className="text-green-600 ml-1">✓</span>
+              ) : (
+                <span className="text-orange-600 ml-1">要改善</span>
+              )}
+            </div>
+          )}
         </div>
         <div className="bg-orange-50 rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-orange-600">
@@ -271,88 +295,58 @@ export default function ComprehensiveProgress({ className = '' }: ComprehensiveP
       {/* 詳細情報 */}
       <div className="space-y-4">
         {/* 得意領域 */}
-        {stats.recommendedFocus.length > 0 && (
-          <div className="bg-green-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Target className="w-4 h-4 text-green-600" />
+        {stats.strongAreas?.length > 0 && (
+          <div className="bg-green-50 rounded-lg p-4 mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Award className="w-4 h-4 text-green-600" />
               <h4 className="font-medium text-green-800">得意領域</h4>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {stats.strongAreas.map((area: string, index: number) => {
+                const chapter = getChapterForArea(area);
+                const chapterUrl = getChapterUrl(area);
+                const progress = stats.chapterProgress?.[area];
+                return (
+                  <Link
+                    key={index}
+                    href={chapterUrl}
+                    className="flex items-center gap-2 px-3 py-2 bg-white border border-green-200 text-green-700 rounded-lg text-sm hover:shadow-md transition-shadow"
+                  >
+                    <span className="font-medium">{chapter}</span>
+                    {progress && (
+                      <span className="text-xs text-green-600 font-bold">
+                        {progress.accuracy}%
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* 推奨学習領域 */}
+        {stats.recommendedFocus && stats.recommendedFocus.length > 0 && (
+          <div className="bg-blue-50 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Target className="w-4 h-4 text-blue-600" />
+              <h4 className="font-medium text-blue-800">推奨学習領域</h4>
             </div>
             <div className="flex flex-wrap gap-2">
               {stats.recommendedFocus.map((area: string, index: number) => {
                 const chapter = getChapterForArea(area);
                 const chapterUrl = getChapterUrl(area);
                 return (
-                  <div
+                  <Link
                     key={index}
-                    className="flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm"
+                    href={chapterUrl}
+                    className="flex items-center gap-2 px-3 py-2 bg-white border border-blue-200 text-blue-700 rounded-lg text-sm hover:shadow-md transition-shadow"
                   >
-                    <span>{area}</span>
-                    <Link 
-                      href={chapterUrl}
-                      className="flex items-center gap-1 px-2 py-0.5 bg-green-200 rounded-full text-xs hover:bg-green-300 transition-colors cursor-pointer"
-                    >
-                      <BookOpen className="w-3 h-3" />
-                      <span>{chapter}</span>
-                    </Link>
-                  </div>
+                    <BookOpen className="w-3 h-3" />
+                    <span className="font-medium">{chapter}</span>
+                  </Link>
                 );
               })}
-            </div>
-          </div>
-        )}
-
-        {/* 弱い領域 */}
-        {stats.weakAreas.length > 0 && (
-          <div className="bg-red-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Target className="w-4 h-4 text-red-600" />
-              <h4 className="font-medium text-red-800">改善が必要な領域</h4>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {stats.weakAreas.map((area: string, index: number) => {
-                const chapter = getChapterForArea(area);
-                const chapterUrl = getChapterUrl(area);
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm"
-                  >
-                    <span>{area}</span>
-                    <Link 
-                      href={chapterUrl}
-                      className="flex items-center gap-1 px-2 py-0.5 bg-red-200 rounded-full text-xs hover:bg-red-300 transition-colors cursor-pointer"
-                    >
-                      <BookOpen className="w-3 h-3" />
-                      <span>{chapter}</span>
-                    </Link>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* スキル別分析 */}
-        {stats.strongSkills?.length > 0 && (
-          <div className="bg-green-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Target className="w-4 h-4 text-green-600" />
-              <h4 className="font-medium text-green-800">詳細スキル分析（正答率の高い領域）</h4>
-            </div>
-            
-            {/* 正答率の高いスキル */}
-            <div>
-              <h5 className="text-sm font-medium text-green-700 mb-2">習得済みスキル</h5>
-              <div className="flex flex-wrap gap-2">
-                {stats.strongSkills.map((skill: string, index: number) => (
-                  <span
-                    key={index}
-                    className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
             </div>
           </div>
         )}

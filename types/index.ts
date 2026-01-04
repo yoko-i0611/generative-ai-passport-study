@@ -71,6 +71,7 @@ export type QuizSession = {
   duration: number; // 演習時間（秒）
   selectedQuestionCount: number;
   isReviewMode: boolean;
+  questionTimes?: { [questionId: string]: number }; // 各問題の解答時間（秒）
 };
 
 // 総合学習履歴（複数回の演習結果を蓄積）
@@ -81,6 +82,7 @@ export type ComprehensiveLearningHistory = {
   totalCorrectAnswers: number;
   overallAccuracy: number;
   averageSessionDuration: number;
+  averageTimePerQuestion: number; // 1問あたりの平均時間（秒）
   lastSessionDate: number;
   chapterProgress: {
     [chapter: string]: {

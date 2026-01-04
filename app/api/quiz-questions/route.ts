@@ -16,8 +16,10 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const countParam = searchParams.get('count');
+  const reviewModeParam = searchParams.get('review'); // 復習モードかどうか
   
   const count = countParam ? parseInt(countParam, 10) : 10;
+  const isReviewMode = reviewModeParam === 'true';
 
   if (count <= 0) {
     return NextResponse.json({ error: 'Count must be a positive integer' }, { status: 400 });

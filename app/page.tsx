@@ -76,6 +76,9 @@ export default function HomePage() {
               <Link href="/quiz" className="text-gray-700 hover:text-primary-600 transition-colors">
                 問題演習
               </Link>
+              <Link href="/analytics" className="text-gray-700 hover:text-primary-600 transition-colors">
+                学習分析
+              </Link>
               <Link href="#features" className="text-gray-700 hover:text-primary-600 transition-colors">
                 利用方法
               </Link>

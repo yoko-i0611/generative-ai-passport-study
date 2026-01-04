@@ -5,6 +5,36 @@ import { LearningHistory, SkillAnalysis } from '@/types';
 import { calculateSkillLevel, generateProgressData } from '@/app/utils/skillAnalysis';
 import { LearningHistoryManager } from '@/app/utils/learningHistory';
 import { Brain, Target, TrendingUp, Clock, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
+
+// 章名の変換関数
+const getChapterName = (area: string): string => {
+  const chapterMapping: { [key: string]: string } = {
+    'chapter1': '第1章 AI（人工知能）',
+    'chapter2': '第2章 生成AI（ジェネレーティブAI）',
+    'chapter3': '第3章 現在の生成AIの動向',
+    'chapter4': '第4章 情報リテラシー・法律・倫理',
+    'chapter5': '第5章 テキスト生成AIのプロンプト制作と実例',
+    // 問題データの章カテゴリ名にも対応
+    '第1章 AI（人工知能）': '第1章 AI（人工知能）',
+    '第2章 生成AI（ジェネレーティブAI）': '第2章 生成AI（ジェネレーティブAI）',
+    '第3章 現在の生成AIの動向': '第3章 現在の生成AIの動向',
+    '第4章 情報リテラシー・法律・倫理': '第4章 情報リテラシー・法律・倫理',
+    '第5章 テキスト生成AIのプロンプト制作と実例': '第5章 テキスト生成AIのプロンプト制作と実例',
+  };
+  return chapterMapping[area] || area;
+};
+
+const getChapterUrl = (area: string): string => {
+  const chapterMapping: { [key: string]: string } = {
+    'chapter1': '/courses/chapter1',
+    'chapter2': '/courses/chapter2',
+    'chapter3': '/courses/chapter3',
+    'chapter4': '/courses/chapter4',
+    'chapter5': '/courses/chapter5',
+  };
+  return chapterMapping[area] || '#';
+};
 
 export default function LearningProgress() {
   const [skillAnalysis, setSkillAnalysis] = useState<SkillAnalysis | null>(null);
@@ -168,41 +198,27 @@ export default function LearningProgress() {
         </div>
       </div>
 
-      {/* 弱点分野 */}
-      {skillAnalysis.weakAreas.length > 0 && (
+      {/* 推奨学習 */}
+      {skillAnalysis.recommendedTopics.length > 0 && (
         <div className="mb-6">
           <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
-            <Target className="w-4 h-4 mr-2 text-warning-500" />
-            弱点分野
+            <TrendingUp className="w-4 h-4 mr-2 text-success-500" />
+            推奨学習領域
           </h4>
           <div className="flex flex-wrap gap-2">
-            {skillAnalysis.weakAreas.map((area, index) => (
-              <span 
+            {skillAnalysis.recommendedTopics.map((topic, index) => (
+              <Link
                 key={index}
-                className="px-3 py-1 bg-warning-100 text-warning-800 rounded-full text-sm"
+                href={getChapterUrl(topic)}
+                className="flex items-center gap-1 px-3 py-1 bg-success-100 text-success-800 rounded-full text-sm hover:bg-success-200 transition-colors"
               >
-                {area}
-              </span>
+                <CheckCircle className="w-3 h-3" />
+                {getChapterName(topic)}
+              </Link>
             ))}
           </div>
         </div>
       )}
-
-      {/* 推奨学習 */}
-      <div className="mb-6">
-        <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
-          <TrendingUp className="w-4 h-4 mr-2 text-success-500" />
-          推奨学習
-        </h4>
-        <div className="space-y-2">
-          {skillAnalysis.recommendedTopics.map((topic, index) => (
-            <div key={index} className="flex items-center text-sm text-gray-600">
-              <CheckCircle className="w-4 h-4 mr-2 text-success-500" />
-              {topic}
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* 更新ボタン */}
       <div className="flex justify-center">

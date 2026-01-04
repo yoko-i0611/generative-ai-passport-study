@@ -134,10 +134,16 @@ export default function AnalyticsPage() {
   const getChapterName = (chapter: string): string => {
     const chapterNames: { [key: string]: string } = {
       'chapter1': '第1章 AI（人工知能）',
-      'chapter2': '第2章 生成AI',
-      'chapter3': '第3章 情報リテラシー',
-      'chapter4': '第4章 プロンプト制作',
-      'chapter5': '第5章 実践と応用',
+      'chapter2': '第2章 生成AI（ジェネレーティブAI）',
+      'chapter3': '第3章 現在の生成AIの動向',
+      'chapter4': '第4章 情報リテラシー・法律・倫理',
+      'chapter5': '第5章 テキスト生成AIのプロンプト制作と実例',
+      // 問題データの章カテゴリ名にも対応
+      '第1章 AI（人工知能）': '第1章 AI（人工知能）',
+      '第2章 生成AI（ジェネレーティブAI）': '第2章 生成AI（ジェネレーティブAI）',
+      '第3章 現在の生成AIの動向': '第3章 現在の生成AIの動向',
+      '第4章 情報リテラシー・法律・倫理': '第4章 情報リテラシー・法律・倫理',
+      '第5章 テキスト生成AIのプロンプト制作と実例': '第5章 テキスト生成AIのプロンプト制作と実例',
     };
     return chapterNames[chapter] || chapter;
   };
@@ -212,13 +218,19 @@ export default function AnalyticsPage() {
     }))
     .sort((a, b) => a.chapter.localeCompare(b.chapter));
 
-  // スキル別進捗データを整理
-  const skillProgressData = Object.entries(stats.skillProgress || {})
-    .map(([skill, progress]: [string, any]) => ({
-      skill,
-      ...progress
-    }))
-    .sort((a, b) => b.accuracy - a.accuracy);
+  // 得意領域のデータを整理
+  const strongAreasData = (stats.strongAreas || [])
+    .map((chapter: string) => {
+      const progress = stats.chapterProgress?.[chapter];
+      return {
+        chapter,
+        name: getChapterName(chapter),
+        url: getChapterUrl(chapter),
+        accuracy: progress?.accuracy || 0,
+        ...progress
+      };
+    })
+    .filter(area => area.accuracy > 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50">
@@ -283,13 +295,31 @@ export default function AnalyticsPage() {
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-2">
-              <div className="text-sm text-gray-600">平均演習時間</div>
+              <div className="text-sm text-gray-600">
+                {stats.averageTimePerQuestion > 0 ? '1問あたりの平均時間' : '平均演習時間'}
+              </div>
               <Clock className="w-5 h-5 text-purple-500" />
             </div>
             <div className="text-3xl font-bold text-gray-900">
-              {formatDuration(stats.averageSessionDuration)}
+              {stats.averageTimePerQuestion > 0 
+                ? `${Math.round(stats.averageTimePerQuestion)}秒/問`
+                : formatDuration(stats.averageSessionDuration)
+              }
             </div>
-            <div className="text-xs text-gray-500 mt-1">1回あたりの平均</div>
+            <div className="text-xs text-gray-500 mt-1">
+              {stats.averageTimePerQuestion > 0 ? (
+                <>
+                  目標: 60秒/問
+                  {stats.averageTimePerQuestion <= 60 ? (
+                    <span className="text-green-600 ml-1">✓ 目標達成</span>
+                  ) : (
+                    <span className="text-orange-600 ml-1">要改善</span>
+                  )}
+                </>
+              ) : (
+                '1回あたりの平均'
+              )}
+            </div>
           </div>
 
           <div className={`bg-white rounded-lg shadow-md p-6 border-2 ${getTrendColor(stats.learningTrend)}`}>
@@ -357,56 +387,27 @@ export default function AnalyticsPage() {
           )}
         </div>
 
-        {/* スキル別分析 */}
-        {skillProgressData.length > 0 && (
+        {/* 得意領域 */}
+        {strongAreasData.length > 0 && (
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Brain className="w-6 h-6 text-primary-600" />
-              スキル別分析
+              <Award className="w-6 h-6 text-primary-600" />
+              得意領域
             </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* 得意スキル */}
-              {stats.strongSkills && stats.strongSkills.length > 0 && (
-                <div className="border border-green-200 rounded-lg p-4 bg-green-50">
-                  <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
-                    <Award className="w-5 h-5" />
-                    得意スキル
-                  </h3>
-                  <div className="space-y-2">
-                    {stats.strongSkills.map((skill: string, index: number) => {
-                      const skillData = skillProgressData.find(s => s.skill === skill);
-                      return skillData ? (
-                        <div key={index} className="flex items-center justify-between bg-white rounded p-2">
-                          <span className="text-sm font-medium text-gray-800">{skill}</span>
-                          <span className="text-sm font-bold text-green-600">{skillData.accuracy}%</span>
-                        </div>
-                      ) : null;
-                    })}
+            <div className="flex flex-wrap gap-3">
+              {strongAreasData.map((area, index) => (
+                <Link
+                  key={index}
+                  href={area.url}
+                  className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-4 py-3 hover:shadow-md transition-shadow"
+                >
+                  <span className="text-sm font-medium text-gray-800">{area.name}</span>
+                  <div className="flex items-center gap-2 ml-4">
+                    <span className="text-sm font-bold text-green-600">{area.accuracy}%</span>
+                    <CheckCircle2 className="w-4 h-4 text-green-600" />
                   </div>
-                </div>
-              )}
-
-              {/* 改善が必要なスキル */}
-              {stats.weakSkills && stats.weakSkills.length > 0 && (
-                <div className="border border-red-200 rounded-lg p-4 bg-red-50">
-                  <h3 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
-                    <Target className="w-5 h-5" />
-                    改善が必要なスキル
-                  </h3>
-                  <div className="space-y-2">
-                    {stats.weakSkills.map((skill: string, index: number) => {
-                      const skillData = skillProgressData.find(s => s.skill === skill);
-                      return skillData ? (
-                        <div key={index} className="flex items-center justify-between bg-white rounded p-2">
-                          <span className="text-sm font-medium text-gray-800">{skill}</span>
-                          <span className="text-sm font-bold text-red-600">{skillData.accuracy}%</span>
-                        </div>
-                      ) : null;
-                    })}
-                  </div>
-                </div>
-              )}
+                </Link>
+              ))}
             </div>
           </div>
         )}

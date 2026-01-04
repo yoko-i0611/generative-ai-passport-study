@@ -54,6 +54,7 @@ export class LearningHistoryManager {
         totalCorrectAnswers: 0,
         overallAccuracy: 0,
         averageSessionDuration: 0,
+        averageTimePerQuestion: 0,
         lastSessionDate: 0,
         chapterProgress: {},
         skillProgress: {},
@@ -124,6 +125,36 @@ export class LearningHistoryManager {
     history.totalCorrectAnswers = totalCorrect;
     history.overallAccuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
     history.averageSessionDuration = validSessions.length > 0 ? Math.round(totalDuration / validSessions.length) : 0;
+    
+    // 1問あたりの平均時間を計算（実際の解答時間から）
+    // questionTimesが記録されている場合はそれを優先、なければセッション時間から計算
+    let totalQuestionTime = 0;
+    let totalQuestionCount = 0;
+    
+    validSessions.forEach(session => {
+      if (session.questionTimes && Object.keys(session.questionTimes).length > 0) {
+        // 実際の解答時間を使用
+        Object.values(session.questionTimes).forEach(time => {
+          if (time > 0 && time <= 300) { // 5分以内の回答のみ有効
+            totalQuestionTime += time;
+            totalQuestionCount += 1;
+          }
+        });
+      } else if (session.duration > 0 && session.totalQuestions > 0) {
+        // フォールバック: セッション時間から計算
+        const avgTime = session.duration / session.totalQuestions;
+        if (avgTime > 0 && avgTime <= 300) {
+          totalQuestionTime += avgTime * session.totalQuestions;
+          totalQuestionCount += session.totalQuestions;
+        }
+      }
+    });
+    
+    const averageTimePerQuestion = totalQuestionCount > 0 
+      ? Math.round((totalQuestionTime / totalQuestionCount) * 10) / 10 // 小数点第1位まで
+      : 0;
+    
+    history.averageTimePerQuestion = averageTimePerQuestion;
     history.lastSessionDate = history.sessions.length > 0 ? history.sessions[history.sessions.length - 1].timestamp : 0;
     
     // デバッグ情報
@@ -260,18 +291,49 @@ export class LearningHistoryManager {
       !history.strongAreas.includes(chapter)
     );
 
-    // 推奨順序: 未学習 → 基礎章 → 中程度の章
-    recommendations.push(...unstudiedChapters);
-    recommendations.push(...foundationChapters.filter(c => !recommendations.includes(c)));
-    recommendations.push(...moderateChapters.filter(c => !recommendations.includes(c)));
-
-    // 全く学習していない場合は順序通り
-    if (recommendations.length === 0) {
-      recommendations.push('chapter1', 'chapter2', 'chapter3');
+    // 推奨学習領域は苦手領域（weakAreas）を優先
+    // 1. 苦手領域（精度60%未満）を最優先
+    const weakAreaRecommendations = history.weakAreas.slice(0, 3);
+    
+    // 2. 苦手領域が少ない場合は、未学習・基礎章・中程度の章を追加
+    if (weakAreaRecommendations.length < 3) {
+      const additionalRecommendations: string[] = [];
+      
+      // 未学習の章を追加
+      unstudiedChapters.forEach(chapter => {
+        if (!weakAreaRecommendations.includes(chapter) && additionalRecommendations.length < 3 - weakAreaRecommendations.length) {
+          additionalRecommendations.push(chapter);
+        }
+      });
+      
+      // 基礎章を追加
+      foundationChapters.forEach(chapter => {
+        if (!weakAreaRecommendations.includes(chapter) && 
+            !additionalRecommendations.includes(chapter) && 
+            additionalRecommendations.length < 3 - weakAreaRecommendations.length) {
+          additionalRecommendations.push(chapter);
+        }
+      });
+      
+      // 中程度の章を追加
+      moderateChapters.forEach(chapter => {
+        if (!weakAreaRecommendations.includes(chapter) && 
+            !additionalRecommendations.includes(chapter) && 
+            additionalRecommendations.length < 3 - weakAreaRecommendations.length) {
+          additionalRecommendations.push(chapter);
+        }
+      });
+      
+      weakAreaRecommendations.push(...additionalRecommendations);
     }
-
-    // 推奨学習領域を得意領域（strongAreas）に置き換え
-    history.recommendedFocus = history.strongAreas.slice(0, 3);
+    
+    // 全く学習していない場合は順序通り
+    if (weakAreaRecommendations.length === 0) {
+      weakAreaRecommendations.push('chapter1', 'chapter2', 'chapter3');
+    }
+    
+    // 推奨学習領域を苦手領域を優先して設定
+    history.recommendedFocus = weakAreaRecommendations.slice(0, 3);
 
     // デバッグ情報
     console.log('推奨学習領域の分析:', {
@@ -443,6 +505,7 @@ export class LearningHistoryManager {
       totalSessions: history.totalSessions,
       overallAccuracy: history.overallAccuracy,
       averageSessionDuration: history.averageSessionDuration,
+      averageTimePerQuestion: history.averageTimePerQuestion || 0,
       learningTrend: history.learningTrend,
       weakAreas: history.weakAreas,
       strongAreas: history.strongAreas,
@@ -451,6 +514,43 @@ export class LearningHistoryManager {
       recommendedFocus: history.recommendedFocus,
       chapterProgress: history.chapterProgress,
     };
+  }
+
+  // 復習していない間違えた問題のリストを取得（問題文の配列）
+  // 注: 実際のQuestionオブジェクトを取得するには、問題データと照合が必要
+  static getUnreviewedWrongQuestionTexts(): string[] {
+    const history = this.getHistory();
+    const wrongQuestionTexts = new Set<string>();
+    const reviewedQuestionTexts = new Set<string>();
+
+    // 1. 通常モードのセッションから間違えた問題を集める
+    // セッション内のanswersには、問題文をキーとしてユーザーの回答が保存されている
+    // 正解かどうかは、問題データと照合する必要があるため、
+    // ここでは一旦すべての問題文を収集し、後でフィルタリングする
+    history.sessions.forEach(session => {
+      if (!session.isReviewMode) {
+        Object.keys(session.answers).forEach(questionText => {
+          wrongQuestionTexts.add(questionText);
+        });
+      }
+    });
+
+    // 2. 復習モードのセッションで正解した問題を集める（正解した問題のみを復習済みとする）
+    // 注: 問題データと照合する必要があるため、実際の正解判定はfetchReviewQuestionsで行う
+    // ここでは一旦すべての問題文を収集し、後でフィルタリングする
+    history.sessions.forEach(session => {
+      if (session.isReviewMode) {
+        Object.keys(session.answers).forEach(questionText => {
+          reviewedQuestionTexts.add(questionText);
+        });
+      }
+    });
+
+    // 3. 間違えた問題から復習モードで回答した問題を除外
+    // 注: 実際の実装では、問題データと照合して「間違えた問題」のみを抽出し、
+    // 復習モードで「正解した問題」のみを除外する必要がある
+    const unreviewed = Array.from(wrongQuestionTexts).filter(q => !reviewedQuestionTexts.has(q));
+    return unreviewed;
   }
 
   // リアルタイム問題回答を記録（セッション途中での更新）
