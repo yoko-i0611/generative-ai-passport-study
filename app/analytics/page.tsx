@@ -374,9 +374,9 @@ export default function AnalyticsPage() {
                     </div>
                   </div>
                   
-                  <div className="text-xs text-gray-500">
-                    最終演習: {chapter.lastAttempted > 0 ? formatDate(chapter.lastAttempted) : '未実施'}
-                  </div>
+                    <div className="text-xs text-gray-500">
+                      最終演習: {(chapter.lastAttempted && chapter.lastAttempted > 0) ? formatDate(chapter.lastAttempted) : '未実施'}
+                    </div>
                 </div>
               ))}
             </div>
