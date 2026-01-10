@@ -119,7 +119,7 @@ export default function LearningProgress() {
           <div className="text-sm text-gray-500">
             <p>• 学習履歴はこのブラウザに保存されます</p>
             <p>• 他のブラウザやデバイスとは共有されません</p>
-            <p>• 24時間以内の履歴が有効です</p>
+            <p>• ブラウザの閲覧履歴を削除すると、学習履歴も失われます</p>
           </div>
         </div>
       </div>
@@ -240,7 +240,7 @@ export default function LearningProgress() {
               <li>• この履歴は現在のブラウザにのみ保存されています</li>
               <li>• 他のブラウザやデバイスとは共有されません</li>
               <li>• ブラウザのデータを削除すると履歴も消去されます</li>
-              <li>• 24時間以内の学習履歴が分析に使用されます</li>
+              <li>• 保存されているすべての学習履歴が分析に使用されます</li>
             </ul>
           </div>
         </div>

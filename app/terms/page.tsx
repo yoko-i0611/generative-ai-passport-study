@@ -92,6 +92,25 @@ export default function TermsPage() {
                 また、本アプリの利用により生じた損害について、当方は一切の責任を負いません。
                 試験の合格を保証するものではありません。
               </p>
+              
+              <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">データの保存について</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  本アプリの学習履歴は、利用者のブラウザのローカルストレージに保存されます。
+                  以下の場合、学習履歴が失われる可能性があります：
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                  <li>ブラウザの設定で閲覧履歴データを削除した場合</li>
+                  <li>ブラウザの再インストール</li>
+                  <li>OSの再インストール</li>
+                  <li>プライベートモード/シークレットモードの使用</li>
+                  <li>ブラウザのストレージ容量が上限に達した場合</li>
+                  <li>その他、ブラウザや端末の設定によりデータが削除される場合</li>
+                </ul>
+                <p className="text-gray-700 leading-relaxed mt-3">
+                  学習履歴が失われた場合、当方は一切の責任を負いません。
+                </p>
+              </div>
             </section>
 
             <section>

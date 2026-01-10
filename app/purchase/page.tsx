@@ -16,7 +16,8 @@ import {
   Lock,
   HelpCircle,
   BookOpen,
-  FileText
+  FileText,
+  Mail
 } from 'lucide-react';
 
 export default function PurchasePage() {
@@ -229,6 +230,16 @@ export default function PurchasePage() {
                   <div className="mt-4 flex items-center justify-center text-sm text-gray-500">
                     <Lock className="w-4 h-4 mr-2" />
                     Stripeによる安全な決済
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <Link
+                      href="/purchase/restore"
+                      className="text-sm text-primary-600 hover:text-primary-700 font-medium inline-flex items-center transition-colors"
+                    >
+                      <Mail className="w-4 h-4 mr-1" />
+                      購入済みの方はこちら
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -563,6 +574,11 @@ export default function PurchasePage() {
                     <a href="mailto:info@tayoima.com" className="text-gray-300 hover:text-white transition-colors text-sm">
                       お問い合わせ
                     </a>
+                  </li>
+                  <li>
+                    <Link href="/purchase/restore" className="text-gray-300 hover:text-white transition-colors text-sm">
+                      購入状態を復元
+                    </Link>
                   </li>
                 </ul>
               </div>

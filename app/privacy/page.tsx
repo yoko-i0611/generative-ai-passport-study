@@ -91,6 +91,26 @@ export default function PrivacyPage() {
               <p className="text-gray-700 leading-relaxed mt-4">
                 利用者は、ブラウザの設定によりデータを削除することができます。
               </p>
+              
+              <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">学習履歴の保存について</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  本アプリの学習履歴（問題演習の結果、進捗情報など）は、利用者のブラウザのローカルストレージに保存されます。
+                </p>
+                <p className="text-gray-700 leading-relaxed font-semibold mb-2">
+                  重要な注意事項:
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                  <li>学習履歴は、利用しているブラウザ・端末ごとに独立して保存されます</li>
+                  <li>別のブラウザや端末では、学習履歴は共有されません</li>
+                  <li>ブラウザの設定で「閲覧履歴データの削除」を実行すると、学習履歴も削除されます</li>
+                  <li>ブラウザの再インストール、OSの再インストール、プライベートモードの使用などにより、学習履歴が失われる場合があります</li>
+                  <li>学習履歴が失われた場合、当方では復元できません</li>
+                </ul>
+                <p className="text-gray-700 leading-relaxed mt-3">
+                  <strong>データの保存期間:</strong> 学習履歴は、ユーザーが手動で削除するまで、または上記の理由により削除されるまで保存されます。当方では、学習履歴の保存期間を保証するものではありません。
+                </p>
+              </div>
             </section>
 
             <section>

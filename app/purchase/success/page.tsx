@@ -140,8 +140,25 @@ function SuccessContent() {
                 </div>
               </div>
 
+              {/* 別の端末で利用する場合の案内 */}
+              <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 className="text-sm font-semibold text-blue-900 mb-2">
+                  別の端末で利用する場合
+                </h3>
+                <p className="text-sm text-blue-800 mb-3">
+                  別のブラウザや端末で利用する場合は、購入時に使用したメールアドレスで購入状態を復元できます。
+                </p>
+                <Link 
+                  href="/purchase/restore" 
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium inline-flex items-center underline"
+                >
+                  購入状態を復元する
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+              </div>
+
               {/* ホームに戻るボタン */}
-              <Link href="/" className="btn-primary text-lg px-8 py-4 inline-flex items-center">
+              <Link href="/" className="btn-primary text-lg px-8 py-4 inline-flex items-center mt-6">
                 ホームに戻る
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>

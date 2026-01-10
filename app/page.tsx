@@ -437,6 +437,11 @@ export default function HomePage() {
                       特定商取引法に基づく表記
                     </Link>
                   </li>
+                  <li>
+                    <Link href="/purchase/restore" className="text-gray-300 hover:text-white transition-colors text-sm">
+                      購入状態を復元
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </div>

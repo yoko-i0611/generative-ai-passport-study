@@ -72,3 +72,83 @@ export function resetPurchaseStatus(): void {
   }
 }
 
+/**
+ * メールアドレスで購入状態を復元する
+ */
+export async function restorePurchaseByEmail(email: string): Promise<{
+  success: boolean;
+  message?: string;
+}> {
+  if (typeof window === 'undefined') {
+    return { success: false, message: 'Client-side only function' };
+  }
+
+  try {
+    const response = await fetch('/api/restore-purchase', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (data.success && data.purchased) {
+      // 購入状態をクライアント側に保存
+      const status: PurchaseStatus = {
+        purchased: true,
+        purchasedAt: data.purchasedAt,
+        sessionId: data.sessionId,
+      };
+      localStorage.setItem(PURCHASE_KEY, JSON.stringify(status));
+      return { success: true };
+    }
+
+    return {
+      success: false,
+      message: data.message || '購入履歴が見つかりませんでした。',
+    };
+  } catch (error) {
+    console.error('Error restoring purchase:', error);
+    return {
+      success: false,
+      message: '購入状態の復元に失敗しました。もう一度お試しください。',
+    };
+  }
+}
+
+/**
+ * メールアドレスで購入状態を確認する
+ */
+export async function verifyPurchaseByEmail(email: string): Promise<{
+  purchased: boolean;
+  purchasedAt?: number;
+  sessionId?: string;
+}> {
+  try {
+    const response = await fetch('/api/verify-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (data.purchased) {
+      return {
+        purchased: true,
+        purchasedAt: data.purchasedAt,
+        sessionId: data.sessionId,
+      };
+    }
+
+    return { purchased: false };
+  } catch (error) {
+    console.error('Error verifying purchase:', error);
+    return { purchased: false };
+  }
+}
+
