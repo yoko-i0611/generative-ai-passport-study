@@ -104,19 +104,27 @@ export default function PurchasePage() {
     },
     {
       question: '返金は可能ですか？',
-      answer: '商品の性質上、デジタルコンテンツのため返金には対応しておりません。ただし、技術的な問題が発生した場合はサポートいたします。'
+      answer: 'デジタルコンテンツの性質上、お客様都合による返品・返金には対応しておりません。ただし、決済エラーや二重課金が発生した場合、サービスに重大な不具合があり利用できない場合、推奨動作環境を満たしているにも関わらずサービスが正常に動作しない場合は、購入から14日以内に info@tayoima.com までご連絡ください。調査の上、対応いたします。'
     },
     {
       question: 'どのような支払い方法に対応していますか？',
-      answer: 'クレジットカード（Visa、Mastercard、American Express）に対応しています。'
+      answer: 'クレジットカード決済（Stripe経由）に対応しています。対応カード: Visa、Mastercard、American Express、JCB'
     },
     {
-      question: '一度購入すればずっと使えますか？',
-      answer: 'はい、一度購入いただくと、プラットフォームの更新が続く限り無期限でご利用いただけます。'
+      question: 'サービス利用期間はどのくらいですか？',
+      answer: '本サービスは2026年12月31日までご利用いただけます。購入時期に関わらず、すべてのユーザーが同じ日に期限となります。試験制度の改定に対応するため、統一期限を設定しております。'
+    },
+    {
+      question: '別の端末や別のブラウザで利用するにはどうすればいいですか？',
+      answer: '別の端末や別のブラウザでご利用いただく場合、「購入済みの方はこちら」ページから、購入時にStripeに登録したメールアドレスを入力していただくことで、購入確認ができます。購入確認機能は2026年12月31日まで利用可能です。'
+    },
+    {
+      question: '学習履歴は別の端末に引き継がれますか？',
+      answer: 'いいえ、学習履歴は端末・ブラウザごとにローカルストレージに保存されるため、別の端末や別のブラウザでは引き継がれません。ブラウザの閲覧データを削除した場合も、学習履歴は失われます。'
     },
     {
       question: 'モバイルデバイスでも利用できますか？',
-      answer: 'はい、スマートフォンやタブレットからも快適にご利用いただけます。'
+      answer: 'はい、スマートフォンやタブレットからも快適にご利用いただけます。推奨ブラウザ: Chrome、Edge、Safari、Firefoxの最新版。JavaScriptとLocalStorageが有効であることが必要です。'
     }
   ];
 
@@ -155,21 +163,12 @@ export default function PurchasePage() {
               <Link href="/" className="text-gray-700 hover:text-primary-600 transition-colors">
                 ホーム
               </Link>
-              {purchased ? (
+              {purchased && (
                 <>
                   <Link href="/quiz" className="text-gray-700 hover:text-primary-600 transition-colors">
                     問題演習
                   </Link>
                   <Link href="/analytics" className="text-gray-700 hover:text-primary-600 transition-colors">
-                    学習分析
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/purchase" className="text-gray-700 hover:text-primary-600 transition-colors">
-                    問題演習
-                  </Link>
-                  <Link href="/purchase" className="text-gray-700 hover:text-primary-600 transition-colors">
                     学習分析
                   </Link>
                 </>
@@ -208,7 +207,8 @@ export default function PurchasePage() {
                     <span className="text-6xl font-bold text-gradient">¥500</span>
                     <span className="text-2xl text-gray-500">（税込）</span>
                   </div>
-                  <p className="text-gray-600 mb-6">一度の購入で永久利用</p>
+                  <p className="text-gray-600 mb-2">一度の購入で全機能を利用可能</p>
+                  <p className="text-sm text-gray-500 mb-6">※ サービス利用期間: 2026年12月31日まで</p>
                   <button
                     onClick={handlePurchase}
                     disabled={isLoading}
@@ -248,7 +248,7 @@ export default function PurchasePage() {
               <div className="flex flex-wrap justify-center gap-4 mb-12">
                 <div className="flex items-center bg-white px-4 py-2 rounded-full shadow-sm">
                   <CheckCircle className="w-5 h-5 text-success-500 mr-2" />
-                  <span className="text-sm font-medium text-gray-700">永久利用可能</span>
+                  <span className="text-sm font-medium text-gray-700">全機能利用可能</span>
                 </div>
                 <div className="flex items-center bg-white px-4 py-2 rounded-full shadow-sm">
                   <Shield className="w-5 h-5 text-primary-500 mr-2" />
@@ -378,7 +378,8 @@ export default function PurchasePage() {
                 <span className="text-5xl font-bold text-gradient">¥500</span>
                 <span className="text-xl text-gray-500">（税込）</span>
               </div>
-              <p className="text-gray-600 mb-8">一度の購入で永久利用</p>
+              <p className="text-gray-600 mb-2">一度の購入で全機能を利用可能</p>
+              <p className="text-sm text-gray-500 mb-8">※ サービス利用期間: 2026年12月31日まで（購入時期に関わらず）</p>
             </div>
 
             <div className="space-y-4 mb-8">
@@ -577,7 +578,7 @@ export default function PurchasePage() {
                   </li>
                   <li>
                     <Link href="/purchase/restore" className="text-gray-300 hover:text-white transition-colors text-sm">
-                      購入状態を復元
+                      購入済みの方はこちら
                     </Link>
                   </li>
                 </ul>
