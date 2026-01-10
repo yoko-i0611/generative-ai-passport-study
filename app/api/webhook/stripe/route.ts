@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import * as kv from '../../lib/kv-storage';
+import * as kv from '@/app/lib/kv-storage';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 

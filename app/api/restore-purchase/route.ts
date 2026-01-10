@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import * as kv from '../../lib/kv-storage';
+import * as kv from '@/app/lib/kv-storage';
 
 /**
  * メールアドレスで購入状態を復元するAPI
