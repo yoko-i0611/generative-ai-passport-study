@@ -405,6 +405,27 @@ REST API情報を取得したら、以下の手順で環境変数を手動設定
 
 ### ステップ3: 動作確認方法
 
+#### ローカル開発環境での確認
+
+1. **開発サーバーの再起動**（必須）
+   ```bash
+   # 現在実行中の開発サーバーを停止（Ctrl+C）
+   # キャッシュをクリア（既に実行済み: rm -rf .next）
+   npm run dev
+   ```
+   
+2. **ページにアクセスして確認**:
+   - `http://localhost:3000/purchase/restore` にアクセス
+   - ページが正しく表示されることを確認
+   - メールアドレス入力フォームが表示されることを確認
+
+3. **APIエンドポイントの確認**:
+   - ブラウザの開発者ツール（F12）→ Network タブを開く
+   - メールアドレスを入力して「購入状態を復元」をクリック
+   - `/api/restore-purchase` へのリクエストが送信されることを確認
+
+#### 本番環境での確認
+
 1. **環境変数設定後のデプロイ**
    - 環境変数を追加した後、必要に応じて再デプロイを実行
    - Vercel Dashboard → Deployments で最新のデプロイが成功していることを確認
@@ -1061,7 +1082,53 @@ const token = process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKE
 
 ---
 
+---
+
+## 🔧 トラブルシューティング：404エラー
+
+### 問題: `/purchase/restore` ページが404エラーになる
+
+**症状**:
+- `http://localhost:3000/purchase/restore` にアクセスすると404エラー
+- ブラウザのコンソールに `GET http://localhost:3000/purchase 404 (Not Found)` が表示される
+
+**原因**:
+- ポート3000が既存のプロセスで使用されている
+- Next.jsのビルドキャッシュが古い
+- 開発サーバーが正常に起動していない
+
+**解決方法**:
+
+1. **ポート3000を使用しているプロセスを確認**:
+   ```bash
+   lsof -ti:3000
+   ```
+
+2. **Next.jsのプロセスを終了**:
+   ```bash
+   kill -9 $(lsof -ti:3000 | grep -v "Cursor\|Chrome")
+   ```
+   または、特定のPIDを指定：
+   ```bash
+   kill -9 <PID>
+   ```
+
+3. **キャッシュをクリアして再起動**:
+   ```bash
+   rm -rf .next
+   npm run dev
+   ```
+
+4. **ブラウザのキャッシュをクリア**:
+   - `Cmd+Shift+R`（Mac）または `Ctrl+Shift+R`（Windows）でハードリロード
+   - または、ブラウザの開発者ツール（F12）→ Network タブ → 「Disable cache」にチェック
+
+**確認方法**:
+- `http://localhost:3000/purchase/restore` にアクセスして、HTTP 200が返ることを確認
+
+---
+
 **作成日**: 2026年1月10日  
 **最終更新日**: 2026年1月10日  
-**状況**: ✅ 環境変数の設定完了！`KV_REST_API_URL` と `KV_REST_API_TOKEN` が自動設定されました。
+**状況**: ✅ 環境変数の設定完了！`KV_REST_API_URL` と `KV_REST_API_TOKEN` が自動設定されました。✅ `/purchase/restore` ページが正常に動作しています（HTTP 200）。
 

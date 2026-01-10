@@ -439,7 +439,7 @@ export default function HomePage() {
                   </li>
                   <li>
                     <Link href="/purchase/restore" className="text-gray-300 hover:text-white transition-colors text-sm">
-                      購入状態を復元
+                      購入済みの方はこちら
                     </Link>
                   </li>
                 </ul>

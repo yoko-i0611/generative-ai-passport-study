@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Chat from '../components/Chat';
+import PurchaseGuard from '../components/PurchaseGuard';
 
 // 環境変数からチャット機能の有効/無効を取得
 const isChatEnabled = process.env.NEXT_PUBLIC_ENABLE_CHAT === 'true';
@@ -22,5 +23,10 @@ export default function ChatPage() {
     return null;
   }
 
-  return <Chat />;
+  // 購入チェック: 購入済みの場合のみチャット機能を表示
+  return (
+    <PurchaseGuard>
+      <Chat />
+    </PurchaseGuard>
+  );
 } 

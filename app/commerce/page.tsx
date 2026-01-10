@@ -36,7 +36,7 @@ export default function CommercePage() {
           <div className="prose prose-gray max-w-none space-y-8">
             <section>
               <p className="text-gray-600 text-sm mb-6">
-                最終更新日: 2026年1月4日
+                最終更新日: 2026年1月10日
               </p>
             </section>
 
@@ -66,16 +66,20 @@ export default function CommercePage() {
               <p className="text-gray-700 leading-relaxed">
                 メールアドレス: <a href="mailto:info@tayoima.com" className="text-primary-600 hover:text-primary-700 underline">info@tayoima.com</a>
                 <br />
-                事業サイト: <a href="https://www.tayoima.com/" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 underline">https://www.tayoima.com/</a>
+                運営元: <a href="https://www.tayoima.com/" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 underline">https://www.tayoima.com/</a>
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">販売価格</h2>
               <p className="text-gray-700 leading-relaxed">
-                500円（税込・買い切り）
+                500円（税込）
               </p>
-              <p className="text-gray-600 text-sm mt-2">
+              <p className="text-gray-700 leading-relaxed mt-3 text-sm">
+                ※ サービス利用期間: 2026年12月31日まで（購入時期に関わらず）
+                <br />
+                ※ 試験制度の改定に対応するため、統一期限を設定しています
+                <br />
                 ※ 価格は予告なく変更する場合があります
               </p>
             </section>
@@ -85,9 +89,15 @@ export default function CommercePage() {
               <p className="text-gray-700 leading-relaxed">
                 生成AIパスポート試験対策プラットフォーム
               </p>
-              <p className="text-gray-600 text-sm mt-2">
-                内容：300問の問題演習、ユニットごとのインプット学習、詳細な学習分析機能など、試験合格に必要なすべての機能
+              <p className="text-gray-700 leading-relaxed mt-3">
+                <strong>内容:</strong>
               </p>
+              <ul className="list-disc list-inside space-y-1 text-gray-700 ml-4 mt-2">
+                <li>300問の問題演習</li>
+                <li>ユニットごとのインプット学習</li>
+                <li>詳細な学習分析機能</li>
+                <li>その他、学習支援に関する機能</li>
+              </ul>
             </section>
 
             <section>
@@ -95,7 +105,7 @@ export default function CommercePage() {
               <p className="text-gray-700 leading-relaxed">
                 クレジットカード決済（Stripe経由）
                 <br />
-                対応: Visa、Mastercard、American Express
+                対応: Visa、Mastercard、American Express、JCB
               </p>
             </section>
 
@@ -117,8 +127,18 @@ export default function CommercePage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">返品・返金について</h2>
               <p className="text-gray-700 leading-relaxed">
                 デジタルコンテンツの性質上、お客様都合による返品・返金には対応しておりません。
-                <br />
-                ただし、決済エラーやシステム障害など、当方に起因する問題が発生した場合は、個別に対応いたします。
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                ただし、以下の場合は個別に対応いたします。
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4 mt-3">
+                <li>決済エラーや二重課金が発生した場合</li>
+                <li>サービスに重大な不具合があり、利用できない場合</li>
+                <li>推奨動作環境を満たしているにも関わらず、サービスが正常に動作しない場合</li>
+              </ul>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                返金をご希望の場合は、購入から14日以内に <a href="mailto:info@tayoima.com" className="text-primary-600 hover:text-primary-700 underline">info@tayoima.com</a> までご連絡ください。
+                調査の上、対応いたします。
               </p>
             </section>
 
@@ -144,6 +164,9 @@ export default function CommercePage() {
                   </ul>
                 </div>
               </div>
+              <p className="text-gray-600 text-sm mt-3">
+                ※ 上記以外の環境でも動作する場合がありますが、動作保証はいたしかねます
+              </p>
             </section>
           </div>
         </div>

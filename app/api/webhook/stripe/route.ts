@@ -60,14 +60,22 @@ export async function POST(request: NextRequest) {
 
       // 購入状態を保存（Vercel KVにメールアドレスをキーとして保存）
       try {
-        // TTLを含めて保存（1年間有効）
+        // 統一期限: 環境変数で設定可能（デフォルト: 2026年12月31日 23:59:59 JST）
+        // 将来的に期限を延長する場合は、環境変数 PURCHASE_EXPIRATION_DATE を設定することで対応可能
+        const expirationDateString = process.env.PURCHASE_EXPIRATION_DATE || '2026-12-31T23:59:59+09:00';
+        const expirationDate = new Date(expirationDateString);
+        const now = new Date();
+        const secondsUntilExpiration = Math.max(0, Math.floor((expirationDate.getTime() - now.getTime()) / 1000));
+        
+        // TTLを含めて保存（統一期限まで有効）
         await kv.set(`purchase:${email}`, {
           purchased: true,
           purchasedAt: Date.now(),
           sessionId: sessionId,
-        }, { ex: 365 * 24 * 60 * 60 });
+          expiresAt: expirationDate.getTime(), // 期限日時も保存（確認用）
+        }, { ex: secondsUntilExpiration });
 
-        console.log('Purchase status saved for email:', email);
+        console.log('Purchase status saved for email:', email, `(expires: ${expirationDate.toLocaleDateString('ja-JP')})`);
       } catch (kvError) {
         console.error('Error saving to KV:', kvError);
         return NextResponse.json(
