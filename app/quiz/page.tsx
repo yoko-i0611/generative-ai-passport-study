@@ -989,8 +989,8 @@ export default function QuizPage() {
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
-                  <div className="flex items-center">
-                    <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
+                  <div className="flex items-start">
+                    <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center flex-shrink-0 ${
                       selectedAnswer === option
                         ? showResult
                           ? option === currentQuestion.correctAnswer
@@ -1008,7 +1008,7 @@ export default function QuizPage() {
                         <CheckCircle className="w-3 h-3 text-white" />
                       )}
                     </div>
-                    <span className="text-gray-700">{option}</span>
+                    <span className="text-gray-700 flex-1">{option}</span>
                   </div>
                 </button>
               ))}

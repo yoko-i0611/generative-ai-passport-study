@@ -128,8 +128,8 @@ export default function UnitQuizModal({
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <div className="flex items-center">
-                        <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
+                      <div className="flex items-start">
+                        <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center flex-shrink-0 ${
                           selectedAnswers[currentQuestionIndex] === option
                             ? 'border-blue-500 bg-blue-500'
                             : 'border-gray-300'
@@ -138,7 +138,7 @@ export default function UnitQuizModal({
                             <div className="w-2 h-2 bg-white rounded-full"></div>
                           )}
                         </div>
-                        <span className="text-gray-700">{option}</span>
+                        <span className="text-gray-700 flex-1">{option}</span>
                       </div>
                     </button>
                   ))}
