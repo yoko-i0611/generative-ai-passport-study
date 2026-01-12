@@ -76,14 +76,6 @@ export default function PrivacyPage() {
                 <p className="text-gray-700 leading-relaxed mt-3">
                   これらの情報は、購入確認機能を提供する目的でのみ使用されます。
                 </p>
-                <p className="text-gray-700 leading-relaxed mt-4">
-                  <strong>購入完了メールについて:</strong>
-                </p>
-                <p className="text-gray-700 leading-relaxed mt-2 text-sm">
-                  購入完了時にお客様のメールアドレスに、購入完了のお知らせメールを送信します。
-                  このメールには、サービス利用期間、ホームページへのリンク、利用方法などの情報を記載します。
-                  このメール送信は、購入確認機能の提供に含まれます。
-                </p>
                 <p className="text-gray-700 leading-relaxed mt-3">
                   <strong>有効期限:</strong> 2026年12月31日までです（購入時期に関わらず、すべてのユーザーが同じ日に期限となります）。
                   有効期限を過ぎた場合、データは自動的に削除され、別の端末や別のブラウザでの購入確認ができなくなります。
@@ -102,9 +94,8 @@ export default function PrivacyPage() {
               </p>
               <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
                 <li>学習進捗の表示</li>
-                <li>学習分析機能の提供</li>
                 <li>アプリの機能向上</li>
-                <li>購入確認機能の提供（購入完了メールの送信を含む）</li>
+                <li>購入確認機能の提供</li>
                 <li>購入履歴の確認</li>
               </ul>
             </section>
