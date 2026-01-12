@@ -370,7 +370,8 @@ export default function QuizPage() {
         currentQuestion.question,
         selectedAnswer,
         isCorrect,
-        Date.now()
+        Date.now(),
+        currentQuestion.metadata?.category || currentQuestion.chapter
       );
       console.log('✅ リアルタイム学習履歴記録成功');
     } catch (error) {

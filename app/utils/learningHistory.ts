@@ -1,6 +1,15 @@
 import { QuizSession, ComprehensiveLearningHistory } from '@/types';
 import { courses } from '../../data/courses';
 
+// 各章の全問題数
+export const CHAPTER_TOTAL_QUESTIONS: { [key: string]: number } = {
+  'chapter1': 73,
+  'chapter2': 53,
+  'chapter3': 49,
+  'chapter4': 62,
+  'chapter5': 61,
+};
+
 // 学習履歴の管理クラス
 export class LearningHistoryManager {
   private static readonly STORAGE_KEY = 'comprehensiveLearningHistory';
@@ -361,14 +370,35 @@ export class LearningHistoryManager {
     });
   }
 
+  // 章名を章IDに変換（例: "第3章 現在の生成AIの動向" → "chapter3"）
+  private static convertChapterNameToId(chapterName: string | undefined): string | null {
+    if (!chapterName) return null;
+    
+    const chapterMap: { [key: string]: string } = {
+      '第1章': 'chapter1',
+      '第2章': 'chapter2',
+      '第3章': 'chapter3',
+      '第4章': 'chapter4',
+      '第5章': 'chapter5',
+    };
+    
+    for (const [key, value] of Object.entries(chapterMap)) {
+      if (chapterName.includes(key)) {
+        return value;
+      }
+    }
+    
+    return null;
+  }
+
   // 章を問題文から推測（現在の5章構成に対応）
   private static detectChapterFromQuestion(questionText: string): string | null {
     const chapterKeywords = {
-      'chapter1': ['基礎', '基本', '概要', '導入', 'AI', '人工知能', 'ANI', 'AGI', '機械学習', 'ディープラーニング'],
-      'chapter2': ['生成AI', 'GPT', 'BERT', 'Transformer', 'LLM', '大規模言語モデル', 'CNN', 'RNN', 'LSTM'],
-      'chapter3': ['情報リテラシー', 'AI倫理', 'バイアス', 'プライバシー', 'セキュリティ', '著作権', 'GDPR'],
-      'chapter4': ['プロンプト', 'プロンプトエンジニアリング', 'Zero-Shot', 'Few-Shot', 'Chain-of-Thought', '指示'],
-      'chapter5': ['実践', '応用', '活用', '事例', 'ビジネス', '導入', '実装', '技術動向', '将来展望'],
+      'chapter1': ['基礎', '基本', '概要', '導入', 'AI', '人工知能', 'ANI', 'AGI', '機械学習', 'ディープラーニング', 'シンギュラリティ', 'AI効果', 'ダートマス会議', 'AIブーム'],
+      'chapter2': ['生成AI', 'GPT', 'BERT', 'Transformer', 'LLM', '大規模言語モデル', 'CNN', 'RNN', 'LSTM', 'VAE', 'GAN', 'ジェネレーティブAI', 'ChatGPT', 'Claude'],
+      'chapter3': ['RAG', 'マルチモーダル', 'エージェント', 'ディープフェイク', 'GPT-4o', '自己回帰型', '拡散モデル', 'オムニ', 'Operator', 'Codex', 'Veo', '音声生成', '動画生成', '画像生成', 'Autoregressive', 'Diffusion'],
+      'chapter4': ['ソーシャルエンジニアリング', 'フィッシング', '個人情報保護法', '要配慮個人情報', '知的財産権', '著作権', 'AI倫理', 'セキュリティ', 'Wi-Fi', 'QRコード', 'プライバシー', 'GDPR', '情報リテラシー', '機微情報', '匿名加工情報', 'AI社会原則'],
+      'chapter5': ['プロンプトエンジニアリング', 'Temperature', 'Top-p', 'Chain-of-Thought', 'LLM', 'プロンプト', 'Zero-Shot', 'Few-Shot', 'CoT', 'ReAct', 'ショット学習', '指示', 'コンテキスト', 'システムメッセージ'],
     };
 
     for (const [chapter, keywords] of Object.entries(chapterKeywords)) {
@@ -567,7 +597,7 @@ export class LearningHistoryManager {
   }
 
   // リアルタイム問題回答を記録（セッション途中での更新）
-  static recordAnswer(questionText: string, userAnswer: string, isCorrect: boolean, timestamp: number = Date.now()) {
+  static recordAnswer(questionText: string, userAnswer: string, isCorrect: boolean, timestamp: number = Date.now(), chapterName?: string) {
     if (typeof window === 'undefined') {
       // サーバーサイドでは何もしない
       console.log('❌ サーバーサイドのため recordAnswer をスキップ');
@@ -578,8 +608,14 @@ export class LearningHistoryManager {
     
     const history = this.getHistory();
     
-    // 章を検出
-    const chapter = this.detectChapterFromQuestion(questionText);
+    // 章を検出（章名が提供されている場合はそれを優先、なければ問題文から推測）
+    let chapter: string | null = null;
+    if (chapterName) {
+      chapter = this.convertChapterNameToId(chapterName);
+    }
+    if (!chapter) {
+      chapter = this.detectChapterFromQuestion(questionText);
+    }
     console.log('🔍 章検出結果:', { chapter, questionStart: questionText.substring(0, 50) + '...' });
     
     if (chapter) {

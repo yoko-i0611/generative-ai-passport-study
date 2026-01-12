@@ -3884,13 +3884,13 @@
       "correctAnswer": "ユーザーからの入力をそのままAIに渡さず、入力値の検証（バリデーション）やフィルタリングを行う。",
       "explanation": "入力値のサニタイズや、意図しない命令が含まれていないかの事前チェックが有効な防御策です。",
       "metadata": {
-        "chapter": 4,
-        "category": "第4章 情報リテラシー・法律・倫理",
+        "chapter": 5,
+        "category": "第5章 テキスト生成AIのプロンプト制作と実例",
         "source": "additional",
         "tags": [
-          "法律・倫理",
+          "プロンプト",
           "セキュリティ",
-          "プロンプト"
+          "リスク管理"
         ],
         "difficulty": "medium",
         "unitId": null
@@ -5940,11 +5940,11 @@
       "correctAnswer": "法的判断が確立されていない",
       "explanation": "AI生成コンテンツの著作権については、世界的にまだ法的判断が確立されておらず、議論が続いています。",
       "metadata": {
-        "chapter": 1,
-        "category": "第1章 AI（人工知能）",
+        "chapter": 4,
+        "category": "第4章 情報リテラシー・法律・倫理",
         "source": "old_100",
         "tags": [
-          "AI基礎",
+          "法律・倫理",
           "著作権"
         ],
         "difficulty": "medium",
@@ -6507,12 +6507,12 @@
       "correctAnswer": "人間の価値観の尊重",
       "explanation": "AI倫理において最も重要な要素は、人間の価値観の尊重です。AI技術は人間の利益のために開発・利用されるべきです。",
       "metadata": {
-        "chapter": 1,
-        "category": "第1章 AI（人工知能）",
+        "chapter": 4,
+        "category": "第4章 情報リテラシー・法律・倫理",
         "source": "old_100",
         "tags": [
-          "AI基礎",
-          "リスク管理"
+          "法律・倫理",
+          "AI倫理"
         ],
         "difficulty": "medium",
         "unitId": null
