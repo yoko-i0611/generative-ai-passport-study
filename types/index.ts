@@ -20,7 +20,8 @@ export type Quiz = {
 };
 
 export type Question = {
-  id: number;
+  id?: number;
+  questionId?: string;
   question: string;
   options: string[];
   correctAnswer: string | string[]; // 単一選択または複数選択に対応
@@ -30,6 +31,14 @@ export type Question = {
   section?: string;
   difficulty?: 'easy' | 'medium' | 'hard';
   skillCategory?: string; // 細かいスキルカテゴリ
+  metadata?: {
+    chapter: number;
+    category: string;
+    source: string;
+    tags: string[];
+    difficulty: 'easy' | 'medium' | 'hard';
+    unitId?: string;
+  };
 };
 
 // 学習履歴の拡張型定義
