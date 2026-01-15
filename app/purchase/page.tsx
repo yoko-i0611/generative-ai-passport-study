@@ -23,6 +23,7 @@ import {
 export default function PurchasePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [purchased, setPurchased] = useState<boolean>(false);
+  const [showFreeFeatureDetails, setShowFreeFeatureDetails] = useState(false);
 
   useEffect(() => {
     setPurchased(isPurchased());
@@ -72,12 +73,6 @@ export default function PurchasePage() {
       color: 'accent'
     },
     {
-      icon: BarChart3,
-      title: '詳細な学習分析',
-      description: '章別・スキル別の進捗分析で、あなたの弱点を可視化',
-      color: 'secondary'
-    },
-    {
       icon: Zap,
       title: '復習モード',
       description: '間違えた問題を自動で抽出し、効率的に復習できます',
@@ -92,7 +87,7 @@ export default function PurchasePage() {
     {
       icon: Shield,
       title: '進捗管理',
-      description: '学習履歴を自動保存し、いつでも進捗を確認可能',
+      description: '学習履歴をブラウザ内に自動保存し、いつでも進捗を確認可能（端末・ブラウザごとに保存）',
       color: 'success'
     }
   ];
@@ -196,7 +191,7 @@ export default function PurchasePage() {
                 </div>
               </div>
               <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-                300問の問題演習、試験範囲を網羅する学習コンテンツ、詳細な学習分析など、
+                300問の問題演習、試験範囲を網羅する学習コンテンツ、復習モードなど、
                 試験合格に必要なすべての機能を一度にご利用いただけます。
               </p>
               
@@ -372,7 +367,7 @@ export default function PurchasePage() {
           <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-12 border-2 border-primary-200">
             <div className="text-center mb-8">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                完全版プラン
+                料金プラン
               </h3>
               <div className="flex items-baseline justify-center space-x-2 mb-6">
                 <span className="text-5xl font-bold text-gradient">¥500</span>
@@ -382,16 +377,12 @@ export default function PurchasePage() {
               <p className="text-sm text-gray-500 mb-8">※ サービス利用期間: 2026年12月31日まで（購入時期に関わらず）</p>
             </div>
 
-            <div className="space-y-4 mb-8">
+            <div className="space-y-4 mb-6">
               {[
                 '2026年試験最新シラバス対応',
-                '300問の問題演習データベース',
                 '試験範囲を網羅する学習コンテンツ',
-                '詳細な学習分析機能',
-                '章別・スキル別の進捗管理',
+                '300問の問題演習',
                 '復習モード機能',
-                '推奨学習領域の自動提案',
-                '学習履歴の自動保存',
                 'すべてのコースコンテンツへのアクセス'
               ].map((item, index) => (
                 <div key={index} className="flex items-center">
@@ -399,6 +390,77 @@ export default function PurchasePage() {
                   <span className="text-gray-700">{item}</span>
                 </div>
               ))}
+            </div>
+
+            {/* 無料の付加機能 */}
+            <div className="mb-8 border-t border-gray-200 pt-6">
+              <div 
+                className="cursor-pointer"
+                onClick={() => setShowFreeFeatureDetails(!showFreeFeatureDetails)}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <span className="text-base font-bold text-primary-600">【無料の付加機能】</span>
+                    <div className="mt-1">
+                      <span className="text-gray-700 font-medium">・学習分析機能</span>
+                    </div>
+                  </div>
+                  <ArrowRight 
+                    className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                      showFreeFeatureDetails ? 'rotate-90' : ''
+                    }`}
+                  />
+                </div>
+              </div>
+              
+              {showFreeFeatureDetails && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="mt-4 pl-4 border-l-4 border-info-500"
+                >
+                  <div className="space-y-3 text-sm text-gray-700">
+                    <p className="font-semibold text-gray-900 mb-2">無料提供機能の内容:</p>
+                    <ul className="space-y-2 ml-4">
+                      <li className="flex items-start">
+                        <CheckCircle className="w-4 h-4 text-success-500 mr-2 flex-shrink-0 mt-0.5" />
+                        <span>学習進捗の可視化（章別・スキル別の進捗をグラフで確認）</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="w-4 h-4 text-success-500 mr-2 flex-shrink-0 mt-0.5" />
+                        <span>章別の統計情報の表示（各章の正答率や回答数を詳細に分析）</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="w-4 h-4 text-success-500 mr-2 flex-shrink-0 mt-0.5" />
+                        <span>学習傾向の分析（学習の改善・安定・低下傾向を自動分析）</span>
+                      </li>
+                    </ul>
+                    <div className="mt-4 bg-info-50 p-3 rounded-lg">
+                      <p className="text-xs leading-relaxed mb-2">
+                        <strong>無料提供機能について:</strong>
+                        <br />
+                        この機能は、皆様の学習をより効果的にサポートするため、無料の付加機能として提供しています。
+                        <br />
+                        ・継続的な改善を行っているため、機能の追加や仕様の変更を行う場合があります
+                        <br />
+                        ・より良いサービス提供のため、ユーザーの皆様からのフィードバックをもとに機能を進化させていきます
+                        <br />
+                        ・学習履歴はブラウザ内に安全に保存され、サーバーには送信されません
+                      </p>
+                    </div>
+                    <div className="bg-yellow-50 p-3 rounded-lg">
+                      <p className="text-xs leading-relaxed">
+                        <strong>※ 保証について:</strong>
+                        <br />
+                        本機能は無料提供のため、サービス内容の保証対象外となります。
+                        ただし、重大な不具合が発生した場合は、誠意をもって対応いたします。
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
 
             <button

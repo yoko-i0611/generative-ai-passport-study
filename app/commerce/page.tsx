@@ -67,6 +67,8 @@ export default function CommercePage() {
                 メールアドレス: <a href="mailto:info@tayoima.com" className="text-primary-600 hover:text-primary-700 underline">info@tayoima.com</a>
                 <br />
                 運営元: <a href="https://www.tayoima.com/" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 underline">https://www.tayoima.com/</a>
+                <br />
+                電話番号: 請求があれば遅滞なく開示いたします
               </p>
             </section>
 
@@ -93,11 +95,31 @@ export default function CommercePage() {
                 <strong>内容:</strong>
               </p>
               <ul className="list-disc list-inside space-y-1 text-gray-700 ml-4 mt-2">
+                <li>2026年試験最新シラバス対応</li>
+                <li>試験範囲を網羅する学習コンテンツ</li>
                 <li>300問の問題演習</li>
-                <li>ユニットごとのインプット学習</li>
-                <li>詳細な学習分析機能</li>
+                <li>復習モード機能</li>
                 <li>その他、学習支援に関する機能</li>
               </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">無料提供機能</h2>
+              <p className="text-gray-700 leading-relaxed mb-3">
+                本サービスでは、学習をより効果的にサポートするため、以下の機能を無料の付加機能として提供しています。
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                <li>詳細な学習分析機能（学習進捗の可視化、章別の統計情報の表示、学習傾向の分析）</li>
+              </ul>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                <strong>※ 保証について:</strong>
+                <br />
+                本機能は無料提供のため、サービス内容の保証対象外となります。
+                ただし、重大な不具合が発生した場合は、誠意をもって対応いたします。
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                本機能に関する不具合や改善要望がございましたら、<a href="mailto:info@tayoima.com" className="text-primary-600 hover:text-primary-700 underline">info@tayoima.com</a>までお気軽にお問い合わせください。
+              </p>
             </section>
 
             <section>

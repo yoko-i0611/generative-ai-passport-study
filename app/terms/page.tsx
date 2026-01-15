@@ -138,7 +138,7 @@ export default function TermsPage() {
               <p className="text-gray-700 leading-relaxed mb-4">
                 利用者は、本アプリの利用にあたり、以下の行為を行ってはなりません。
               </p>
-              <ol className="list-decimal list-inside space-y-2 text-gray-700 ml-4">
+              <ol className="list-decimal list-inside space-y-2 text-gray-700 ml-4 mb-4">
                 <li>本アプリの内容を無断で複製、転載、配布する行為</li>
                 <li>本アプリを商用目的で利用する行為</li>
                 <li>本アプリの運営を妨害する行為</li>
@@ -146,10 +146,81 @@ export default function TermsPage() {
                 <li>購入確認機能を不正に利用する行為</li>
                 <li>その他、当方が不適切と判断する行為</li>
               </ol>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                <strong>違反時の措置:</strong>
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-2 mb-3">
+                利用者が上記の禁止事項に違反した場合、当方は以下の措置を講じることができるものとします。
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                <li>本アプリの利用を停止または終了すること</li>
+                <li>購入確認機能の利用を停止すること</li>
+                <li>違反行為による損害について、返金等の対応を行わないこと</li>
+                <li>その他、当方が必要と判断する措置</li>
+              </ul>
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">第5条（サービス内容の性質と免責事項）</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第4条の2（知的財産権）</h2>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                本アプリに含まれるすべてのコンテンツ（問題、解説、画像、ロゴ、UIデザイン、プログラムコード等）の著作権その他の知的財産権は、当方または正当な権利者に帰属します。
+              </p>
+              <p className="text-gray-700 leading-relaxed mb-3">
+                利用者は、本アプリの利用に必要な範囲を超えて、以下の行為を行ってはなりません。
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4 mb-4">
+                <li>本アプリのコンテンツを複製、転載、配布、改変すること</li>
+                <li>本アプリのコンテンツを他のサービスや教材に流用すること</li>
+                <li>本アプリのロゴやデザインを無断で使用すること</li>
+                <li>本アプリのプログラムコードを逆コンパイル、逆アセンブル、リバースエンジニアリングすること</li>
+                <li>その他、当方の知的財産権を侵害する行為</li>
+              </ul>
+              <p className="text-gray-700 leading-relaxed">
+                利用者は、本アプリの利用により、当方の知的財産権を取得するものではありません。
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第5条（無料提供機能について）</h2>
+              
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">無料提供機能の内容</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  本アプリは、学習をより効果的にサポートするため、詳細な学習分析機能を無料の付加機能として提供しています。
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                  <li>学習進捗の可視化</li>
+                  <li>章別の統計情報の表示</li>
+                  <li>学習傾向の分析</li>
+                </ul>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">機能の変更について</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  継続的な改善を行っているため、機能の追加や仕様の変更を行う場合があります。
+                  より良いサービス提供のため、ユーザーの皆様からのフィードバックをもとに機能を進化させていきます。
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">保証について</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  本機能は無料提供のため、サービス内容の保証対象外となります。
+                  ただし、重大な不具合が発生した場合は、誠意をもって対応いたします。
+                </p>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">お問い合わせ</h3>
+                <p className="text-gray-700 leading-relaxed text-sm">
+                  本機能に関する不具合や改善要望がございましたら、<a href="mailto:info@tayoima.com" className="text-primary-600 hover:text-primary-700 underline">info@tayoima.com</a>までお気軽にお問い合わせください。
+                </p>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第6条（サービス内容の性質と免責事項）</h2>
               
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">コンテンツの性質について</h3>
@@ -175,18 +246,21 @@ export default function TermsPage() {
 
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">免責事項</h3>
-                <p className="text-gray-700 leading-relaxed mb-3">
-                  当方は、以下について責任を負いかねます。
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  当方は、本アプリの利用により生じた損害について、当方の故意または重過失による場合を除き、以下の損害について責任を負いません。ただし、消費者契約法その他の法令により、免責が認められない場合は、この限りではありません。
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                  <li>本アプリの利用により生じた間接的な損害</li>
-                  <li>学習履歴の消失による損害（ブラウザの設定等により失われた場合）</li>
+                <ol className="list-decimal list-inside space-y-2 text-gray-700 ml-4 mb-4">
+                  <li>本アプリの利用により生じた間接的・派生的損害</li>
+                  <li>学習履歴の消失による損害（利用者のブラウザ設定等による場合）</li>
                   <li>試験の不合格による損害</li>
-                </ul>
+                  <li>サービス提供の中断、停止、終了による損害</li>
+                  <li>データの消失、改ざん、漏洩による損害（第三者の不正アクセス等、当方に過失がない場合）</li>
+                </ol>
                 <p className="text-gray-700 leading-relaxed mt-4">
-                  ただし、サービスに重大な不具合がある場合や、
-                  当方の故意または重大な過失による損害については、
-                  この限りではありません。
+                  なお、当方が損害賠償責任を負う場合であっても、当方の軽過失による損害に限り、その賠償額の上限は本サービスの利用料金（500円）とします。ただし、当方の故意または重過失による損害については、この限りではありません。
+                </p>
+                <p className="text-gray-700 leading-relaxed mt-4 text-sm">
+                  ※ 個人情報の取り扱いに関する免責事項については、<Link href="/privacy" className="text-primary-600 hover:text-primary-700 underline">プライバシーポリシー</Link>をご確認ください。
                 </p>
               </div>
 
@@ -217,7 +291,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">第6条（サービス内容の変更・終了）</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第7条（サービス内容の変更・終了）</h2>
                 <p className="text-gray-700 leading-relaxed">
                   当方は、利用者への事前の告知をもって、本アプリの内容を変更、追加、削除することができるものとします。
                 </p>
@@ -229,14 +303,56 @@ export default function TermsPage() {
                   サービス終了前に、本アプリ上に通知いたします。
                 </p>
                 <p className="text-gray-700 leading-relaxed">
-                  サービス終了後は、本アプリへのアクセスができなくなります。
-                  学習履歴のエクスポート機能を提供する予定ですが、保証するものではありません。
+                  サービス終了後は、本アプリを利用できなくなります。
                 </p>
               </div>
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">第7条（お問い合わせ）</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第8条（未成年者の利用）</h2>
+              <ol className="list-decimal list-inside space-y-3 text-gray-700 ml-4">
+                <li>
+                  本アプリの有料機能を購入する場合、未成年者（18歳未満の方）は親権者の同意を得る必要があります。
+                </li>
+                <li>
+                  未成年者が親権者の同意なく購入した場合、親権者は民法第5条に基づき当該契約を取り消すことができます。
+                </li>
+                <li>
+                  親権者による契約取消しを希望される場合は、以下の書類を添えて、<a href="mailto:info@tayoima.com" className="text-primary-600 hover:text-primary-700 underline">info@tayoima.com</a>までご連絡ください:
+                  <div className="mt-2 ml-4">
+                    <p className="text-gray-700 leading-relaxed mb-2">【必要書類】</p>
+                    <ul className="list-disc list-inside space-y-1 text-gray-700 ml-4">
+                      <li>親権者の本人確認書類（運転免許証、マイナンバーカード、健康保険証等のコピー）</li>
+                      <li>未成年者との続柄を証明する書類（戸籍謄本、住民票等のコピー）</li>
+                      <li>購入時のメールアドレス</li>
+                      <li>購入日時（分かる範囲で可）</li>
+                    </ul>
+                  </div>
+                </li>
+                <li>
+                  当方は、提出された書類の真正性を確認した上で、原則として14営業日以内に返金処理を行います。
+                </li>
+                <li>
+                  以下の場合、返金をお断りすることがあります:
+                  <div className="mt-2 ml-4">
+                    <ol className="list-decimal list-inside space-y-1 text-gray-700">
+                      <li>本サービス終了日（2026年12月31日）を経過している場合</li>
+                      <li>書類の不備や真正性に疑義がある場合</li>
+                      <li>正当な理由なく追加書類の提出に応じない場合</li>
+                    </ol>
+                  </div>
+                </li>
+                <li>
+                  未成年者が本アプリを利用される場合は、保護者の方の監督のもとご利用ください。
+                </li>
+              </ol>
+              <p className="text-gray-700 leading-relaxed text-sm mt-4">
+                ※ 本条の期間制限は、円滑な返金処理のための合理的な手続き期間を定めたものです。
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第9条（お問い合わせ）</h2>
               <p className="text-gray-700 leading-relaxed">
                 本アプリに関するお問い合わせは、以下までご連絡ください。
               </p>
@@ -252,11 +368,19 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">第8条（規約の変更）</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第10条（規約の変更）</h2>
               <p className="text-gray-700 leading-relaxed">
                 当方は、必要に応じて本規約を変更することができます。
                 重要な変更がある場合は、本アプリ上に表示し、事前に通知いたします。
                 変更後の規約は、本アプリ上に表示した時点で効力を生じるものとします。
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第11条（準拠法・管轄裁判所）</h2>
+              <p className="text-gray-700 leading-relaxed">
+                本規約は、日本法に準拠して解釈されるものとします。
+                本アプリの利用に関して生じた紛争については、東京地方裁判所（または東京簡易裁判所）を第一審の専属的合意管轄裁判所とします。
               </p>
             </section>
           </div>

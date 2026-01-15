@@ -38,9 +38,12 @@ export default function PrivacyPage() {
               <p className="text-gray-600 text-sm mb-4">
                 最終更新日: 2026年1月10日
               </p>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed mb-4">
                 生成AIパスポート試験対策アプリ（以下「本アプリ」といいます）は、利用者の個人情報の取り扱いについて、
                 以下のとおりプライバシーポリシーを定めます。
+              </p>
+              <p className="text-gray-700 leading-relaxed">
+                本ポリシーにおいて「個人情報」とは、個人情報保護法に定義される情報、ならびに本アプリが取得するメールアドレス、学習履歴、利用環境情報等を指します。
               </p>
             </section>
 
@@ -59,6 +62,7 @@ export default function PrivacyPage() {
               </p>
               <p className="text-gray-700 leading-relaxed mt-4">
                 ただし、決済処理に必要な情報（メールアドレス、決済情報など）は、決済サービスStripe経由で処理されます。
+                決済情報の管理についてはStripeの責任範囲とし、当方は当該情報を保持しません。
                 Stripeのプライバシーポリシーについては、<a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 underline">https://stripe.com/privacy</a>をご確認ください。
               </p>
 
@@ -85,6 +89,14 @@ export default function PrivacyPage() {
                   すべてのユーザーが同じ日に期限となるように設定しています。
                 </p>
               </div>
+
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">利用期間について</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  利用期間は購入日からの起算ではなく、全ユーザー共通の期限（2026年12月31日）までとします。
+                  本期限設定に関し、途中購入による期間差分の返金等は行いません。
+                </p>
+              </div>
             </section>
 
             <section>
@@ -101,6 +113,50 @@ export default function PrivacyPage() {
             </section>
 
             <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第2条の2（無料提供機能について）</h2>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                本アプリは、学習をより効果的にサポートするため、詳細な学習分析機能を無料の付加機能として提供しています。
+              </p>
+              
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">無料提供機能の内容</h3>
+                <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                  <li>学習進捗の可視化</li>
+                  <li>章別の統計情報の表示</li>
+                  <li>学習傾向の分析</li>
+                </ul>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">機能の変更について</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  継続的な改善を行っているため、機能の追加や仕様の変更を行う場合があります。
+                  より良いサービス提供のため、ユーザーの皆様からのフィードバックをもとに機能を進化させていきます。
+                </p>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">データの保存について</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  学習分析機能で使用する学習履歴は、ブラウザ内に安全に保存され、サーバーには送信されません。
+                  学習履歴の保存場所や管理方法については、第3条（個人情報の管理）をご確認ください。
+                </p>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">保証について</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  本機能は無料提供のため、サービス内容の保証対象外となります。
+                  本機能の提供に関し、当方は正確性・完全性・継続性を保証するものではありません。
+                  ただし、重大な不具合が発生した場合は、誠意をもって対応いたします。
+                </p>
+                <p className="text-gray-700 leading-relaxed text-sm">
+                  本機能に関する不具合や改善要望がございましたら、<a href="mailto:info@tayoima.com" className="text-primary-600 hover:text-primary-700 underline">info@tayoima.com</a>までお気軽にお問い合わせください。
+                </p>
+              </div>
+            </section>
+
+            <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">第3条（個人情報の管理）</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
                 本アプリで収集される学習データは、利用者のブラウザのローカルストレージに保存されます。
@@ -111,6 +167,9 @@ export default function PrivacyPage() {
               </p>
               <p className="text-gray-700 leading-relaxed mt-4">
                 利用者は、ブラウザの設定によりデータを削除することができます。
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                利用者は、学習履歴が自己の管理下にあることを理解し、ブラウザの設定や端末の変更等によるデータ消失に関して、当方は責任を負わないことに同意するものとします。
               </p>
               
               <div className="mt-6">
@@ -181,17 +240,56 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">第4条（Cookieについて）</h2>
-              <p className="text-gray-700 leading-relaxed">
-                本アプリは、機能の提供に必要な最小限のCookieを使用します。
+              <p className="text-gray-700 leading-relaxed mb-3">
+                本アプリは、Next.jsのセッション管理に必要な最小限のCookieを使用する場合があります。
                 Cookieは利用者のブラウザ設定で無効化できますが、一部機能が正常に動作しない場合があります。
+              </p>
+              <p className="text-gray-700 leading-relaxed">
+                本アプリでは、利用開始時点で本Cookieの使用に同意したものとみなします。
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">第5条（第三者提供）</h2>
-              <p className="text-gray-700 leading-relaxed">
-                本アプリは、法令に基づく場合を除き、利用者の個人情報を第三者に提供することはありません。
-              </p>
+              
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">1. 原則</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  本アプリは、法令に基づく場合を除き、利用者の個人情報を第三者に提供することはありません。
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">2. 決済処理のための第三者提供</h3>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  本アプリの決済処理にあたり、以下の情報を決済サービス事業者に提供します。
+                  本アプリをご購入いただく際、この第三者提供に同意いただいたものとみなします。
+                </p>
+                <ul className="list-none space-y-2 text-gray-700 ml-4 mt-4">
+                  <li>提供先：Stripe, Inc.（米国）</li>
+                  <li>提供する情報：メールアドレス、決済情報</li>
+                  <li>提供目的：決済処理および購入確認</li>
+                  <li>提供先のプライバシーポリシー：<a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 underline">https://stripe.com/privacy</a></li>
+                </ul>
+                <p className="text-gray-700 leading-relaxed mt-4">
+                  <strong>海外への情報移転について:</strong>
+                </p>
+                <p className="text-gray-700 leading-relaxed mt-2 mb-3">
+                  決済処理のため、上記情報は米国に所在するStripe, Inc.に提供されます。
+                  米国への情報移転が発生する場合があります。
+                </p>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  Stripeは、以下の保護措置を講じています。
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4 mb-3">
+                  <li>国際的なセキュリティ基準（PCI DSS）への準拠</li>
+                  <li>データの暗号化による保護</li>
+                  <li>アクセス制御および監視体制の整備</li>
+                </ul>
+                <p className="text-gray-700 leading-relaxed text-sm">
+                  ※ Stripeのプライバシーポリシーおよびセキュリティ対策の詳細については、<a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 underline">Stripeの公式サイト</a>をご確認ください。
+                </p>
+              </div>
             </section>
 
             <section>
@@ -241,7 +339,22 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">第8条（お問い合わせ）</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第8条（個人情報に関する免責事項）</h2>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                当方は、個人情報の取り扱いに関して、以下の場合を除き、責任を負いません。
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4 mb-4">
+                <li>第三者の不正アクセス等により個人情報が漏洩した場合（当方の故意または重過失を除く）</li>
+                <li>利用者のブラウザ設定等により学習履歴が消失した場合</li>
+                <li>決済サービス事業者（Stripe）の責任範囲に属する情報の取り扱いに関する損害</li>
+              </ul>
+              <p className="text-gray-700 leading-relaxed mt-4">
+                本アプリの利用全般に関する免責事項については、<Link href="/terms" className="text-primary-600 hover:text-primary-700 underline">利用規約</Link>をご確認ください。
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">第9条（お問い合わせ）</h2>
               <p className="text-gray-700 leading-relaxed">
                 本プライバシーポリシーに関するお問い合わせは、以下までご連絡ください。
               </p>
